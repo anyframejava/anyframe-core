@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<anyframe>
+    <pjthome>C:\workspace\anyframe-5.6.0\anyframe-sample-stomp</pjthome>
+    <pjtname>anyframe-sample-stomp</pjtname>
+    <package>com.anyframe.sample.websocket</package>
+    <path>
+        <template>C:\workspace\anyframe-5.6.0\anyframe-sample-stomp\.\.settings\anyframe\templates</template>
+        <jdbcdrivers>C:\workspace\anyframe-5.6.0\anyframe-sample-stomp\.settings\anyframe</jdbcdrivers>
+        <databases>C:\workspace\anyframe-5.6.0\anyframe-sample-stomp\.settings\anyframe</databases>
+    </path>
+</anyframe>

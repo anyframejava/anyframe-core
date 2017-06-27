@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<anyframe>
+    <pjthome>E:\eclipse-workspace\workspace_anyframe_pi\essential\core\samples\anyframe-sample-timezone</pjthome>
+    <pjtname>anyframe-sample-timezone</pjtname>
+    <package>org.anyframe.sample.timezone</package>
+    <path>
+        <template>E:\eclipse-workspace\workspace_anyframe_pi\essential\core\samples\anyframe-sample-timezone\.settings\anyframe\templates</template>
+        <jdbcdrivers>E:\eclipse-workspace\workspace_anyframe_pi\essential\core\samples\anyframe-sample-timezone\.settings\anyframe</jdbcdrivers>
+        <databases>E:\eclipse-workspace\workspace_anyframe_pi\essential\core\samples\anyframe-sample-timezone\.settings\anyframe</databases>
+    </path>
+</anyframe>
