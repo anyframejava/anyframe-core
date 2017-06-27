@@ -33,7 +33,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * User Mgmt Service가 제공하는 기능을 테스트하기 위한 샘플 테스트 코드
+ * Sample test code to test function provided by User Mgmt Service
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {

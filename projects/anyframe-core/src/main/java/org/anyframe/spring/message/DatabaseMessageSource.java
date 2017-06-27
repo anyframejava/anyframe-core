@@ -140,13 +140,21 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 			defaultLocale = new Locale(defaultLanguage, defaultCountry);
 
 			// 4. get table information
-			tableName = this.messageTable.getProperty("table", TABLE);
-			keyColumn = this.messageTable.getProperty("key.column", KEY);
-			languageColumn = this.messageTable.getProperty("language.column",
-					LANGUAGE);
-			countryColumn = this.messageTable.getProperty("country.column",
-					COUNTRY);
-			textColumn = this.messageTable.getProperty("text.column", TEXT);
+			if (messageTable != null) {
+				tableName = this.messageTable.getProperty("table", TABLE);
+				keyColumn = this.messageTable.getProperty("key.column", KEY);
+				languageColumn = this.messageTable.getProperty(
+						"language.column", LANGUAGE);
+				countryColumn = this.messageTable.getProperty("country.column",
+						COUNTRY);
+				textColumn = this.messageTable.getProperty("text.column", TEXT);
+			} else {
+				tableName = TABLE;
+				keyColumn = KEY;
+				languageColumn = LANGUAGE;
+				countryColumn = COUNTRY;
+				textColumn = TEXT;
+			}
 
 			if (!lazyLoad) {
 				// eternal attribute, when set to "true", overrides timeToLive
@@ -225,7 +233,6 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	/**
 	 * refresh cache
 	 */
-	@SuppressWarnings("unchecked")
 	public void refresh() {
 		synchronized (this.cache) {
 			this.cache.removeAll();

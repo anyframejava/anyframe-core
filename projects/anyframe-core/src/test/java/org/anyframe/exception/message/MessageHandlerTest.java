@@ -15,6 +15,8 @@
 */
 package org.anyframe.exception.message;
 
+import java.util.Locale;
+
 import org.anyframe.exception.message.Message;
 import org.anyframe.exception.message.MessageHandler;
 import org.springframework.context.MessageSource;
@@ -43,7 +45,9 @@ public class MessageHandlerTest extends
 	public void testHandleExMessageMessageSourceStringObjectArray() {
 		MessageSource messageSource = (MessageSource) getApplicationContext()
 				.getBean("messageSource");
-
+		// Default Locale Setting
+		Locale.setDefault (Locale.ENGLISH); 
+		
 		// 1. In case message parameter doesn't exist, get full message through
 		// MessageHandler.
 		Message messages1 = MessageHandler.handleExMessage(messageSource,

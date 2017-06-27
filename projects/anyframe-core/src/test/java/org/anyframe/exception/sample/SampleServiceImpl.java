@@ -15,6 +15,8 @@
 */
 package org.anyframe.exception.sample;
 
+import java.util.Locale;
+
 import org.anyframe.exception.BaseException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -55,6 +57,19 @@ public class SampleServiceImpl implements ISampleService,
 		case 7:
 			throw new BaseException("message", new Exception(
 					"TEST BaseException"));
+		}
+	}
+	
+	public void testBaseExceptionWithLocale(int arg, Locale locale) throws BaseException {
+		switch (arg) {
+		case 1:
+			throw new BaseException(messageSource, "error.base.msg1", locale, 
+					new Exception("TEST BaseException"));
+		case 2:
+			throw new BaseException(messageSource, "error.base.msg2", 
+					new Object[] { "sample" }, locale );
+		case 3:
+			throw new BaseException(messageSource, "error.base.msg1", locale);
 		}
 	}
 }

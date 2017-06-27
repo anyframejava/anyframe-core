@@ -15,6 +15,8 @@
 */
 package org.anyframe.exception.sample;
 
+import java.util.Locale;
+
 import org.anyframe.exception.BaseException;
 
 /**
@@ -23,4 +25,6 @@ import org.anyframe.exception.BaseException;
  */
 public interface ISampleService {
 	void testBaseException(int arg) throws BaseException;
+	
+	void testBaseExceptionWithLocale(int arg, Locale locale) throws BaseException;
 }

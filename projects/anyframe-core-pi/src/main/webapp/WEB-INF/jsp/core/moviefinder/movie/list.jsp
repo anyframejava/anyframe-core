@@ -23,7 +23,7 @@
 		<td height="24">
 		<table width="100%" height="24" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td height="24" class="ct_ttl01" style="padding-left: 12px">Search List of Movie</td>
+				<td height="24" class="ct_ttl01" style="padding-left: 12px"><spring:message code='movie.heading'/></td>
 			</tr>
 		</table>
 		</td>

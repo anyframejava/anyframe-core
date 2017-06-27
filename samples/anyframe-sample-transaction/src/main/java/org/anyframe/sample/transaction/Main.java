@@ -24,7 +24,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
- * TransactionService가 제공하는 기능을 테스트하기 위한 샘플 코드
+ * Sample code to test a feature provided by TransactionService 
  * 
  * [how to execute this class in maven] mvn exec:java
  * -Dexec.mainClass=anyframe.sample.transaction.Main
@@ -50,7 +50,7 @@ public class Main {
 	}
 
 	/**
-	 * 테스트 수행을 위한 main
+	 * Main method to execute a test 
 	 */
 	public static void main(String[] args) throws Exception {
 		Main main = new Main();

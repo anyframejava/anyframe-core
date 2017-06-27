@@ -29,10 +29,10 @@
 	<tbody>
 		<tr class="board">
 				<td class="underline">
-					<a href="${ctx}/coreMovieFinder.do?method=list"><font size="2">- Core 1.0.1</font></a><br/>
+					<a href="${ctx}/coreMovieFinder.do?method=list"><font size="2">- Core 1.0.2</font></a><br/>
 <!--Add new menu here-->
 				</td>
-				<td class="underline" valign="top"> 
+				<td class="underline" valign="top">
 <!--Add new crud generation menu here-->
 				</td>
 		</tr>

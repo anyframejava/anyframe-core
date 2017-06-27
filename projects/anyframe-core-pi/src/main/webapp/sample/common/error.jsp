@@ -1,7 +1,7 @@
 <div id="body">
 <%@ page isErrorPage="true"%>
 <%@ page contentType="text/html; charset=utf-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/sample/common/taglibs.jsp"%>
 <html>
 <head>
 <title>Error</title>
@@ -52,10 +52,10 @@
 												<font color="red">
 												<c:choose>
 													<c:when test="${exception.message == 'Occurred Error'}">
-														${exception.cause.message} 
+														<spring:message code='${exception.cause.message}'/> 
 													</c:when>
 													<c:otherwise>
-														${exception.message} 
+														<spring:message code='${exception.message}'/> 
 													</c:otherwise>
 												</c:choose>
 												</font>
