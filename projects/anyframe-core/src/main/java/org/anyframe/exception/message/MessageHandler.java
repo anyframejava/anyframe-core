@@ -33,8 +33,12 @@ public class MessageHandler {
 
 	public static Message handleExMessage(MessageSource messageSource,
 			String messageKey, Object[] parameters, String defaultMessage) {
-		Locale locale = Locale.getDefault();
-
+		return MessageHandler.handleExMessage(messageSource, messageKey, parameters, Locale.getDefault(),  defaultMessage);
+	}
+	
+	public static Message handleExMessage(MessageSource messageSource,
+			String messageKey, Object[] parameters, Locale locale, String defaultMessage) {
+		
 		String userMessageKey = messageKey;
 		String solutionKey = messageKey + ".solution";
 		String reasonKey = messageKey + ".reason";
@@ -48,6 +52,7 @@ public class MessageHandler {
 
 		return new Message(messageKey, userMessage, solution, reason);
 	}
+	
 
 	public static Message handleExMessage(String message, Object[] parameters) {
 		String userMessage = message;

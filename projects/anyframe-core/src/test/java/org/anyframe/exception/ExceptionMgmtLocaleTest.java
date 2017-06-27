@@ -27,10 +27,9 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * For testing functions what MessageHandler supports, there are some test
  * scenarios in this TestCase.
  * 
- * @author SoYon Lim
  * @author JongHoon Kim
  */
-public class ExceptionMgmtTest extends
+public class ExceptionMgmtLocaleTest extends
 		AbstractDependencyInjectionSpringContextTests {
 
 	private ISampleService sampleService;
@@ -49,16 +48,64 @@ public class ExceptionMgmtTest extends
 
 	/**
 	 * [Flow #-1] Positive : When SampleSerivce throws BaseException, get
-	 * message structure from that exception.
+	 * message structure from that exception. When Language is KOREAN.
 	 */
-	public void testThrowBaseException() {
+	public void testThrowBaseExceptionKO() {
 		Message messages;
 		
-		Locale.setDefault (Locale.ENGLISH); 
+		Locale locale = Locale.KOREAN;
 		// 1. throw new BaseException (constructor is consist of MessageSource,
 		// messageKey, cause exception)
 		try {
-			sampleService.testBaseException(1);
+			sampleService.testBaseExceptionWithLocale(1, locale );
+		} catch (BaseException be) {
+			be.getMessage();
+			messages = be.getMessages();
+			Exception ex = (Exception) be.getCause();
+			assertEquals("TEST BaseException", ex.getMessage());
+			assertEquals("error.base.msg1", messages.getMessageKey());
+			assertEquals("메세지1", messages.getUserMessage());
+			assertEquals("해결1", messages.getSolution());
+			assertEquals("원인1", messages.getReason());
+		}
+
+		// 2. throw new BaseException (constructor is consist of MessageSource,
+		// messageKey, message parameters)
+		try {
+			sampleService.testBaseException(2);
+		} catch (BaseException be) {
+			messages = be.getMessages();
+			assertEquals("error.base.msg2", messages.getMessageKey());
+			assertEquals("sample 메세지2", messages.getUserMessage());
+			assertEquals("해결2", messages.getSolution());
+			assertEquals("원인2", messages.getReason());
+		}
+
+		// 3. throw new BaseException (constructor is consist of MessageSource,
+		// messageKey)
+		try {
+			sampleService.testBaseException(3);
+		} catch (BaseException be) {
+			messages = be.getMessages();
+			assertEquals("error.base.msg1", messages.getMessageKey());
+			assertEquals("메세지1", messages.getUserMessage());
+			assertEquals("해결1", messages.getSolution());
+			assertEquals("원인1", messages.getReason());
+		}
+	}
+	
+	/**
+	 * [Flow #-1] Positive : When SampleSerivce throws BaseException, get
+	 * message structure from that exception. When Language is KOREAN.
+	 */
+	public void testThrowBaseExceptionEN() {
+		Message messages;
+		
+		Locale locale = Locale.ENGLISH;
+		// 1. throw new BaseException (constructor is consist of MessageSource,
+		// messageKey, cause exception)
+		try {
+			sampleService.testBaseExceptionWithLocale(1, locale );
 		} catch (BaseException be) {
 			be.getMessage();
 			messages = be.getMessages();
@@ -73,7 +120,7 @@ public class ExceptionMgmtTest extends
 		// 2. throw new BaseException (constructor is consist of MessageSource,
 		// messageKey, message parameters)
 		try {
-			sampleService.testBaseException(2);
+			sampleService.testBaseExceptionWithLocale(2, locale);
 		} catch (BaseException be) {
 			messages = be.getMessages();
 			assertEquals("error.base.msg2", messages.getMessageKey());
@@ -85,60 +132,13 @@ public class ExceptionMgmtTest extends
 		// 3. throw new BaseException (constructor is consist of MessageSource,
 		// messageKey)
 		try {
-			sampleService.testBaseException(3);
+			sampleService.testBaseExceptionWithLocale(3, locale);
 		} catch (BaseException be) {
 			messages = be.getMessages();
 			assertEquals("error.base.msg1", messages.getMessageKey());
 			assertEquals("message1", messages.getUserMessage());
 			assertEquals("solution1", messages.getSolution());
 			assertEquals("reason1", messages.getReason());
-		}
-
-		// 4. throw new BaseException (constructor is consist of message,
-		// message parameters)
-		try {
-			sampleService.testBaseException(4);
-		} catch (BaseException be) {
-			messages = be.getMessages();
-			assertEquals("sample message", messages.getUserMessage());
-			assertEquals("sample message", messages.getSolution());
-			assertEquals("sample message", messages.getReason());
-		}
-
-		// 5. throw new BaseException (default constructor)
-		try {
-			sampleService.testBaseException(5);
-		} catch (BaseException be) {
-			messages = be.getMessages();
-			assertEquals("BaseRTException without message", messages
-					.getUserMessage());
-			assertEquals("BaseRTException without message", messages
-					.getSolution());
-			assertEquals("BaseRTException without message", messages
-					.getReason());
-		}
-
-		// 6. throw new BaseException (constructor is consist of message)
-		try {
-			sampleService.testBaseException(6);
-		} catch (BaseException be) {
-			messages = be.getMessages();
-			assertEquals("message", messages.getUserMessage());
-			assertEquals("message", messages.getSolution());
-			assertEquals("message", messages.getReason());
-		}
-
-		// 7. throw new BaseException (constructor is consist of message, cause
-		// exception)
-		try {
-			sampleService.testBaseException(7);
-		} catch (BaseException be) {
-			messages = be.getMessages();
-			Exception ex = (Exception) be.getCause();
-			assertEquals("TEST BaseException", ex.getMessage());
-			assertEquals("message", messages.getUserMessage());
-			assertEquals("message", messages.getSolution());
-			assertEquals("message", messages.getReason());
 		}
 	}	
 }

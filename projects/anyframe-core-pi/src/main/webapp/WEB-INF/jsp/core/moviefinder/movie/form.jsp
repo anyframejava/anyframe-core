@@ -36,12 +36,12 @@
 			<tr>
 				<td height="24" class="ct_ttl01" style="padding-left: 12px">
 				 	<c:if test="${empty movie.movieId}">
-				 	Add Movie Information
+				 	<spring:message code='movie.add'/>
 				 	<c:set var="readonly" value="false"/>
 					</c:if>
 			
 				    <c:if test="${not empty movie.movieId}">	
-					Update Movie Information
+					<spring:message code='movie.update'/>
 					<c:set var="readonly" value="true"/>				 
 					</c:if>					
 				</td>
@@ -138,7 +138,7 @@
 		<tr>
 			<td width="150" class="ct_td"><spring:message code="movie.nowPlaying" /></td>
 			<td bgcolor="D6D6D6" width="1"></td>
-			<td class="ct_write01">Is this movie now playing ? <form:checkbox path="nowPlaying" value="Y" />
+			<td class="ct_write01"><spring:message code="movie.isNowPlaying" /><form:checkbox path="nowPlaying" value="Y" />
 			<input type="hidden" name="!nowPlaying" value="N" /></td>
 		</tr>
 		<tr>
