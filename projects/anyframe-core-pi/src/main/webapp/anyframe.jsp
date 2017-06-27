@@ -13,7 +13,7 @@
 <!-- Top -->
   <tr>
     <td height="100%" align="left" valign="middle">
-		<font size="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anyframe Java 5.0.0</font>
+		<font size="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anyframe Java 5.0.0.RC1</font>
     </td>
   </tr>
 </table>
@@ -29,7 +29,7 @@
 	<tbody>
 		<tr class="board">
 				<td class="underline">
-					<a href="${ctx}/coreMovieFinder.do?method=list"><font size="2">- Core 1.0.0</font></a><br/>
+					<a href="${ctx}/coreMovieFinder.do?method=list"><font size="2">- Core 1.0.0.RC1</font></a><br/>
 <!--Add new menu here-->
 				</td>
 				<td class="underline" valign="top">
