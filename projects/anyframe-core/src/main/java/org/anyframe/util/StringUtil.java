@@ -44,10 +44,10 @@ import org.springframework.web.util.HtmlUtils;
 public class StringUtil {
 
 	private StringUtil() {
-		throw new AssertionError(); 
+		throw new AssertionError();
 	}
 
-	private static final char[] ALPHAS = new char[] { 'A', 'B', 'C', 'D', 'E',
+	private static final char[] alphas = new char[] { 'A', 'B', 'C', 'D', 'E',
 			'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
 			'S', 'T', 'U', 'X', 'Y', 'V', 'W', 'Z', 'a', 'b', 'c', 'd', 'e',
 			'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
@@ -55,7 +55,7 @@ public class StringUtil {
 
 	public static final String DEFAULT_EMPTY_STRING = "";
 
-	private static final Random GENERATOR = new Random(System
+	private static final Random generator = new Random(System
 			.currentTimeMillis());
 
 	/** For UTF-8 character set, 1 byte code */
@@ -217,7 +217,7 @@ public class StringUtil {
 	 * the provided list of elements. ex) String[] test = {"aaa", "bbb", "ccc"};
 	 * arrayToCommaDelimitedString(test) => "aaa,bbb,ccc"
 	 * 
-	 * @param array
+	 * @param arrayar
 	 *            the array of values to join together
 	 * @return the joined String that is seperatd by comma
 	 * @deprecated Use {@link #arrayToDelimitedString(Object[])}
@@ -590,7 +590,7 @@ public class StringUtil {
 	 * 
 	 * @param str
 	 *            the String to check, may be null
-	 * @param chars
+	 * @param invalidChars
 	 *            a String of invalid chars, may be null
 	 * @return false if it contains none of the invalid chars, or is null
 	 */
@@ -689,10 +689,8 @@ public class StringUtil {
 	/**
 	 * Convert a camel case string to underscore representation.
 	 * 
-	 * @param str
+	 * @param camelCase
 	 *            Camel case name.
-	 * @param delimiter
-	 * 			  delimiter for conversioin
 	 * @return Camel case representation of the inputString.
 	 */
 	public static String convertToCamelCase(String str, char delimiter) {
@@ -1167,7 +1165,7 @@ public class StringUtil {
 		for (int i = 0; i < size; i++) {
 			int chInt;
 			do {
-				chInt = StringUtil.GENERATOR.nextInt(gap + 1) + startInt;
+				chInt = StringUtil.generator.nextInt(gap + 1) + startInt;
 			} while (!Character.toString((char) chInt).matches("^[a-zA-Z]$"));
 			buf.append((char) chInt);
 		}
@@ -1203,7 +1201,7 @@ public class StringUtil {
 			throws UnsupportedEncodingException {
 		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < size; i++) {
-			buf.append((char) (StringUtil.GENERATOR.nextInt(11172) + 0xAC00));
+			buf.append((char) (StringUtil.generator.nextInt(11172) + 0xAC00));
 		}
 		return buf.toString();
 	}
@@ -1281,7 +1279,7 @@ public class StringUtil {
 	 *         string input
 	 */
 	public static boolean hasLength(String str) {
-		return !isEmpty(str);
+		return str != null && str.length() > 0;
 	}
 
 	/**
@@ -1493,15 +1491,7 @@ public class StringUtil {
 	 * @return which empty string or not.
 	 */
 	public static boolean isEmpty(String str) {
-        if (str != null) {
-            int len = str.length();
-            for (int i = 0; i < len; ++i) {
-                if (str.charAt(i) > ' ') {
-                    return false;
-                }
-            }
-        }
-        return true;
+		return (str == null || str.length() == 0);
 	}
 
 	/**
@@ -1512,9 +1502,7 @@ public class StringUtil {
 	 * @return Whether empty.
 	 */
 	public static boolean isEmptyTrimmed(String str) {
-		if(str == null)
-			return true;
-		return isEmpty(str.trim());
+		return (str == null || str.trim().length() == 0);
 	}
 
 	/**
@@ -1527,9 +1515,9 @@ public class StringUtil {
 	 */
 	public static boolean isHangul(char achar) {
 		String unicodeBlock = Character.UnicodeBlock.of(achar).toString();
-		return "HANGUL_JAMO".equals(unicodeBlock)
-				|| "HANGUL_SYLLABLES".equals(unicodeBlock)
-				|| "HANGUL_COMPATIBILITY_JAMO".equals(unicodeBlock);
+		return unicodeBlock.equals("HANGUL_JAMO")
+				|| unicodeBlock.equals("HANGUL_SYLLABLES")
+				|| unicodeBlock.equals("HANGUL_COMPATIBILITY_JAMO");
 	}
 
 	/**
@@ -1576,7 +1564,7 @@ public class StringUtil {
 	 *         empty string input
 	 */
 	public static boolean isLetter(String str) {
-		if (isEmpty(str)) {
+		if (str == null || str.length() == 0) {
 			return false;
 		}
 
@@ -1599,7 +1587,7 @@ public class StringUtil {
 	 *         null or empty string input
 	 */
 	public static boolean isLetterOrDigit(String str) {
-		if (isEmpty(str)) {
+		if (str == null || str.length() == 0) {
 			return false;
 		}
 		char chars[] = str.toCharArray();
@@ -1668,7 +1656,7 @@ public class StringUtil {
 		if (str == null) {
 			return false;
 		} else {
-			return isEmptyTrimmed(str);
+			return str.trim().length() == 0;
 		}
 	}
 
@@ -1686,7 +1674,7 @@ public class StringUtil {
 		if (str == null) {
 			return false;
 		} else {
-			return isEmptyTrimmed(str);
+			return str.trim().length() == 0;
 		}
 	}
 
@@ -1806,7 +1794,8 @@ public class StringUtil {
 	 * @return the converted string
 	 */
 	public static String newLineToSpace(String str) {
-		return str.replace("\r\n", " ");
+		String output = str.replace("\r\n", " ");
+		return output;
 	}
 
 	/**
@@ -1848,7 +1837,7 @@ public class StringUtil {
 	 */
 	@Deprecated
 	public static String null2str(String org, String converted) {
-		if (isEmptyTrimmed(org)) {
+		if (org == null || org.trim().length() == 0) {
 			return converted;
 		} else {
 			return org.trim();
@@ -1866,7 +1855,7 @@ public class StringUtil {
 	 * @return trimmed string
 	 */
 	public static String nullToString(String str, String defaultStr) {
-		if (isEmptyTrimmed(str)) {
+		if (str == null || str.trim().length() == 0) {
 			return defaultStr;
 		} else {
 			return str.trim();
@@ -1883,7 +1872,7 @@ public class StringUtil {
 	 * @return empty string if the given String is null, given string if not
 	 */
 	public static String nullToEmpty(String str) {
-		if (isEmpty(str)) {
+		if (str == null || str.length() == 0) {
 			return DEFAULT_EMPTY_STRING;
 		} else {
 			return str;
@@ -2161,7 +2150,7 @@ public class StringUtil {
 	private static String randomAlphabetic(int size) {
 		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < size; i++) {
-			buf.append(ALPHAS[StringUtil.GENERATOR.nextInt(52)]);
+			buf.append(alphas[StringUtil.generator.nextInt(52)]);
 		}
 		return buf.toString();
 	}

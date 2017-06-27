@@ -18,7 +18,6 @@ package org.anyframe.util.properties;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.anyframe.exception.FileReloadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,14 +227,12 @@ public interface PropertiesService {
 	 *            The default value of the resource
 	 * @return The value of the named resource as a vector
 	 */
-	Vector<?> getVector(String name, Vector<?> def);
+	@SuppressWarnings("unchecked")
+	Vector<?> getVector(String name, Vector def);
 
 	/**
 	 * The purpose of this method is to refresh the configuration resource if
 	 * some configuration resources is changed.
-	 * 
-	 * @throws FileReloadException
-	 *             if there is any problem refreshing the property files
 	 */
-	void refreshPropertyFiles() throws FileReloadException;
+	void refreshPropertyFiles();
 }

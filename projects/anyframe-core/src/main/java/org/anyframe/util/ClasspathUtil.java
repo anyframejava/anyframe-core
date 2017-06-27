@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 @Deprecated
 public class ClasspathUtil {
-	private static final Logger LOGGER = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(ClasspathUtil.class);
 
 	@SuppressWarnings("restriction")
@@ -58,13 +58,13 @@ public class ClasspathUtil {
 								ucp.setAccessible(true);
 
 							} catch (SecurityException e) {
-								LOGGER
+								logger
 										.error(
 												"Cannot access field 'ucp'. Error : {}",
 												new Object[] { e.getMessage() });
 
 							} catch (NoSuchFieldException e) {
-								LOGGER.error(
+								logger.error(
 										"Cannot find field 'ucp'. Error : {}",
 										new Object[] { e.getMessage() });
 							}

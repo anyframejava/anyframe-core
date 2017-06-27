@@ -21,8 +21,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.anyframe.exception.BaseRuntimeException;
-
 /**
  * Data type class that is used for pagination handling.
  * 
@@ -81,7 +79,7 @@ public class Page implements Serializable {
 	public Page(List<?> objects, int currentPage, int totalCount,
 			int pageunit, int pagesize) {
 		if (pageunit <= 0 || pagesize <= 0) {
-			throw new BaseRuntimeException(
+			throw new RuntimeException(
 					"Page unit or page size should be over 0.");
 		}
 		this.pageunit = pageunit;

@@ -52,35 +52,32 @@ public class MessageSourceDao extends QueryServiceDaoSupport {
 		super.setQueryService(queryService);
 	}
 
-	public void create(MessageSource messageSource) {
+	public void create(MessageSource messageSource) throws Exception {
 		super.create("createMessageSource", messageSource);
 	}
 
-	public void remove(MessageSource messageSource) {
+	public void remove(MessageSource messageSource) throws Exception {
 		super.remove("removeMessageSource", messageSource);
 	}
 
-	public void update(MessageSource messageSource) {
+	public void update(MessageSource messageSource) throws Exception {
 		super.update("updateMessageSource", messageSource);
 	}
 
-	public MessageSource get(MessageSource messageSource) {
-		return super.findByPk("findMessageSourceByPk", messageSource);
+	public MessageSource get(MessageSource messageSource) throws Exception {
+		return (MessageSource) super.findByPk("findMessageSourceByPk", messageSource);
 	}
 
-	public Page getPagingList(SearchVO searchVO) {
+	public Page getPagingList(SearchVO searchVO) throws Exception {
 
-		String searchCondition = StringUtil.nullToString(searchVO
-				.getSearchCondition());
-		String searchKeyword = StringUtil.nullToString(searchVO
-				.getSearchKeyword());
+		String searchCondition = StringUtil.null2str(searchVO.getSearchCondition());
+		String searchKeyword = StringUtil.null2str(searchVO.getSearchKeyword());
 
 		Object[] args = new Object[4];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr='%" + searchKeyword + "%'";
 
-		return super.findListWithPaging("findMessageSourceList", args, searchVO
-				.getPageIndex(), pageSize, pageUnit);
+		return super.findListWithPaging("findMessageSourceList", args, searchVO.getPageIndex(), pageSize, pageUnit);
 	}
 
 	public void refresh() {
