@@ -1278,7 +1278,7 @@ public class DateUtil {
 	 */
 	public static String getYesterday(String pattern) {
 		Calendar cal = getCalendar();
-		cal.roll(Calendar.DATE, -1);
+		cal.add(Calendar.DATE, -1);
 		Date date = cal.getTime();
 		return dateToString(date, pattern);
 	}

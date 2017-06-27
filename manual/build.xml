@@ -14,7 +14,7 @@
 	<property name="subv.password" value="${env.SVN_PASSWORD}" />
 	
 	<property name="book.name" value="core" />
-	<property name="version" value="1.5.1"/>
+	<property name="version" value="1.5.2"/>
 	<property name="service.name" value="anyframe-core" />
 	<property name="spring.version" value="3.2.2.RELEASE"/>
 	
@@ -349,6 +349,6 @@
 	<!-- target for local build -->
 	<target name="all" depends="clean, copy, build-html, build-chunks, build-pdf" />
 	<!-- target for CI build -->
-	<target name="all-CI" depends="all, checkout-sample, copy-sample, deploy-manual, javadoc"/>
+	<target name="all-CI" depends="all, checkout-sample, copy-sample, deploy-manual, javadoc" />
 	
 </project>

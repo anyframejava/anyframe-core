@@ -8,7 +8,7 @@
 	<groupId>org.anyframe.plugin</groupId>
 	<artifactId>anyframe-core-pi</artifactId>
 	<packaging>war</packaging>
-	<version>1.5.1</version>
+	<version>1.5.2</version>
 	<name>core</name>
 	
 	<dependencies>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.anyframe</groupId>
 			<artifactId>anyframe-core</artifactId>
-			<version>1.5.1</version>
+			<version>1.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
