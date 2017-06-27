@@ -1,0 +1,9 @@
+#Tue Mar 15 12:31:26 KST 2011
+activeProfiles=/Users/aromy/.m2/settings.xml
+eclipse.preferences.version=1
+fullBuildGoals=process-test-resources
+includeModules=false
+resolveWorkspaceProjects=true
+resourceFilterGoals=process-resources resources\:testResources
+skipCompilerPlugin=true
+version=1
