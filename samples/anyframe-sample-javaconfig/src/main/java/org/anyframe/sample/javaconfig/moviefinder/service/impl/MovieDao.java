@@ -29,7 +29,7 @@ public class MovieDao {
 		System.out.println("Calling constructor of MovieDao");
 	}
 
-	public Movie get(String movieId) {
+	public Movie get(String movieId) throws Exception {
 		Movie movie = new Movie();
 		movie.setMovieId(movieId);
 		movie.setTitle("Avatar");

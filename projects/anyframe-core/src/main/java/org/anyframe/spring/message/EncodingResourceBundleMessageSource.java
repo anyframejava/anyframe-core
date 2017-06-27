@@ -36,7 +36,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 public class EncodingResourceBundleMessageSource extends
 		ResourceBundleMessageSource {
 
-	private final static Logger LOGGER = LoggerFactory
+	private Logger logger = LoggerFactory
 			.getLogger(EncodingResourceBundleMessageSource.class);
 
 	private String defaultEncoding = "UTF-8";
@@ -55,7 +55,7 @@ public class EncodingResourceBundleMessageSource extends
 			return new String(originalMessage.getBytes("8859_1"),
 					defaultEncoding);
 		} catch (UnsupportedEncodingException e) {
-			LOGGER.error("Unsupported Encoding : {}",
+			logger.error("Unsupported Encoding : {}",
 					new Object[] { defaultEncoding }, e);
 			return null;
 		}

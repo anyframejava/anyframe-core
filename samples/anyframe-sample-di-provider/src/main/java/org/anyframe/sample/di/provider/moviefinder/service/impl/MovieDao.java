@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Scope;
 @Scope("prototype")
 public class MovieDao {
 
-	public Movie get(String movieId) {
+	public Movie get(String movieId) throws Exception {
 		Movie movie = new Movie();
 		movie.setTitle("Alice in Wonderland");
 		movie.setDirector("Tim Burton");
@@ -41,12 +41,13 @@ public class MovieDao {
 		return movie;
 	}
 
-	public List<Movie> getPagingList(Movie movie, int pageIndex) {
+	public List<Movie> getPagingList(Movie movie, int pageIndex)
+			throws Exception {
 		Movie result = new Movie();
 		result.setTitle("Alice in Wonderland");
 		result.setDirector("Tim Burton");
 
-		List<Movie> results = new ArrayList<Movie>();
+		ArrayList<Movie> results = new ArrayList<Movie>();
 		results.add(result);
 		return results;
 	}

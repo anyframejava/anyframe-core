@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.anyframe.exception.BaseRuntimeException;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class DigestUtil {
 
 	private DigestUtil() {
-		throw new AssertionError(); 
+		throw new AssertionError();
 	}
 
 	/** The <code>Log</code> instance for this class. */
@@ -59,7 +58,7 @@ public class DigestUtil {
 			result = new String(str.getBytes(charsetName));
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Exception: {}", new Object[] { e });
-			throw new BaseRuntimeException("UnsupportedEncodingException : "
+			throw new RuntimeException("UnsupportedEncodingException : "
 					+ e.getMessage(), e);
 		}
 		return result;

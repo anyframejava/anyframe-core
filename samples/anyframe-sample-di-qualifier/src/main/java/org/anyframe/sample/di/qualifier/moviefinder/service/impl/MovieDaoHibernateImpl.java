@@ -31,7 +31,7 @@ import org.anyframe.sample.di.qualifier.moviefinder.domain.Movie;
 @DaoQualifier(type = "hibernate")
 public class MovieDaoHibernateImpl implements MovieDao {
 
-	public Movie get(String movieId) {
+	public Movie get(String movieId) throws Exception {
 		System.out.println("call get() in MovieDaoHibernateImpl");
 		Movie movie = new Movie();
 		movie.setTitle("Alice in Wonderland");

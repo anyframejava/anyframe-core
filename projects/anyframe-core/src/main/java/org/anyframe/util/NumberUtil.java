@@ -82,13 +82,13 @@ public class NumberUtil {
 		String wholePattern = "^[+-]?[1-9]\\d*$";
 		String realPattern = "^[+-]?([1-9]\\d*\\.\\d*|0?\\.\\d*[1-9]\\d*)$";
 
-		if ("positive".equals(type)) {
+		if (type.equals("positive")) {
 			return Pattern.matches(positivePattern, number);
-		} else if ("negative".equals(type)) {
+		} else if (type.equals("negative")) {
 			return Pattern.matches(negativePattern, number);
-		} else if ("whole".equals(type)) {
+		} else if (type.equals("whole")) {
 			return Pattern.matches(wholePattern, number);
-		} else if ("real".equals(type)) {
+		} else if (type.equals("real")) {
 			return Pattern.matches(realPattern, number);
 		}
 		return false;
@@ -409,7 +409,7 @@ public class NumberUtil {
 	public static boolean hasNumber(String str) {
 		boolean result = false;
 
-		if (StringUtil.isEmpty(str)) {
+		if (str == null || str == "") {
 			return false;
 		}
 		for (int index = 0; index < str.length(); index++) {
@@ -428,7 +428,7 @@ public class NumberUtil {
 	 * NumberUtil.integer2string(14) = '14'
 	 * </pre>
 	 * 
-	 * @param intValue
+	 * @param integer
 	 *            integer type
 	 * @return String string representation of a number
 	 * @deprecated Use {@link #intToString(int)}
@@ -485,7 +485,7 @@ public class NumberUtil {
 	 * @return <code>true</code> if the string is a correctly formatted number
 	 */
 	public static boolean isNumber(String str) {
-		if (StringUtil.isEmpty(str))
+		if (str == null || str == "")
 			return false;
 
 		// cf.) apache commons lang NumberUtils.isNumber - ex.) 875634512312312l
@@ -566,7 +566,7 @@ public class NumberUtil {
 	 */
 	@Deprecated
 	public static int string2integer(String str) {
-		if (StringUtil.isEmptyTrimmed(str))
+		if (str == null || str.trim().length() == 0)
 			return -1;
 
 		return Integer.parseInt(str.trim());
@@ -580,7 +580,7 @@ public class NumberUtil {
 	 * @return the converted BigDecimal
 	 */
 	public static BigDecimal stringToBigDecimal(String number) {
-		if (StringUtil.isEmptyTrimmed(number))
+		if (number == null || number.trim().length() == 0)
 			return BigDecimal.ZERO;
 		else
 			return new BigDecimal(number);
@@ -596,7 +596,7 @@ public class NumberUtil {
 	 * @return the converted int value
 	 */
 	public static int stringToInt(String number, int defaultValue) {
-		if (StringUtil.isEmptyTrimmed(number)) {
+		if (number == null || number.trim().length() == 0) {
 			return defaultValue;
 		}
 		return Integer.parseInt(number.trim());
@@ -626,7 +626,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal substringToBigDecimal(String number,
 			int beginIndex, int size) {
-		if (StringUtil.isEmptyTrimmed(number))
+		if (number == null || number.trim().length() == 0)
 			return BigDecimal.ZERO;
 		else if (number.length() < beginIndex + size)
 			return new BigDecimal(StringUtil.leftPad(number, beginIndex + size,
@@ -649,7 +649,7 @@ public class NumberUtil {
 	 * @return the converted int value
 	 */
 	public static int substringToInt(String number, int beginIndex, int size) {
-		if (StringUtil.isEmptyTrimmed(number))
+		if (number == null || number.trim().length() == 0)
 			return 0;
 		else if (number.length() < beginIndex + size)
 			return Integer.parseInt(StringUtil.leftPad(number, beginIndex
@@ -778,7 +778,7 @@ public class NumberUtil {
 	 *         input
 	 */
 	public static boolean isDigit(String number) {
-		if (StringUtil.isEmptyTrimmed(number)) {
+		if (number == null || number.length() == 0) {
 			return false;
 		}
 		char chars[] = number.toCharArray();

@@ -34,13 +34,13 @@ import org.springframework.stereotype.Repository;
 public class GenreDao extends JdbcDaoSupport {
 
 	@Inject
-	public void setJdbcDaoDataSource(DataSource dataSource) {
+	public void setJdbcDaoDataSource(DataSource dataSource) throws Exception {
 		super.setDataSource(dataSource);
 	}
 
-	public List<Genre> getList() {
+	public List<Genre> getList() throws Exception {
 		String sql = "SELECT GENRE_ID, NAME FROM GENRE ORDER BY NAME";
-		return super.getJdbcTemplate().query(sql,
+		return getJdbcTemplate().query(sql,
 				new BeanPropertyRowMapper<Genre>(Genre.class));
 	}
 

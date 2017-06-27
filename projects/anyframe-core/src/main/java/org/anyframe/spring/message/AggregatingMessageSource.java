@@ -67,22 +67,7 @@ public class AggregatingMessageSource implements MessageSource {
 	 */
 	public String getMessage(MessageSourceResolvable resolvable, Locale locale)
 			throws NoSuchMessageException {
-		for (MessageSource messageSource : messageSources) {
-			try {
-				return messageSource.getMessage(resolvable, locale);
-			} catch (NoSuchMessageException e) {
-				logger.debug(String.format(
-						"Message Source [%s] does not contain message. %s",
-						messageSource.getClass().getName(), e.getMessage()));
-			}
-		}
-
-		String[] codes = resolvable.getCodes();
-		if (codes == null) {
-			codes = new String[0];
-		}
-		throw new NoSuchMessageException(
-				codes.length > 0 ? codes[codes.length - 1] : null, locale);
+		throw new UnsupportedOperationException("Not supported");
 	}
 
 	/**

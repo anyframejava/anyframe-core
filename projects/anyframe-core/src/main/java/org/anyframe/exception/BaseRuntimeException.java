@@ -29,7 +29,7 @@ import org.springframework.context.MessageSource;
  * @author JongHoon Kim
  * @author Jongpil Park
  * 
- * @since 1.5.0
+ * @since 1.0.5
  */
 public class BaseRuntimeException extends RuntimeException implements
 		DetailMessageSource {

@@ -42,29 +42,29 @@ public class MovieDao extends QueryServiceDaoSupport {
 		super.setQueryService(queryService);
 	}
 
-	public void create(Movie movie) {
+	public void create(Movie movie) throws Exception {
 		movie.setMovieId("MV-" + System.currentTimeMillis());
-		super.create("createMovie", movie);
+		create("createMovie", movie);
 	}
 
-	public void remove(String movieId) {
+	public void remove(String movieId) throws Exception {
 		Movie movie = new Movie();
 		movie.setMovieId(movieId);
-		super.remove("removeMovie", movie);
+		remove("removeMovie", movie);
 	}
 
-	public void update(Movie movie) {
-		super.update("updateMovie", movie);
+	public void update(Movie movie) throws Exception {
+		update("updateMovie", movie);
 	}
 
-	public Movie get(String movieId) {
+	public Movie get(String movieId) throws Exception {
 		Movie movie = new Movie();
 		movie.setMovieId(movieId);
-		return super.findByPk("findMovieByPk", movie);
+		return (Movie) findByPk("findMovieByPk", movie);
 	}
 
-	public Page getPagingList(Movie movie, int pageIndex) {
-		return super.findListWithPaging("findMovieList", movie, pageIndex,
-				pageSize, pageUnit);
+	public Page getPagingList(Movie movie, int pageIndex) throws Exception {
+		return this.findListWithPaging("findMovieList", movie, pageIndex, pageSize,
+				pageUnit);
 	}
 }

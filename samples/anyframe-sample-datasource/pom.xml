@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.anyframe</groupId>
 	<artifactId>anyframe-sample-datasource</artifactId>
-	<version>1.5.0</version>
+	<version>1.5.0.RC1</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.anyframe</groupId>
 			<artifactId>anyframe-core</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.0.RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -130,7 +130,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<version>1.2.15</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>

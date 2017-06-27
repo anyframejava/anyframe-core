@@ -51,7 +51,7 @@ public class DateUtil {
 	// =============================================
 
 	/** Date pattern */
-	public static final String DATE_PATTERN_DASH = "yyyy-MM-dd"; 
+	public static final String DATE_PATTERN_DASH = "yyyy-MM-dd";
 
 	/** Time pattern */
 	public static final String TIME_PATTERN = "HH:mm";
@@ -190,7 +190,7 @@ public class DateUtil {
 	 *            date(yyyy-MM-dd)
 	 * @param abbreviation
 	 *            if <code>true</code>, return in abbreviation.
-	 * @param locale
+	 * @param Locale
 	 *            locale
 	 * @return String day of week
 	 */
@@ -739,6 +739,8 @@ public class DateUtil {
 	 * 
 	 * @param date
 	 *            string of the time (HH:mm)
+	 * @param pattern
+	 *            time pattern
 	 * @return return <code>true</code>if valid time and <code>false</code> if
 	 *         not.
 	 */
@@ -751,8 +753,6 @@ public class DateUtil {
 	 * 
 	 * @param date
 	 *            string of the time
-	 * @param pattern
-	 *            time pattern
 	 * @return return <code>true</code>if valid time and <code>false</code> if
 	 *         not.
 	 */
@@ -888,9 +888,9 @@ public class DateUtil {
 	 * 
 	 * @param str
 	 *            string
-	 * @param basePattern
+	 * @param pattern
 	 *            original date format
-	 * @param wantedPattern
+	 * @param pattern
 	 *            converted date format
 	 * @deprecated Use {@link #convertDateFormat(String, String, String)}
 	 */
@@ -1439,7 +1439,8 @@ public class DateUtil {
 	 * @return {@link java.sql.Timestamp} object (current date)
 	 */
 	public static Timestamp getCurrentSQLTimestamp() {
-		return new Timestamp(new Date().getTime());
+		Timestamp timestamp = new Timestamp(new Date().getTime());
+		return timestamp;
 	}
 
 	/**
