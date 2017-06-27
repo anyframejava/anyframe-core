@@ -22,17 +22,14 @@
 	<welcome-file-list>
 		<welcome-file>/anyframe.jsp</welcome-file>
 	</welcome-file-list>
-	
 	<error-page>
 		<error-code>401</error-code>
 		<location>/sample/common/unauthorized.jsp</location>
-		
 	</error-page>	
 	<error-page>
 		<error-code>403</error-code>
 		<location>/sample/common/accessdenied.jsp</location>
 	</error-page>
-	
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>
