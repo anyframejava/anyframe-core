@@ -25,11 +25,12 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.anyframe.exception.InitializationException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
-import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -105,12 +106,12 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 
 	private CacheManager cacheManager;
 
-	private static String TABLE = "MESSAGE_SOURCE";
-	private static String KEY = "KEY";
-	private static String LANGUAGE = "LANGUAGE";
-	private static String COUNTRY = "COUNTRY";
-	private static String TEXT = "TEXT";
-	private static String UNDEFINED = "UNDEFINED";
+	private static String table = "MESSAGE_SOURCE";
+	private static String key = "KEY";
+	private static String language = "LANGUAGE";
+	private static String country = "COUNTRY";
+	private static String text = "TEXT";
+	private final static String UNDEFINED = "UNDEFINED";
 
 	private Locale defaultLocale;
 
@@ -133,7 +134,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	 * <li>in case of lazyLoad, read db messages.</li>
 	 * </ol>
 	 */
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		try {
 			// 1. get jdbcTemplate for finding db messages
 			this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -146,19 +147,19 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 
 			// 4. get table information
 			if (messageTable != null) {
-				tableName = this.messageTable.getProperty("table", TABLE);
-				keyColumn = this.messageTable.getProperty("key.column", KEY);
+				tableName = this.messageTable.getProperty("table", table);
+				keyColumn = this.messageTable.getProperty("key.column", key);
 				languageColumn = this.messageTable.getProperty(
-						"language.column", LANGUAGE);
+						"language.column", language);
 				countryColumn = this.messageTable.getProperty("country.column",
-						COUNTRY);
-				textColumn = this.messageTable.getProperty("text.column", TEXT);
+						country);
+				textColumn = this.messageTable.getProperty("text.column", text);
 			} else {
-				tableName = TABLE;
-				keyColumn = KEY;
-				languageColumn = LANGUAGE;
-				countryColumn = COUNTRY;
-				textColumn = TEXT;
+				tableName = table;
+				keyColumn = key;
+				languageColumn = language;
+				countryColumn = country;
+				textColumn = text;
 			}
 
 			if (!lazyLoad) {
@@ -174,8 +175,8 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 						.getCacheConfiguration().setMaxEntriesLocalHeap(0);
 				readMessages(true);
 			}
-		} catch (Exception e) {
-			throw e;
+		} catch (Exception ex) {
+			throw new InitializationException("Fail to initialize databaseMessageSource", ex);
 		}
 	}
 
@@ -294,7 +295,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	private List<Message> readMessages(final boolean caching) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
-		sql.append(keyColumn).append(" as key, ");
+		sql.append(keyColumn).append(", ");
 		sql.append(languageColumn).append(" as language, ");
 		sql.append(countryColumn).append(" as country, ");
 		sql.append(textColumn).append(" as text ");
@@ -304,7 +305,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 				new RowMapper<Message>() {
 					public Message mapRow(ResultSet rs, int idx)
 							throws SQLException {
-						String keyValue = rs.getString("key");
+						String keyValue = rs.getString(keyColumn);
 						String languageValue = rs.getString("language");
 						String countryValue = rs.getString("country");
 						String textValue = rs.getString("text");
@@ -334,7 +335,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	private String readMessage(String code, Locale locale) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
-		sql.append(keyColumn).append(" as key, ");
+		sql.append(keyColumn).append(", ");
 		sql.append(languageColumn).append(" as language, ");
 		sql.append(countryColumn).append(" as country, ");
 		sql.append(textColumn).append(" as text ");
@@ -351,7 +352,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 					new RowMapper<String>() {
 						public String mapRow(ResultSet rs, int idx)
 								throws SQLException {
-							String keyValue = rs.getString("key");
+							String keyValue = rs.getString(keyColumn);
 							String languageValue = rs.getString("language");
 							String countryValue = rs.getString("country");
 							String textValue = rs.getString("text");

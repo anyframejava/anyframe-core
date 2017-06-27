@@ -23,8 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * annotation interface for anyframe web mvc  
- *
+ * annotation interface for anyframe web mvc
+ * 
  * @author jaehyoung.eum
  * @since 1.0.4
  */

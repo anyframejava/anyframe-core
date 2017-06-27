@@ -108,12 +108,12 @@ public class ExceptionMgmtTest {
 			sampleService.testBaseException(5);
 		} catch (BaseException be) {
 			messages = be.getMessages();
-			assertEquals("BaseRTException without message",
-					messages.getUserMessage());
-			assertEquals("BaseRTException without message",
-					messages.getSolution());
-			assertEquals("BaseRTException without message",
-					messages.getReason());
+			assertEquals("BaseRTException without message", messages
+					.getUserMessage());
+			assertEquals("BaseRTException without message", messages
+					.getSolution());
+			assertEquals("BaseRTException without message", messages
+					.getReason());
 		}
 
 		// 6. throw new BaseException (constructor is consist of message)

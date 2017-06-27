@@ -16,10 +16,12 @@
 package org.anyframe.pagination;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.anyframe.exception.BaseRuntimeException;
 
 /**
  * Data type class that is used for pagination handling.
@@ -35,7 +37,7 @@ public class Page implements Serializable {
 	public static final Page EMPTY_PAGE = new Page(Collections.EMPTY_LIST, 1,
 			0, "", "");
 
-	private Collection<?> objects;
+	private List<?> objects;
 
 	private int currentPage;
 
@@ -59,7 +61,7 @@ public class Page implements Serializable {
 
 	}
 
-	public Page(Collection<?> objects, int currentPage, int totalCount) {
+	public Page(List<?> objects, int currentPage, int totalCount) {
 		this.objects = objects;
 		this.totalCount = totalCount;
 		this.maxPage = pagesize == 0 ? this.totalCount : (totalCount - 1)
@@ -69,17 +71,17 @@ public class Page implements Serializable {
 		this.endUnitPage = beginUnitPage + (pageunit - 1);
 	}
 
-	public Page(Collection<?> objects, int currentPage, int totalCount,
+	public Page(List<?> objects, int currentPage, int totalCount,
 			String condition, String search) {
 		this(objects, currentPage, totalCount);
 		this.condition = condition;
 		this.search = search;
 	}
 
-	public Page(Collection<?> objects, int currentPage, int totalCount,
+	public Page(List<?> objects, int currentPage, int totalCount,
 			int pageunit, int pagesize) {
 		if (pageunit <= 0 || pagesize <= 0) {
-			throw new RuntimeException(
+			throw new BaseRuntimeException(
 					"Page unit or page size should be over 0.");
 		}
 		this.pageunit = pageunit;
@@ -93,11 +95,11 @@ public class Page implements Serializable {
 		this.endUnitPage = beginUnitPage + (pageunit - 1);
 	}
 
-	public Collection<?> getList() {
+	public List<?> getList() {
 		return objects;
 	}
 
-	public void setList(Collection<?> val) {
+	public void setList(List<?> val) {
 		// not called.
 	}
 
@@ -193,7 +195,7 @@ public class Page implements Serializable {
 	}
 
 	public String getCurrentPageStr() {
-		return (new Integer(this.currentPage)).toString();
+		return new Integer(this.currentPage).toString();
 	}
 
 	public void setCurrentPageStr(String str) {
@@ -224,11 +226,11 @@ public class Page implements Serializable {
 		this.pagesize = pagesize;
 	}
 
-	public Collection<?> getObjects() {
+	public List<?> getObjects() {
 		return objects;
 	}
 
-	public void setObjects(Collection<?> objects) {
+	public void setObjects(List<?> objects) {
 		this.objects = objects;
 	}
 

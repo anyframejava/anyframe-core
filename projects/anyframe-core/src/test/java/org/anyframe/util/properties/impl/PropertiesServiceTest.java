@@ -50,7 +50,7 @@ public class PropertiesServiceTest {
 	 * @throws Exception
 	 *             fail to test
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPropertiesService() throws Exception {
 		// 1. get tokens_on_multiple_lines which defined properties file using
@@ -58,51 +58,47 @@ public class PropertiesServiceTest {
 		assertNotNull(propertiesService.getString("tokens_on_multiple_lines"));
 		// 2. get number.double which defined properties file using Properties
 		// Service.
-		assertEquals(new Double(1234),
-				new Double(propertiesService.getDouble("number.double")));
+		assertEquals(new Double(1234), new Double(propertiesService
+				.getDouble("number.double")));
 		// 3. get number.float which defined properties file using Properties
 		// Service.
-		assertEquals(new Float(1234),
-				new Float(propertiesService.getFloat("number.float")));
+		assertEquals(new Float(1234), new Float(propertiesService
+				.getFloat("number.float")));
 		// 4. get number.int which defined properties file using Properties
 		// Service.
-		assertEquals(new Integer(1234),
-				new Integer(propertiesService.getInt("number.int")));
+		assertEquals(new Integer(1234), new Integer(propertiesService
+				.getInt("number.int")));
 		// 5. get number.long which defined properties file using Properties
 		// Service.
-		assertEquals(new Long(1234),
-				new Long(propertiesService.getLong("number.long")));
+		assertEquals(new Long(1234), new Long(propertiesService
+				.getLong("number.long")));
 		// 6. get tokens_on_a_line which defined properties file using
 		// Properties Service.
 		assertEquals(2, propertiesService.getVector("tokens_on_a_line").size());
 
 		// 7. get tokens_on_a_line which doesn't defined properties file using
 		// Properties Service.
-		assertEquals(
-				0,
-				propertiesService.getVector("notexist_tokens_on_a_line",
-						new Vector()).size());
+		assertEquals(0, propertiesService.getVector(
+				"notexist_tokens_on_a_line", new Vector()).size());
 
 		// 8. get AAAA defined as property element with default value.
 		assertNotNull(propertiesService.getString("AAAA", ""));
 		// 9. With default value, get number.double which defined properties
 		// file using Properties Service.
-		assertEquals(new Double(1234),
-				new Double(propertiesService.getDouble("number.double", 123.4)));
+		assertEquals(new Double(1234), new Double(propertiesService.getDouble(
+				"number.double", 123.4)));
 		// 10. With default value, get number.float which defined properties
 		// file using Properties Service.
-		assertEquals(
-				new Float(1234),
-				new Float(propertiesService.getFloat("number.float",
-						(float) 123.4)));
+		assertEquals(new Float(1234), new Float(propertiesService.getFloat(
+				"number.float", (float) 123.4)));
 		// 11. With default value, get number.int which defined properties file
 		// using Properties Service.
-		assertEquals(new Integer(1234),
-				new Integer(propertiesService.getInt("number.int", 123)));
+		assertEquals(new Integer(1234), new Integer(propertiesService.getInt(
+				"number.int", 123)));
 		// 12. With default value, get number.long which defined properties file
 		// using Properties Service.
-		assertEquals(new Long(1234),
-				new Long(propertiesService.getLong("number.long", 1234)));
+		assertEquals(new Long(1234), new Long(propertiesService.getLong(
+				"number.long", 1234)));
 
 		// 13. get the list of the keys contained in the configuration
 		// repository.
@@ -125,8 +121,8 @@ public class PropertiesServiceTest {
 
 		// 18. get special characters
 		System.out.println(propertiesService.getString("special.test"));
-		assertEquals("~!@#$%^&*()_+;{}|",
-				propertiesService.getString("special.test"));
+		assertEquals("~!@#$%^&*()_+;{}|", propertiesService
+				.getString("special.test"));
 
 		System.out.println(propertiesService.getString("special.test.sign"));
 	}
@@ -149,24 +145,24 @@ public class PropertiesServiceTest {
 
 		// 1. get tokens_on_multiple_lines which defined properties file using
 		// Properties Service.
-		assertEquals("first token",
-				propertiesService.getString("tokens_on_multiple_lines"));
+		assertEquals("first token", propertiesService
+				.getString("tokens_on_multiple_lines"));
 		// 2. get number.double which defined properties file using Properties
 		// Service.
-		assertEquals(new Double(1234),
-				new Double(propertiesService.getDouble("number.double")));
+		assertEquals(new Double(1234), new Double(propertiesService
+				.getDouble("number.double")));
 
 		// 3. refresh property resources
 		propertiesService.refreshPropertyFiles();
 
 		// 4. get tokens_on_multiple_lines which defined properties file using
 		// Properties Service.
-		assertEquals("first token",
-				propertiesService.getString("tokens_on_multiple_lines"));
+		assertEquals("first token", propertiesService
+				.getString("tokens_on_multiple_lines"));
 		// 5. get number.double which defined properties file using Properties
 		// Service.
-		assertEquals(new Double(1234),
-				new Double(propertiesService.getDouble("number.double")));
+		assertEquals(new Double(1234), new Double(propertiesService
+				.getDouble("number.double")));
 
 	}
 }

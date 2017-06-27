@@ -22,20 +22,20 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
 /**
- * <p>Utility methods focusing on type inspection, particularly with regard to
- * generics.</p>
- *
- * We changed
- * org.apache.commons.lang.reflect.TypeUtils
- * Class into
+ * <p>
+ * Utility methods focusing on type inspection, particularly with regard to
+ * generics.
+ * </p>
+ * 
+ * We changed org.apache.commons.lang.reflect.TypeUtils Class into
  * org.anyframe.util.TypeUtils
- *
+ * 
  * @author James Carman
  * @author Matt Benson
  * @author modified by Changje Kim
  */
 public class TypeUtil {
-	
+
 	private TypeUtil() {
 		throw new AssertionError();
 	}
@@ -46,11 +46,15 @@ public class TypeUtil {
 	 * not know the runtime type of <code>type</code>: if you know you have a
 	 * {@link Class} instance, it is already raw; if you know you have a
 	 * {@link ParameterizedType}, its raw type is only a method call away.
-	 * @param enclosingType context
-	 * @param type to read
+	 * 
+	 * @param enclosingType
+	 *            context type
+	 * @param type
+	 *            type to read
 	 * @return Class<?>
 	 */
-	// original code stolen from commons [proxy]'s 2.0 branch, then kneaded until firm
+	// original code stolen from commons [proxy]'s 2.0 branch, then kneaded
+	// until firm
 	public static Class<?> getRawType(Type enclosingType, Type type) {
 		if (type instanceof Class<?>) {
 			// it is raw, no problem
@@ -61,18 +65,18 @@ public class TypeUtil {
 			return (Class<?>) ((ParameterizedType) type).getRawType();
 		}
 		if (type instanceof TypeVariable<?>) {
-//			Validate
-//					.notNull(enclosingType,
-//							"Cannot get raw type of TypeVariable without enclosing type");
+			// Validate
+			// .notNull(enclosingType,
+			// "Cannot get raw type of TypeVariable without enclosing type");
 			// resolve the variable against the enclosing type, hope for the
 			// best (casting)
 			return (Class<?>) resolveVariable(enclosingType,
 					(TypeVariable<?>) type);
 		}
 		if (type instanceof GenericArrayType) {
-//			Validate
-//					.notNull(enclosingType,
-//							"Cannot get raw type of GenericArrayType without enclosing type");
+			// Validate
+			// .notNull(enclosingType,
+			// "Cannot get raw type of GenericArrayType without enclosing type");
 			// not included in original code, but not too difficult: just have
 			// to get raw component type...
 			Class<?> rawComponentType = getRawType(enclosingType,
@@ -88,11 +92,13 @@ public class TypeUtil {
 	 * We plan to return Class<?> from the top-level call, as evidenced by the
 	 * cast in the above method, but to handle recursion and falling back up the
 	 * graph, as it were, return Type
+	 * 
 	 * @param enclosingType
 	 * @param typeVar
-     * @return Type resolved
+	 * @return Type resolved type
 	 */
-	// original code stolen from commons [proxy]'s 2.0 branch, then kneaded until firm
+	// original code stolen from commons [proxy]'s 2.0 branch, then kneaded
+	// until firm
 	private static Type resolveVariable(Type enclosingType,
 			TypeVariable<?> typeVar) {
 		if (enclosingType instanceof ParameterizedType) {
@@ -133,7 +139,7 @@ public class TypeUtil {
 				}
 			}
 
-		    return result;
+			return result;
 		}
 
 		return null;

@@ -19,9 +19,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -60,7 +58,8 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testGetRandomStringByCharset() {
+	public void testGetRandomStringByCharset()
+			throws UnsupportedEncodingException {
 		assertNotNull(StringUtil.getRandomStringByCharset(20, "UTF-8"));
 		System.out.println(StringUtil.getRandomStringByCharset(20, "UTF-8"));
 
@@ -77,19 +76,13 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testGetContainsCount() {
-		assertEquals(3, StringUtil.getContainsCount("Anyframe Java Test", "a"));
-		assertEquals(0,
-				StringUtil.getContainsCount("Anyframe Java Test", "test"));
-		assertEquals(1,
-				StringUtil.getContainsCount("Anyframe Java Test", "Test"));
+	public void testCountMatches() {
+		assertEquals(3, StringUtil.countMatches("Anyframe Java Test", "a"));
+		assertEquals(0, StringUtil.countMatches("Anyframe Java Test", "test"));
+		assertEquals(1, StringUtil.countMatches("Anyframe Java Test", "Test"));
 
-		assertEquals(3, StringUtil.getContainsCount("Anyframe Java Test",
+		assertEquals(3, StringUtil.countMatches("Anyframe Java Test",
 				new char[] { 'a' }));
-		assertEquals(
-				4,
-				StringUtil.getContainsCount("Anyframe Java Test", new char[] {
-						'a', 'T' }));
 	}
 
 	@Test
@@ -130,17 +123,17 @@ public class StringUtilTest {
 
 	@Test
 	public void testGetContainsCountIgnoreCase() {
-		assertEquals(4, StringUtil.getContainsCountIgnoreCase(
-				"Anyframe Java Test", new char[] { 'a' }));
-		assertEquals(6, StringUtil.getContainsCountIgnoreCase(
-				"Anyframe Java Test", new char[] { 'a', 'T' }));
+		assertEquals(4, StringUtil.countMatchesIgnoreCase("Anyframe Java Test",
+				new char[] { 'a' }));
+		assertEquals(0, StringUtil.countMatchesIgnoreCase("Anyframe Java Test",
+				new char[] { 'a', 'T' }));
 
-		assertEquals(4, StringUtil.getContainsCountIgnoreCase(
-				"Anyframe Java Test", "a"));
-		assertEquals(1, StringUtil.getContainsCountIgnoreCase(
-				"Anyframe Java Test", "test"));
-		assertEquals(1, StringUtil.getContainsCountIgnoreCase(
-				"Anyframe Java Test", "Test"));
+		assertEquals(4,
+				StringUtil.countMatchesIgnoreCase("Anyframe Java Test", "a"));
+		assertEquals(1,
+				StringUtil.countMatchesIgnoreCase("Anyframe Java Test", "test"));
+		assertEquals(1,
+				StringUtil.countMatchesIgnoreCase("Anyframe Java Test", "Test"));
 	}
 
 	@Test
@@ -160,11 +153,11 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testGetCutString() {
+	public void testLeft() {
 		assertEquals("Anyframe Java ",
-				StringUtil.getCutString("Anyframe Java Test", 14));
+				StringUtil.left("Anyframe Java Test", 14));
 		assertEquals("Anyframe Java Test",
-				StringUtil.getCutString("Anyframe Java Test", 18));
+				StringUtil.left("Anyframe Java Test", 18));
 	}
 
 	@Test
@@ -253,31 +246,15 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testSplitHead() {
-		assertEquals("Any", StringUtil.splitHead("Anyframe Java Test", 3));
-		assertEquals("Anyframe", StringUtil.splitHead("Anyframe Java Test", 8));
-
-		assertEquals("", StringUtil.splitHead(null, 3));
-	}
-
-	@Test
-	public void testSplitTail() {
-		assertEquals("est", StringUtil.splitTail("Anyframe Java Test", 3));
-		assertEquals("Test", StringUtil.splitTail("Anyframe Java Test", 4));
-
-		assertEquals("", StringUtil.splitTail(null, 3));
-	}
-
-	@Test
 	public void testRemoveAll() {
 		assertEquals("Anyfrme  Test",
-				StringUtil.removeAll("Anyframe Java Test", "Java"));
+				StringUtil.deleteAny("Anyframe Java Test", "Java"));
 		assertEquals("Anyfrme Jv est",
-				StringUtil.removeAll("Anyframe Java Test", "aT"));
+				StringUtil.deleteAny("Anyframe Java Test", "aT"));
 		assertEquals("frame ava Test",
-				StringUtil.removeAll("Anyframe Java Test", "AnyJ"));
+				StringUtil.deleteAny("Anyframe Java Test", "AnyJ"));
 		assertEquals("AnyfrmeJvTes",
-				StringUtil.removeAll("Anyframe\nJava\nTest\n", "at\n"));
+				StringUtil.deleteAny("Anyframe\nJava\nTest\n", "at\n"));
 	}
 
 	@Test
@@ -305,12 +282,12 @@ public class StringUtilTest {
 
 	@Test
 	public void testNullToString() {
-		assertEquals("", StringUtil.null2str(null));
-		assertEquals("", StringUtil.null2str("    "));
+		assertEquals("", StringUtil.nullToString(null));
+		assertEquals("", StringUtil.nullToString("    "));
 		assertEquals("Anyframe Java Test",
-				StringUtil.null2str("Anyframe Java Test"));
-		assertEquals("empty", StringUtil.null2str(null, "empty"));
-		assertEquals("empty", StringUtil.null2str("    ", "empty"));
+				StringUtil.nullToString("Anyframe Java Test"));
+		assertEquals("empty", StringUtil.nullToString(null, "empty"));
+		assertEquals("empty", StringUtil.nullToString("    ", "empty"));
 	}
 
 	@Test
@@ -358,17 +335,17 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testReplaceHtmlEscape() {
+	public void testHtmlEscape() {
 		assertEquals("&lt;html&gt;Anyframe Java Test&lt;html&gt;",
-				StringUtil.replaceHtmlEscape("<html>Anyframe Java Test<html>"));
+				StringUtil.htmlEscape("<html>Anyframe Java Test<html>"));
 	}
 
 	@Test
-	public void testRemoveEscapeChar() {
+	public void testHtmlUnescape() {
 		assertEquals(
 				"<html>Anyframe Java Test<html>",
 				StringUtil
-						.removeEscapeChar("&lt;html&gt;Anyframe Java Test&lt;html&gt;"));
+						.htmlUnescape("&lt;html&gt;Anyframe Java Test&lt;html&gt;"));
 	}
 
 	@Test
@@ -380,16 +357,19 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testTrim() {
-		assertEquals("AnyframeJava", StringUtil.trim("Anyframe*Java", "*"));
-		assertEquals("AnyframeJava", StringUtil.trim("Anyframe**Java", "**"));
-		assertEquals("AnyframeJava", StringUtil.trim("Anyframe---Java", "---"));
+	public void testDeleteFirstMatches() {
+		assertEquals("AnyframeJava",
+				StringUtil.deleteFirstMatches("Anyframe*Java", "*"));
+		assertEquals("AnyframeJava",
+				StringUtil.deleteFirstMatches("Anyframe**Java", "**"));
+		assertEquals("AnyframeJava",
+				StringUtil.deleteFirstMatches("Anyframe---Java", "---"));
 		assertEquals("AnyframeJava**Test",
-				StringUtil.trim("Anyframe**Java**Test", "**"));
+				StringUtil.deleteFirstMatches("Anyframe**Java**Test", "**"));
 		assertEquals("Anyframe*Java**Test",
-				StringUtil.trim("Anyframe**Java**Test", "*"));
+				StringUtil.deleteFirstMatches("Anyframe**Java**Test", "*"));
 		assertEquals("Anyframe**Java**Test",
-				StringUtil.trim("Anyframe**Java**Test", "__"));
+				StringUtil.deleteFirstMatches("Anyframe**Java**Test", "__"));
 	}
 
 	@Test
@@ -404,11 +384,11 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testGetStringArray() {
+	public void testTokenizeToStringArray() {
 		assertArrayEquals(new String[] { "Anyframe/Java/Test" },
-				StringUtil.getStringArray("Anyframe/Java/Test", "-"));
+				StringUtil.tokenizeToStringArray("Anyframe/Java/Test", "-"));
 		assertArrayEquals(new String[] { "Anyframe", "Java", "Test" },
-				StringUtil.getStringArray("Anyframe/Java/Test", "/"));
+				StringUtil.tokenizeToStringArray("Anyframe/Java/Test", "/"));
 	}
 
 	@Test
@@ -421,7 +401,6 @@ public class StringUtilTest {
 	@Test
 	public void testIsEmpty() {
 		assertTrue(StringUtil.isEmpty(""));
-		assertFalse(StringUtil.isEmpty("   "));
 		assertTrue(StringUtil.isEmpty(null));
 		assertFalse(StringUtil.isEmpty("abc"));
 	}
@@ -432,63 +411,48 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testReplace() {
-		assertEquals("Anyframe|Common",
-				StringUtil.replace("Anyframe/Common", "/", "|"));
-		assertEquals("Anyframe.Java",
-				StringUtil.replace("Anyframe_Java", "_", "."));
-		assertEquals("Anyframe.Java_Test",
-				StringUtil.replace("Anyframe_Java_Test", "_", "."));
-		assertEquals("AnyframeUtilavaTest",
-				StringUtil.replace("AnyframeJavaTest", "Java", "Util"));
-		assertEquals("JavaUtilTest",
-				StringUtil.replace(".UtilTest", ".", "Java"));
+	public void testContainsMaxOccurences() {
+		assertTrue(StringUtil.containsMaxOccurences("abbbbc", "4"));
+		assertFalse(StringUtil.containsMaxOccurences("abbcbb", "4"));
+		assertTrue(StringUtil.containsMaxOccurences("letter", "2"));
+		assertTrue(StringUtil.containsMaxOccurences("000012300000", "5"));
+
+		assertFalse(StringUtil.containsMaxOccurences(null, "5"));
 	}
 
 	@Test
-	public void testContainsMaxSequence() {
-		assertTrue(StringUtil.containsMaxSequence("abbbbc", "4"));
-		assertFalse(StringUtil.containsMaxSequence("abbcbb", "4"));
-		assertTrue(StringUtil.containsMaxSequence("letter", "2"));
-		assertTrue(StringUtil.containsMaxSequence("000012300000", "5"));
-
-		assertFalse(StringUtil.containsMaxSequence(null, "5"));
-	}
-
-	@Test
-	public void testContainsInvalidChars() {
-		assertTrue(StringUtil.containsInvalidChars("abc*abc", "*"));
-		assertTrue(StringUtil.containsInvalidChars("abc-abc", "*/-"));
-		assertFalse(StringUtil.containsInvalidChars("abcabc", "*/-"));
-		assertTrue(StringUtil.containsInvalidChars("abc-abc", new char[] { '*',
+	public void testContainsAny() {
+		assertTrue(StringUtil.containsAny("abc*abc", "*"));
+		assertTrue(StringUtil.containsAny("abc-abc", "*/-"));
+		assertFalse(StringUtil.containsAny("abcabc", "*/-"));
+		assertTrue(StringUtil.containsAny("abc-abc",
+				new char[] { '*', '/', '-' }));
+		assertFalse(StringUtil.containsAny("abc_edf_123", new char[] { '*',
 				'/', '-' }));
-		assertFalse(StringUtil.containsInvalidChars("abc_edf_123", new char[] {
-				'*', '/', '-' }));
-		assertTrue(StringUtil.containsInvalidChars("abc/", new char[] { '*',
-				'/' }));
+		assertTrue(StringUtil.containsAny("abc/", new char[] { '*', '/' }));
 
-		assertTrue(StringUtil.containsInvalidChars(null, "*"));
+		assertFalse(StringUtil.containsAny(null, "*"));
 	}
 
 	@Test
-	public void testIsAlphaNumeric() {
-		assertTrue(StringUtil.isAlphaNumeric("abcfds"));
-		assertTrue(StringUtil.isAlphaNumeric("127652"));
-		assertTrue(StringUtil.isAlphaNumeric("abc12fds"));
-		assertFalse(StringUtil.isAlphaNumeric("abc12_fds"));
-		assertFalse(StringUtil.isAlphaNumeric("abc12fds'"));
-		assertFalse(StringUtil.isAlphaNumeric(null));
-		assertFalse(StringUtil.isAlphaNumeric(""));
+	public void testIsLetterOrDigit() {
+		assertTrue(StringUtil.isLetterOrDigit("abcfds"));
+		assertTrue(StringUtil.isLetterOrDigit("127652"));
+		assertTrue(StringUtil.isLetterOrDigit("abc12fds"));
+		assertFalse(StringUtil.isLetterOrDigit("abc12_fds"));
+		assertFalse(StringUtil.isLetterOrDigit("abc12fds'"));
+		assertFalse(StringUtil.isLetterOrDigit(null));
+		assertFalse(StringUtil.isLetterOrDigit(""));
 	}
 
 	@Test
-	public void testIsAlpha() {
-		assertTrue(StringUtil.isAlpha("abcfds"));
-		assertFalse(StringUtil.isAlpha("127652"));
-		assertFalse(StringUtil.isAlpha("abc12fds"));
-		assertFalse(StringUtil.isAlpha("abc12_fds"));
-		assertFalse(StringUtil.isAlpha(null));
-		assertFalse(StringUtil.isAlpha(""));
+	public void testIsLetter() {
+		assertTrue(StringUtil.isLetter("abcfds"));
+		assertFalse(StringUtil.isLetter("127652"));
+		assertFalse(StringUtil.isLetter("abc12fds"));
+		assertFalse(StringUtil.isLetter("abc12_fds"));
+		assertFalse(StringUtil.isLetter(null));
+		assertFalse(StringUtil.isLetter(""));
 	}
 
 	@Test
@@ -512,349 +476,79 @@ public class StringUtilTest {
 		}
 	}
 
-	/**
-	 * 이하 Backward Compatibility 테스트 케이스
-	 */
-
-	/**
-	 * [Flow #-1] Positive Case : encode password
-	 */
 	@Test
-	public void testEncodePasswordBC() {
-		// 1. try to encode password and compare
-		String encoded1 = StringUtil.encodePassword("password", "MD5");
-		String encoded2 = StringUtil.encodePassword("password", "MD5");
-		assertEquals(encoded1, encoded2);
-		// 2. define not available algorithm 'MD6 MessageDigest'
-		try {
-			String encoded3 = StringUtil.encodePassword("password", "MD6");
-			// assertEquals("password", encoded3);
-			fail("NoSuchAlgorithmException expected");
-		} catch (Exception e) {
-			assertTrue(e.getMessage().contains(
-					"MD6 MessageDigest not available"));
-		}
+	public void testConvertStringCharset() throws UnsupportedEncodingException {
+		assertEquals("Anyframe Java Test", StringUtil.convertStringCharset(
+				"Anyframe Java Test", "US-ASCII"));
+		assertEquals("Anyframe Java Test", StringUtil.convertStringCharset(
+				"Anyframe Java Test", "ISO-8859-1"));
+
+		String s = new String("Anyframe Java Test".getBytes("UTF-16LE"));
+		assertEquals(s, StringUtil.convertStringCharset("Anyframe Java Test",
+				"UTF-16LE"));
 	}
 
-	/**
-	 * [Flow #-2] Positive Case : encode string
-	 */
-	@Test
-	public void testEncodeStringBC() {
-		// 1. try to encode string and decode that.
-		String encoded = StringUtil.encodeString("password");
-		String decoded = StringUtil.decodeString(encoded);
-		assertEquals("password", decoded);
+	@Test(expected = UnsupportedEncodingException.class)
+	public void testConvertStringCharsetException()
+			throws UnsupportedEncodingException {
+		assertEquals("Anyframe Java Test",
+				StringUtil.convertStringCharset("Anyframe Java Test", "iso"));
 	}
 
-	/**
-	 * [Flow #-3] Positive Case : decode string
-	 */
 	@Test
-	public void testDecodeStringBC() {
-		// 1. try to encode password and compare decoded string and original
-		// string
-		String encoded = StringUtil.encodeString("password");
-		String decoded = StringUtil.decodeString(encoded);
-		assertEquals("password", decoded);
+	public void testIsUserFormat() {
+		assertTrue(StringUtil.isUserFormat("123,456", "###,###"));
+		assertFalse(StringUtil.isUserFormat("123,45A", "###,###"));
+		assertFalse(StringUtil.isUserFormat("123456", "###,###"));
+		assertTrue(StringUtil.isUserFormat("123-456", "###-###"));
+		assertTrue(StringUtil.isUserFormat("123.456", "###.###"));
+		assertTrue(StringUtil.isUserFormat("123**456", "###**###"));
+		assertTrue(StringUtil.isUserFormat("123^456", "###^###"));
+		assertTrue(StringUtil.isUserFormat("123?456", "###?###"));
+		assertTrue(StringUtil.isUserFormat("123(456", "###(###"));
 	}
 
-	/**
-	 * [Flow #-4] Positive Case : swap first letter
-	 */
 	@Test
-	public void testSwapFirstLetterCaseBC() {
-		// 1. In case, first letter is small letter. try to swap.
-		String swapped = StringUtil.swapFirstLetterCase("password");
-		assertEquals("Password", swapped);
-		// 2. In case, first letter is big letter. try to swap.
-		swapped = StringUtil.swapFirstLetterCase("PASSWORD");
-		assertEquals("pASSWORD", swapped);
+	public void testIsRegexPatternMatch() {
+		assertTrue(StringUtil.isRegexPatternMatch("aaaaab", "a*b"));
+		assertFalse(StringUtil.isRegexPatternMatch("cabbbb", "a*b"));
 	}
 
-	/**
-	 * [Flow #-5] Positive, Negative Case : trim string with a specific string
-	 */
 	@Test
-	public void testTrimBC() {
-		// 1. try to trim when trimmed string is 'trim'
-		String trimmed = StringUtil.trim("passwordtrimpassword", "trim");
-		assertEquals("passwordpassword", trimmed);
-		// 2. try to trim when trimmed string is ','
-		trimmed = StringUtil.trim("passwordtrimpassword", ",");
-		assertEquals("passwordtrimpassword", trimmed);
+	public void testIsPatternMatching() {
+		assertTrue(StringUtil.isPatternMatching("abc-def", "*-*"));
+		assertFalse(StringUtil.isPatternMatching("abc", "*-*"));
 	}
 
-	/**
-	 * [Flow #-6] Positive, Negative Case : get last string
-	 */
 	@Test
-	public void testGetLastStringBC() {
-		// 1. get last string when token is ','
-		String trimmed = StringUtil.getLastString("password,password", ",");
-		assertEquals("password", trimmed);
-
-		// 2. get last string when original doesn't have token.
-		trimmed = StringUtil.getLastString("password,password", "*");
-		assertEquals("password,password", trimmed);
+	public void testIsPatternInclude() {
+		assertTrue(StringUtil.isPatternInclude("asdf@5456", "s"));
+		assertFalse(StringUtil.isPatternInclude("asdf5456", "s"));
+		assertTrue(StringUtil.isPatternInclude("@", "s"));
+		assertFalse(StringUtil.isPatternInclude("1234가나다라", "s"));
+		assertTrue(StringUtil.isPatternInclude("가나다@", "s"));
+		assertTrue(StringUtil.isPatternInclude("-", "s"));
+		assertTrue(StringUtil.isPatternInclude("ㅁㅁ--4", "s"));
+		assertTrue(StringUtil.isPatternInclude("한", "k"));
+		assertFalse(StringUtil.isPatternInclude("eng", "k"));
+		assertTrue(StringUtil.isPatternInclude("eng가", "k"));
+		assertTrue(StringUtil.isPatternInclude("123가32", "k"));
+		assertFalse(StringUtil.isPatternInclude("eng32", "k"));
+		assertTrue(StringUtil.isPatternInclude("eng가", "k"));
+		assertTrue(StringUtil.isPatternInclude("가나다", "k"));
+		assertFalse(StringUtil.isPatternInclude("", "k"));
+		assertTrue(StringUtil.isPatternInclude("asdfsdfsdf", "e"));
+		assertTrue(StringUtil.isPatternInclude("asdfs1dfsdf", "e"));
+		assertTrue(StringUtil.isPatternInclude("123123123", "n"));
+		assertTrue(StringUtil.isPatternInclude("asdfs1dfsdf", "n"));
 	}
 
-	/**
-	 * [Flow #-7] Positive, Negative Case : get string array.
-	 */
 	@Test
-	public void testGetStringArrayBC() {
-		// 1. when original string has token, get string array.
-		String[] strings = StringUtil.getStringArray("password,password", ",");
-		assertEquals(2, strings.length);
-		// 2. when original string doesn't have token, get string array.
-		strings = StringUtil.getStringArray("password", ",");
-		assertEquals(1, strings.length);
-	}
-
-	/**
-	 * [Flow #-8] Positive Case : check which string is not empty or not
-	 */
-	@Test
-	public void testIsNotEmptyBC() {
-		// 1. check which string is not empty or not
-		assertTrue(StringUtil.isNotEmpty("passwordtrimpassword"));
-	}
-
-	/**
-	 * [Flow #-9] Positive Case : check which string is empty or not
-	 */
-	@Test
-	public void testIsEmptyBC() {
-		// 1. check empty string
-		assertTrue(StringUtil.isEmpty(""));
-		// 2. check null
-		assertTrue(StringUtil.isEmpty(null));
-	}
-
-	/**
-	 * [Flow #-10] Positive Case : replace some string of original string to
-	 * specific string
-	 */
-	@Test
-	public void testReplaceBC() {
-		// 1. try to replace ',' to '-'
-		String replaced = StringUtil.replace("password,password", ",", "-");
-		assertEquals("password-password", replaced);
-	}
-
-	/**
-	 * [Flow #-11] Positive Case : converts the string representation of a
-	 * number to integer type
-	 */
-	@Test
-	public void testString2integerBC() {
-		// 1. converts the string representation of a number to integer type
-		assertEquals(1, StringUtil.string2integer("1"));
-	}
-
-	/**
-	 * [Flow #-12] Positive Case : converts integer type to String
-	 */
-	@Test
-	public void testInteger2stringBC() {
-		// 1. converts integer type to String
-		assertEquals("1", StringUtil.integer2string(1));
-	}
-
-	/**
-	 * [Flow #-13] Positive, Negative Case : check that str matches the pattern
-	 * string
-	 * 
-	 * @throws Exception
-	 *             fail to test
-	 */
-	@Test
-	public void testIsPatternMatchingBC() throws Exception {
-		// 1. str matches the pattern
-		String str = "abc-def";
-		String pattern = "*-*";
-		assertTrue(StringUtil.isPatternMatching(str, pattern));
-		// 2. str doesn't match the pattern
-		str = "abc";
-		assertTrue(!StringUtil.isPatternMatching(str, pattern));
-	}
-
-	/**
-	 * [Flow #-14] Positive, Negative Case : check that string contains a
-	 * sequence of the same character
-	 */
-	@Test
-	public void testContainsMaxSequenceBC() {
-		// 1. string contains 2 sequences of the same character
-		String str = "password";
-		String maxSeqNumber = "2";
-		assertTrue(StringUtil.containsMaxSequence(str, maxSeqNumber));
-		// 2. string contains 3 sequences of the same character
-		str = "my000";
-		maxSeqNumber = "3";
-		assertTrue(StringUtil.containsMaxSequence(str, maxSeqNumber));
-		// 3. string doesn't contain any sequence of the same character
-		str = "abbbbc";
-		maxSeqNumber = "5";
-		assertTrue(!StringUtil.containsMaxSequence(str, maxSeqNumber));
-		// 4. string is null
-		str = null;
-		assertTrue(!StringUtil.containsMaxSequence(str, maxSeqNumber));
-	}
-
-	/**
-	 * [Flow #-15] Positive, Negative Case : check that string contains a
-	 * sequence of the same character
-	 */
-	@Test
-	public void testContainsInvalidCharsBC() {
-		// 1. string is empty.
-		String str = "";
-		char[] invalidChars = new char[] { '*', '%' };
-		assertTrue(!StringUtil.containsInvalidChars(str, invalidChars));
-		// 2. string is null.
-		str = null;
-		assertTrue(!StringUtil.containsInvalidChars(str, invalidChars));
-		// 3. invalid chars doesn't defined.
-		str = "";
-		assertTrue(!StringUtil.containsInvalidChars(str, new char[] {}));
-		// 4. string has invalid chars.
-		str = "x*yz";
-		assertTrue(StringUtil.containsInvalidChars(str, invalidChars));
-		assertTrue(StringUtil.containsInvalidChars(str, "yz"));
-	}
-
-	/**
-	 * [Flow #-16] Positive, Negative Case : check that String contains only
-	 * unicode letters or digits
-	 */
-	@Test
-	public void testIsAlphaNumericBC() {
-		// 1. string is empty
-		String str = "";
-		assertTrue(!StringUtil.isAlphaNumeric(str));
-		// 2. string is null
-		str = null;
-		assertTrue(!StringUtil.isAlphaNumeric(str));
-		// 3. strigng consist of only alphabet
-		str = "abc";
-		assertTrue(StringUtil.isAlphaNumeric(str));
-		// 4. string has a special character
-		str = "a-bc";
-		assertTrue(!StringUtil.isAlphaNumeric(str));
-		// 5. strigng consist of alphabet and number
-		str = "abc4";
-		assertTrue(StringUtil.isAlphaNumeric(str));
-	}
-
-	/**
-	 * [Flow #-17] Positive, Negative Case : check that String contains only
-	 * unicode letters
-	 */
-	@Test
-	public void testIsAlphaBC() {
-		// 1. string is empty
-		String str = "";
-		assertTrue(!StringUtil.isAlpha(str));
-		// 2. string is null
-		str = null;
-		assertTrue(!StringUtil.isAlpha(str));
-		// 3. strigng consist of only alphabet
-		str = "abc";
-		assertTrue(StringUtil.isAlpha(str));
-		// 4. string has a special character
-		str = "a-bc";
-		assertTrue(!StringUtil.isAlpha(str));
-		// 5. strigng consist of alphabet and number
-		str = "abc4";
-		assertTrue(!StringUtil.isAlpha(str));
-	}
-
-	/**
-	 * [Flow #-18] Positive, Negative Case : check that String contains only
-	 * unicode digits
-	 */
-	@Test
-	public void testIsNumericBC() {
-		// 1. string is empty
-		String str = "";
-		assertTrue(!StringUtil.isNumeric(str));
-		// 2. string is null
-		str = null;
-		assertTrue(!StringUtil.isNumeric(str));
-		// 3. strigng consist of only alphabet
-		str = "abc";
-		assertTrue(!StringUtil.isNumeric(str));
-		// 4. string has a special character
-		str = "a-bc";
-		assertTrue(!StringUtil.isNumeric(str));
-		// 5. strigng consist of alphabet and number
-		str = "abc4";
-		assertTrue(!StringUtil.isNumeric(str));
-		// 5. strigng consist of only number
-		str = "1234";
-		assertTrue(StringUtil.isNumeric(str));
-	}
-
-	/**
-	 * [Flow #-19] Positive, Negative Case : Reverses a String
-	 */
-	@Test
-	public void testReverseBC() {
-		// 1. string is null
-		String str = null;
-		assertNull(StringUtil.reverse(str));
-		// 1. string is 'bat'
-		str = "bat";
-		assertEquals("tab", StringUtil.reverse(str));
-	}
-
-	/**
-	 * [Flow #-20] Positive, Negative Case : fill a String
-	 */
-	@Test
-	public void testFillStringBC() {
-		String originalStr = "1";
-		char ch = '0';
-		int cipers = 6;
-		assertEquals("000001", StringUtil.fillString(originalStr, ch, cipers));
-
-		originalStr = "12345";
-		cipers = 4;
-		assertNull(StringUtil.fillString(originalStr, ch, cipers));
+	public void testIsRegexPatternInclude() {
+		assertTrue(StringUtil.isRegexPatternInclude("cabbbb", "a*b"));
+		assertTrue(StringUtil.isRegexPatternInclude("cccc123123abbbb", "a*b"));
+		assertTrue(StringUtil.isRegexPatternInclude("000abbbbsdfs12", "a*b"));
+		assertTrue(StringUtil.isRegexPatternInclude("abc", "."));
 
 	}
-
-	/**
-	 * [Flow #-21] Positive, Negative Case : Determine whether a (trimmed)
-	 * string is empty
-	 */
-	@Test
-	public void testIsEmptyTrimmedBC() {
-		// 1. string is null
-		String str = null;
-		assertTrue(StringUtil.isEmptyTrimmed(str));
-
-		// 2. string is empty string
-		str = "    ";
-		assertTrue(StringUtil.isEmptyTrimmed(str));
-
-		// 3. string is not empty string
-		str = "not empty";
-		assertFalse(StringUtil.isEmptyTrimmed(str));
-	}
-
-	/**
-	 * [Flow #-22] Positive, Negative Case : Return token list with separator
-	 */
-	@Test
-	public void testGetTokensBC() {
-		// 1. original string
-		String str = "a,b,c,d";
-
-		// 2. get token list
-		assertEquals(4, StringUtil.getTokens(str).size());
-	}
-
 }

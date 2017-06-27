@@ -17,13 +17,13 @@ package org.anyframe.util.file;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * File Search Utility
  * 
  * @author SoYon Lim
  */
-@SuppressWarnings("unchecked")
 public abstract class FileUtil {
 	private FileUtil() {
 	}
@@ -37,23 +37,17 @@ public abstract class FileUtil {
 	 * @param extName
 	 *            extension name
 	 * @return ArrayList all the files which is having given extension
-	 * @throws Exception
-	 *             fail to get files.
 	 */
-	public static ArrayList getFiles(String dir, String extName)
-			throws Exception {
-		ArrayList dirList = new ArrayList();
+	public static List<String> getFiles(String dir, String extName) {
+		List<File> dirList = new ArrayList<File>();
 		dirList = getDirs(dirList, dir);
 
 		final ExtensionFileFilter filter = new ExtensionFileFilter(extName);
 
-		ArrayList fileList = new ArrayList();
+		List<String> fileList = new ArrayList<String>();
 		for (int i = 0; i < dirList.size(); i++) {
-			File currentDir = (File) dirList.get(i);
+			File currentDir = dirList.get(i);
 			final File[] files = currentDir.listFiles(filter);
-
-			// if (files == null)
-			// continue;
 
 			for (int j = 0; j < files.length; j++)
 				fileList.add(currentDir.getAbsolutePath() + File.separator
@@ -71,11 +65,8 @@ public abstract class FileUtil {
 	 * @param dir
 	 *            parent directory path
 	 * @return ArrayList all sub-directories
-	 * @throws Exception
-	 *             fail to get directories.
 	 */
-	public static ArrayList getDirs(ArrayList dirList, String dir)
-			throws Exception {
+	public static List<File> getDirs(List<File> dirList, String dir) {
 		final File parentDir = new File(dir);
 		dirList.add(parentDir);
 

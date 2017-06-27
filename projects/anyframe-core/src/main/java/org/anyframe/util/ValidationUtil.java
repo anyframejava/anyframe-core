@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * Provides function that checks if a specific resident registration number,
  * business registration number, corporate registration number, or alien
  * registration number is valid in terms of format or regular expressions.
- *
+ * 
  * @author HyunJung Jeong
  */
 public class ValidationUtil {
@@ -34,14 +34,15 @@ public class ValidationUtil {
 
 	/**
 	 * Check if input resident registration number is valid.
-	 *
-	 * @param regno resident registration number
+	 * 
+	 * @param regno
+	 *            resident registration number
 	 * @return if resident registration number is valid, return
-	 * <code>true</code>, if invalid, return <code>false</code>.
+	 *         <code>true</code>, if invalid, return <code>false</code>.
 	 */
 	public static boolean isResidentRegNumber(String regno) {
 		String pattern = "^([0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12][0-9]|3[01]))-([1|2|3|4][0-9]{6})$";
-		if (!isRegexPatternMatch(regno, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(regno, pattern)) {
 			return false;
 		}
 		String replaceno = regno.replace("-", "");
@@ -54,7 +55,8 @@ public class ValidationUtil {
 			if (StringUtil.isEmpty(replaceno.substring(index, index + 1))) {
 				return false;
 			}
-			sum += (replaceno.charAt(index) - 0x30) * (bases.charAt(index) - 0x30);
+			sum += (replaceno.charAt(index) - 0x30)
+					* (bases.charAt(index) - 0x30);
 		}
 
 		int mod = sum % 11;
@@ -63,15 +65,16 @@ public class ValidationUtil {
 
 	/**
 	 * Check if corporate registration number is valid.
-	 *
-	 * @param corpNumber corporate registration number
+	 * 
+	 * @param corpNumber
+	 *            corporate registration number
 	 * @return if corporate registration number is valid, return
-	 * <code>true</code>, if invalid, return <code>false</code>.
+	 *         <code>true</code>, if invalid, return <code>false</code>.
 	 */
 	public static boolean isIncorpCertNumber(String corpNumber) {
 		String pattern = "^((\\d{6})-(\\d{7}))$";
 
-		if (!isRegexPatternMatch(corpNumber, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(corpNumber, pattern)) {
 			return false;
 		}
 		String replaceno = corpNumber.replace("-", "");
@@ -79,10 +82,12 @@ public class ValidationUtil {
 		int checkSum = 0;
 
 		for (int index = 0; index < 12; index++) {
-			checkSum += (Character.getNumericValue(replaceno.charAt(index)) * ((index % 2 == 0) ? 1 : 2));
+			checkSum += (Character.getNumericValue(replaceno.charAt(index)) * ((index % 2 == 0) ? 1
+					: 2));
 		}
 
-		if ((10 - (checkSum % 10)) % 10 == Character.getNumericValue(replaceno.charAt(12)))
+		if ((10 - (checkSum % 10)) % 10 == Character.getNumericValue(replaceno
+				.charAt(12)))
 			return true;
 		else
 			return false;
@@ -90,15 +95,16 @@ public class ValidationUtil {
 
 	/**
 	 * Check if input business registration number is valid.
-	 *
-	 * @param bizNumber business registration number
+	 * 
+	 * @param bizNumber
+	 *            business registration number
 	 * @return if business registration number is valid, return
-	 * <code>true</code>, if invalid, return <code>false</code>.
+	 *         <code>true</code>, if invalid, return <code>false</code>.
 	 */
 	public static boolean isBizRegNumber(String bizNumber) {
 		String pattern = "^((\\d{3})-(\\d{2})-(\\d{5}))$";
 
-		if (!isRegexPatternMatch(bizNumber, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(bizNumber, pattern)) {
 			return false;
 		}
 		String replaceno = bizNumber.replace("-", "");
@@ -112,7 +118,8 @@ public class ValidationUtil {
 
 		checkSum += (Character.getNumericValue(replaceno.charAt(8)) * 5) / 10;
 
-		if ((10 - (checkSum % 10)) % 10 == Character.getNumericValue(replaceno.charAt(9)))
+		if ((10 - (checkSum % 10)) % 10 == Character.getNumericValue(replaceno
+				.charAt(9)))
 			return true;
 		else
 			return false;
@@ -120,87 +127,91 @@ public class ValidationUtil {
 
 	/**
 	 * Check if input phone number is valid.
-	 *
-	 * @param phoneNumber phone number
+	 * 
+	 * @param phoneNumber
+	 *            phone number
 	 * @return if phone number is valid, return <code>true</code>, if invalid,
-	 * return <code>false</code>.
+	 *         return <code>false</code>.
 	 */
 	public static boolean isTelephoneNumber(String phoneNumber) {
 		String pattern = "^\\d{2,4}-\\d{3,4}-\\d{4}$";
 
-		if (!isRegexPatternMatch(phoneNumber, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(phoneNumber, pattern)) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
 
 	/**
 	 * Check if input cell phone number is valid.
-	 *
-	 * @param cellPhoneNumber cell phone number
+	 * 
+	 * @param cellPhoneNumber
+	 *            cell phone number
 	 * @return if cell phone number is valid, return <code>true</code>, if
-	 * invalid, return <code>false</code>.
+	 *         invalid, return <code>false</code>.
 	 */
 	public static boolean isCellphoneNumber(String cellPhoneNumber) {
 		String pattern = "^(01(0|1|6|7|8|9))-\\d{3,4}-\\d{4}$";
 
-		if (!isRegexPatternMatch(cellPhoneNumber, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(cellPhoneNumber, pattern)) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
 
 	/**
 	 * Check if input email address is valid.
-	 *
-	 * @param email email address
+	 * 
+	 * @param email
+	 *            email address
 	 * @return if email address if valid, return <code>true</code>, if invalid,
-	 * return <code>false</code>.
+	 *         return <code>false</code>.
 	 */
 	public static boolean isEmailAddress(String email) {
 		String pattern = "([\\w-\\.]+)@((?:[\\w]+\\.)+)([a-zA-Z]{2,4})$";
 
-		if (!isRegexPatternMatch(email, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(email, pattern)) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
 
 	/**
-	 * Check if input care number is valid.
-	 *
-	 * @param cardNumber card number
+	 * Check if input card number is valid.
+	 * 
+	 * @param cardNumber
+	 *            card number
 	 * @return if card number is valid, return <code>true</code>, if invalid,
-	 * return <code>false</code>.
+	 *         return <code>false</code>.
 	 */
 	public static boolean isCardNumber(String cardNumber) {
 
 		String pattern = "^\\d{4}[\\s\\-]?\\d{4}[\\s\\-]?\\d{4}[\\s\\-]?\\d{4}$";
-		if (!isRegexPatternMatch(cardNumber, pattern)) {
+		if (!StringUtil.isRegexPatternMatch(cardNumber, pattern)) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
 
 	/**
 	 * Check if string length exists between minimum and maximum length
-	 *
-	 * @param str string to be checked
-	 * @param min minimum length
-	 * @param max maximum length
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param min
+	 *            minimum length
+	 * @param max
+	 *            maximum length
 	 * @return if string is between minimum and maximum length, return
-	 * <code>true</code>
+	 *         <code>true</code>
 	 */
 	public static boolean isRangeLength(String str, int min, int max) {
-		if (StringUtil.getLength(str) >= min && StringUtil.getLength(str) <= max)
+		if (StringUtil.getLength(str) >= min
+				&& StringUtil.getLength(str) <= max)
 			return true;
 		else
 			return false;
@@ -209,15 +220,19 @@ public class ValidationUtil {
 	/**
 	 * Check if string length is between minimum and maximum length when
 	 * calculated in bytes.
-	 *
-	 * @param str string to be checked
-	 * @param min minimum length
-	 * @param max maximum length
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param min
+	 *            minimum length
+	 * @param max
+	 *            maximum length
 	 * @return if string is between minimum and maximum length, return
-	 * <code>true</code>
+	 *         <code>true</code>
 	 */
 	public static boolean isRangeByteLength(String str, int min, int max) {
-		if (StringUtil.getByteLength(str) >= min && StringUtil.getByteLength(str) <= max)
+		if (StringUtil.getByteLength(str) >= min
+				&& StringUtil.getByteLength(str) <= max)
 			return true;
 		else
 			return false;
@@ -227,45 +242,56 @@ public class ValidationUtil {
 	 * Perform escaping in advance so that metacharacters [\^$.|?*+() that are
 	 * meaningfully used are not used in a way different from the user's
 	 * intentions.
-	 *
-	 * @param orgPattern original string
+	 * 
+	 * @param orgPattern
+	 *            original string
 	 * @return escaping string
 	 */
 	private static String regexMetaCharEscape(String orgPattern) {
-		return orgPattern.replaceAll("([\\[\\\\\\^\\$\\.\\|\\?\\*\\+\\(\\)])", "\\\\$1");
+		return orgPattern.replaceAll("([\\[\\\\\\^\\$\\.\\|\\?\\*\\+\\(\\)])",
+				"\\\\$1");
 	}
 
 	/**
 	 * Check if letter matching format defined by user has come in.
-	 *
+	 * 
 	 * <pre>
 	 * ValidationUtil.isUserFormat(&quot;123-456&quot;, &quot;###-###&quot;) = true;
 	 * ValidationUtil.isUserFormat(&quot;123.456&quot;, &quot;###.###&quot;) = true;
 	 * </pre>
-	 *
-	 * @param str string to be checked
-	 * @param pattern user defined pattern
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param pattern
+	 *            user defined pattern
 	 * @return in case of string matching pattern that is defined by user,
-	 * <code>true</code>
+	 *         <code>true</code>
+	 * @deprecated Use @link {@link StringUtil#isUserFormat(String)}
 	 */
+	@Deprecated
 	public static boolean isUserFormat(String str, String pattern) {
 		String metaChange = regexMetaCharEscape(pattern);
-		String regexChange = metaChange.replaceAll("#", "\\\\d").replaceAll("S", "[a-zA-Z]");
+		String regexChange = metaChange.replaceAll("#", "\\\\d").replaceAll(
+				"S", "[a-zA-Z]");
 		return str.matches(regexChange);
 	}
 
 	/**
 	 * Check if the entire pattern matches the formal input pattern.
-	 *
+	 * 
 	 * <pre>
 	 * ValidationUtil.isRegexPatternMatch(&quot;aaaaab&quot;, &quot;a*b&quot;) = true;
 	 * ValidationUtil.isRegexPatternMatch(&quot;cabbbb&quot;, &quot;a*b&quot;) = false;
 	 * </pre>
-	 *
-	 * @param str pattern to be checked
-	 * @param pattern regular expression pattern
+	 * 
+	 * @param str
+	 *            pattern to be checked
+	 * @param pattern
+	 *            regular expression pattern
 	 * @return if the input string matches the formal pattern, <code>true</code>
+	 * @deprecated Use @link {@link StringUtil#isRegexPatternMatch(String)}
 	 */
+	@Deprecated
 	public static boolean isRegexPatternMatch(String str, String pattern) {
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(str);
@@ -274,17 +300,21 @@ public class ValidationUtil {
 
 	/**
 	 * Check if the input string matches the formal pattern. Change * to ..
-	 *
+	 * 
 	 * <pre>
 	 * ValidationUtil.isPatternMatching("abc-def', "*-*") 	= true
 	 * ValidationUtil.isPatternMatching("abc", "*-*") 	    = false
 	 * </pre>
-	 *
-	 * @param str pattern to be checked
-	 * @param pattern pattern String
+	 * 
+	 * @param str
+	 *            pattern to be checked
+	 * @param pattern
+	 *            pattern String
 	 * @return if the entered string matches the formal pattern,
-	 * <code>true</code>
+	 *         <code>true</code>
+	 * @deprecated Use @link {@link StringUtil#isUserFormat(String)}
 	 */
+	@Deprecated
 	public static boolean isPatternMatching(String str, String pattern) {
 		// if url has wild key, i.e. "*", convert it to ".*" so that we can
 		// perform regex matching
@@ -300,7 +330,7 @@ public class ValidationUtil {
 	/**
 	 * Check if input string matches the given filter pattern. s of sken is
 	 * special character. k is korean. e is english. n is number.
-	 *
+	 * 
 	 * <pre>
 	 * ValidationUtil.isPatternInclude(&quot;asdf@5456&quot;, &quot;s&quot;) = true;
 	 * ValidationUtil.isPatternInclude(&quot;-&quot;, &quot;s&quot;) = true;
@@ -311,11 +341,15 @@ public class ValidationUtil {
 	 * ValidationUtil.isPatternInclude(&quot;123123123&quot;, &quot;n&quot;) = true;
 	 * ValidationUtil.isPatternInclude(&quot;asdfs1dfsdf&quot;, &quot;n&quot;) = true;
 	 * </pre>
-	 *
-	 * @param str string to be checked
-	 * @param param filter pattern
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param param
+	 *            filter pattern
 	 * @return if input string pattern matches filter, <code>true</code>
+	 * @deprecated Use @link {@link StringUtil#isPatternInclude(String)}
 	 */
+	@Deprecated
 	public static boolean isPatternInclude(String str, String param) {
 
 		if (param.indexOf("s") >= 0) {
@@ -335,15 +369,19 @@ public class ValidationUtil {
 
 	/**
 	 * Check if some strings match pattern.
-	 *
+	 * 
 	 * <pre>
 	 * ValidationUtil.isRegexPatternInclude("cabbbb", "a*b"))  = true
 	 * </pre>
-	 *
-	 * @param str string to be checked
-	 * @param pattern regular expression pattern
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param pattern
+	 *            regular expression pattern
 	 * @return if input sting matches the formal pattern, <code>true</code>
+	 * @deprecated Use @link {@link StringUtil#isRegexPatternInclude(String)}
 	 */
+	@Deprecated
 	public static boolean isRegexPatternInclude(String str, String pattern) {
 		return isRegexPatternMatch(str, ".*" + pattern + ".*");
 	}

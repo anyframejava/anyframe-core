@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util.properties.impl;
 
 import org.springframework.beans.factory.BeanCreationException;
@@ -32,12 +32,12 @@ public class PropertiesServiceNegativeTest extends TestCase {
 	private ConfigurableApplicationContext context = null;
 
 	/**
-	 * [Flow #-1] Negative Case : try to initialize PropertiesService with
-	 * wrong configuration (empty key).
+	 * [Flow #-1] Negative Case : try to initialize PropertiesService with wrong
+	 * configuration (empty key).
 	 * 
 	 * @throws Exception
 	 *             fail to test
-	 */	
+	 */
 	public void testEmptyKey() throws Exception {
 		try {
 			String[] confFiles = new String[] {
@@ -45,21 +45,20 @@ public class PropertiesServiceNegativeTest extends TestCase {
 					"classpath*:/context-common.xml" };
 			context = new FileSystemXmlApplicationContext(confFiles, false);
 			context.refresh();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			assertTrue(e instanceof BeanCreationException);
 			assertTrue(e.getMessage().indexOf(
 					"key is essential attribute in a <element>") != -1);
 		}
 	}
-	
+
 	/**
-	 * [Flow #-2] Negative Case : try to initialize PropertiesService with
-	 * wrong configuration (not exist properties file).
+	 * [Flow #-2] Negative Case : try to initialize PropertiesService with wrong
+	 * configuration (not exist properties file).
 	 * 
 	 * @throws Exception
 	 *             fail to test
-	 */		
+	 */
 	public void testNotExistPropertiesFile() throws Exception {
 		try {
 			String[] confFiles = new String[] {
@@ -67,11 +66,10 @@ public class PropertiesServiceNegativeTest extends TestCase {
 					"classpath*:/context-common.xml" };
 			context = new FileSystemXmlApplicationContext(confFiles, false);
 			context.refresh();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			assertTrue(e instanceof BeanCreationException);
 			assertTrue(e.getMessage().indexOf(
 					"Fail to initialize a Properties Service") != -1);
 		}
-	}	
+	}
 }

@@ -272,8 +272,8 @@ public class MultiActionSimpleFormController extends SimpleFormController {
 					Object command = getCommand(request);
 					ServletRequestDataBinder binder = bindAndValidate(request,
 							command);
-					BindException errors = new BindException(binder
-							.getBindingResult());
+					BindException errors = new BindException(
+							binder.getBindingResult());
 					return processFormSubmission(request, response, command,
 							errors);
 				} catch (HttpSessionRequiredException ex) {
@@ -441,7 +441,7 @@ public class MultiActionSimpleFormController extends SimpleFormController {
 	private boolean isExceptionHandlerMethod(Method method) {
 		return (isHandlerMethod(method)
 				&& method.getParameterTypes().length == 3 && Throwable.class
-				.isAssignableFrom(method.getParameterTypes()[2]));
+					.isAssignableFrom(method.getParameterTypes()[2]));
 	}
 
 	/**
@@ -620,8 +620,8 @@ public class MultiActionSimpleFormController extends SimpleFormController {
 				bind(request, command);
 			}
 
-			Object returnValue = method.invoke(this.delegate, params
-					.toArray(new Object[params.size()]));
+			Object returnValue = method.invoke(this.delegate,
+					params.toArray(new Object[params.size()]));
 			return massageReturnValueIfNecessary(returnValue);
 		} catch (InvocationTargetException ex) {
 			// The handler method threw an exception.
@@ -744,8 +744,7 @@ public class MultiActionSimpleFormController extends SimpleFormController {
 				return massageReturnValueIfNecessary(returnValue);
 			} catch (InvocationTargetException ex2) {
 				anyframeLogger
-						.error(
-								"Original exception overridden by exception handling failure",
+						.error("Original exception overridden by exception handling failure",
 								ex);
 				ReflectionUtils.rethrowException(ex2.getTargetException());
 			} catch (Exception ex2) {

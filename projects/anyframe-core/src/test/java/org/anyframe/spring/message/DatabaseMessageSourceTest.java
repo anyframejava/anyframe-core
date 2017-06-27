@@ -120,7 +120,7 @@ public class DatabaseMessageSourceTest {
 			fail("Unable to initialize database for test. " + e);
 		}
 	}
-	
+
 	/**
 	 * clear cache
 	 */
@@ -163,7 +163,7 @@ public class DatabaseMessageSourceTest {
 
 		// 4. sleep for expiring cached data
 		Thread.sleep(2000);
-		
+
 		// 5. get message with arguments
 		assertEquals(
 				"Fail to get message (message id = 'error.moviefinderimpl.get', locale = 'ko_KR')",

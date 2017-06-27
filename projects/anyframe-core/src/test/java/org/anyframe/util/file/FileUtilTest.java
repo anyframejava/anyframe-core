@@ -15,7 +15,9 @@
  */
 package org.anyframe.util.file;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -26,21 +28,20 @@ import junit.framework.TestCase;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-@SuppressWarnings("unchecked")
 public class FileUtilTest extends TestCase {
 
 	public void testSearchFile() throws Exception {
-		ArrayList list = FileUtil.getFiles("./src/test/resources", "xml");
+		List<String> list = FileUtil.getFiles("./src/test/resources", "xml");
 		assertTrue(list.size() > 0);
 	}
 
 	public void testSearchNonExistingFile() throws Exception {
-		ArrayList list = FileUtil.getFiles("./src/test/resources", "xml???");
+		List<String> list = FileUtil.getFiles("./src/test/resources", "xml???");
 		assertTrue(list.size() == 0);
 	}
 
 	public void testSearchDirectory() throws Exception {
-		ArrayList list = new ArrayList();
+		List<File> list = new ArrayList<File>();
 		FileUtil.getDirs(list, "./src/test/resources");
 		assertTrue(list.size() > 0);
 	}
