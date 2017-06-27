@@ -12,11 +12,11 @@ INSERT INTO GENRE VALUES('GR-08','Romance');
 INSERT INTO GENRE VALUES('GR-09','Sci-Fi');
 INSERT INTO GENRE VALUES('GR-10','Thriller');
 
-INSERT INTO MOVIE VALUES('MV-00001','GR-02','Alice in Wonderland','Tim Burton','Johnny Depp',110,'2010-03-04',8000,'sample/images/posters/aliceinwonderland.jpg','Y');
-INSERT INTO MOVIE VALUES('MV-00002','GR-09','Avatar','James Cameron','Sigourney Weaver',100,'2010-02-16',7000,'sample/images/posters/avatar.jpg','Y');
-INSERT INTO MOVIE VALUES('MV-00003','GR-01','Green Zone','Paul Greengrass','Yigal Naor',90,'2010-03-25',7000,'sample/images/posters/greenzone.jpg','Y');
-INSERT INTO MOVIE VALUES('MV-00004','GR-06','Remember Me','Allen Coulter','Caitlyn Rund',115,'2010-03-12',8000,'sample/images/posters/rememberme.jpg','Y');
-INSERT INTO MOVIE VALUES('MV-00005','GR-04','She is Out of My League','Jim Field Smith','Jay Baruchel',118,'2010-03-12',7500,'sample/images/posters/shesoutof.jpg','Y');
-INSERT INTO MOVIE VALUES('MV-00006','GR-05','Shutter Island','Martin Scorsese','Leonardo DiCaprio',95,'2010-03-18',8000,'sample/images/posters/shutterisland.jpg','Y');
+INSERT INTO MOVIE VALUES('MV-00001','GR-02','Alice in Wonderland','Tim Burton','Johnny Depp',110,'2011-03-04',8000,'sample/images/posters/aliceinwonderland.jpg','Y');
+INSERT INTO MOVIE VALUES('MV-00002','GR-09','Avatar','James Cameron','Sigourney Weaver',100,'2011-02-16',7000,'sample/images/posters/avatar.jpg','Y');
+INSERT INTO MOVIE VALUES('MV-00003','GR-01','Green Zone','Paul Greengrass','Yigal Naor',90,'2011-03-25',7000,'sample/images/posters/greenzone.jpg','Y');
+INSERT INTO MOVIE VALUES('MV-00004','GR-06','Remember Me','Allen Coulter','Caitlyn Rund',115,'2011-03-12',8000,'sample/images/posters/rememberme.jpg','Y');
+INSERT INTO MOVIE VALUES('MV-00005','GR-04','She is Out of My League','Jim Field Smith','Jay Baruchel',118,'2011-03-12',7500,'sample/images/posters/shesoutof.jpg','Y');
+INSERT INTO MOVIE VALUES('MV-00006','GR-05','Shutter Island','Martin Scorsese','Leonardo DiCaprio',95,'2011-03-18',8000,'sample/images/posters/shutterisland.jpg','Y');
 
 commit;
