@@ -85,7 +85,7 @@
 			        	다음은 HibernateTransactionManager의 속성 정의 파일인 context-transaction-hibernate.xml 의 일부이다.
 			        	 여기에서 sessionFactory property를 정의해 주는데, sessionFactory 설정은 sessionFactory
           				Bean을 참조하고 있음을 알 수 있다. Hibernate의 sessionFactory Bean 설정 방법은 <ulink
-          				url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.6.0/reference/htmlsingle/hibernate.html#hibernate_hibernate_springintegration_property">Hibernate</ulink> 서비스 매뉴얼 내용을
+          				url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.6.1-SNAPSHOT/reference/htmlsingle/hibernate.html#hibernate_hibernate_springintegration_property">Hibernate</ulink> 서비스 매뉴얼 내용을
           				참고한다.
           				<programlisting language="xml"><![CDATA[<bean id="transactionManagerHibernate"
     class=]]><emphasis role="bold">"org.springframework.orm.hibernate3.HibernateTransactionManager"</emphasis><![CDATA[>
@@ -1029,11 +1029,11 @@ TransactionStatus status = transactionService.getTransaction(def);
 								<tbody>
 									<row>
 										<entry align="center">hsqldb.zip</entry>
-										<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/hsqldb.zip">Download</ulink></entry>
+										<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/hsqldb.zip">Download</ulink></entry>
 									</row>										
 									<row>
 										<entry align="center">anyframe-sample-transaction.zip</entry>
-										<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-transaction.zip">Download</ulink></entry>
+										<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-transaction.zip">Download</ulink></entry>
 									</row>
 								</tbody>
 							</tgroup>

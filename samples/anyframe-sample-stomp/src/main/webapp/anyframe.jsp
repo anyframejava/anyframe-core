@@ -22,7 +22,7 @@
                 	<th>Installed Plugins</th>
                     <td>
                     	<ul>
-                            <%-- <li><a href="<c:url value='/coreMovieFinder.do?method=list'/>">Core 1.6.0</a></li> --%>
+                            <%-- <li><a href="<c:url value='/coreMovieFinder.do?method=list'/>">Core 1.5.1</a></li> --%>
                             <li><a href="<c:url value='/wsMovieFinder.do'/>">WebSocket</a></li>
                             <li><a href="<c:url value='/sockJSMovieFinder.do'/>">SockJS</a></li>
                             <li><a href="<c:url value='/stompMovieFinder.do'/>">STOMP</a></li>

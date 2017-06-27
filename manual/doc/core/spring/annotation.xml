@@ -1149,36 +1149,36 @@ public class MovieDao extends JdbcDaoSupport {
 							<tbody>
 								<row>
 									<entry align="center">maven-ant-tasks-2.0.10.jar</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/maven-ant-tasks-2.0.10.jar">Download</ulink></entry>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/maven-ant-tasks-2.0.10.jar">Download</ulink></entry>
 								</row>
 								<row>
 									<entry align="center">anyframe-sample-di-qualifier.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-di-qualifier.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-di-qualifier.zip">Download</ulink>
 									</entry>
 								</row>	
 								<row>
 									<entry align="center">anyframe-sample-di-provider.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-di-provider.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-di-provider.zip">Download</ulink>
 									</entry>
 								</row>																											
 								<row>
 									<entry align="center">anyframe-sample-genericqualifier.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-genericqualifier.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-genericqualifier.zip">Download</ulink>
 									</entry>
 								</row>																											
 								<row>
 									<entry align="center">anyframe-sample-metaannotation.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-metaannotation.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-metaannotation.zip">Download</ulink>
 									</entry>
 								</row>																											
 								<row>
 									<entry align="center">anyframe-sample-orderedautowiring.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-orderedautowiring.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-orderedautowiring.zip">Download</ulink>
 									</entry>
 								</row>																											
 								<row>
 									<entry align="center">anyframe-sample-lazyinit.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.0/reference/sample/anyframe-sample-lazyinit.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.6.1-SNAPSHOT/reference/sample/anyframe-sample-lazyinit.zip">Download</ulink>
 									</entry>
 								</row>																											
 							</tbody>						

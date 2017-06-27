@@ -330,7 +330,7 @@
 			                <row>
 			                	<entry>ContentNegotiatingViewResolver</entry>
 			                	<entry>요청 URL의 파일명이나 HTTP Request의 Accepter 헤더값을 기반으로 View를 판단.자세한 사용법은 본 매뉴얼의 
-			                	<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.1.0/reference/htmlsingle/springrest.html#springrest_restsupport_contentnegotiation">SpringREST Plugin >> Content Negotiation</ulink>을 참조</entry>
+			                	<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.1.1-SNAPSHOT/reference/htmlsingle/springrest.html#springrest_restsupport_contentnegotiation">SpringREST Plugin >> Content Negotiation</ulink>을 참조</entry>
 			                </row>
 						</tbody>
 					</tgroup>

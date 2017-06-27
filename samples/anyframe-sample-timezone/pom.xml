@@ -3,19 +3,19 @@
     <parent>
         <groupId>org.anyframe</groupId>
         <artifactId>anyframe-sample-parent</artifactId>
-        <version>5.3.0</version>
+        <version>5.2.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.anyframe</groupId>
     <artifactId>anyframe-sample-timezone</artifactId>
     <packaging>war</packaging>
-    <version>1.6.0</version>
+    <version>1.5.1-SNAPSHOT</version>
     <name>anyframe-sample-timezone</name>
     <dependencies>
         <dependency>
             <groupId>org.anyframe</groupId>
             <artifactId>anyframe-core</artifactId>
-            <version>1.6.0</version>
+            <version>1.5.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
