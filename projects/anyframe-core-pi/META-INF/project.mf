@@ -3,11 +3,11 @@ anyframe.home=
 
 #=== Project Information ====
 project.name=anyframe-core-pi
-project.home=/Users/soo/DEMO/ats-1.6.1/workspace/anyframe-core-pi
-project.version=1.0
+project.home=/Users/user/workspace/anyframe-core-pi
+project.version=1.0.4
 project.type=web
 project.build=maven
-project.template.home=/Users/soo/.anyframe/templates
+project.template.home=/Users/user/.anyframe/templates
 project.template=default
 project.daoframework=springjdbc
 package.name=org.anyframe.plugin

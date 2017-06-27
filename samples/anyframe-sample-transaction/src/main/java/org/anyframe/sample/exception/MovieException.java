@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,12 @@ package org.anyframe.sample.exception;
 import org.anyframe.exception.BaseException;
 import org.springframework.context.MessageSource;
 
+/**
+ * This MovieException class contains various constructor for different
+ * functionality on this project.
+ * 
+ * @author Sooyeon Park
+ */
 public class MovieException extends BaseException {
 
 	private static final long serialVersionUID = 1L;
@@ -70,7 +76,6 @@ public class MovieException extends BaseException {
 	public MovieException(MessageSource messageSource, String messageKey,
 			Throwable wrappedException) {
 		super(messageSource, messageKey, wrappedException);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -97,7 +102,7 @@ public class MovieException extends BaseException {
 	public MovieException(String message, Throwable exception) {
 		super(message, null, exception);
 	}
-	
+
 	/**
 	 * Constructor with a message key and an exception.
 	 * 
@@ -106,5 +111,5 @@ public class MovieException extends BaseException {
 	 */
 	public MovieException(String message) {
 		super(message);
-	}	
+	}
 }

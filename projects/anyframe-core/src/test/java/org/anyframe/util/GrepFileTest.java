@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,18 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util;
 
 import java.io.File;
 import java.util.regex.Pattern;
 
-import org.anyframe.util.file.GrepFile;
-
-
 import junit.framework.TestCase;
 
+import org.anyframe.util.file.GrepFile;
+
 /**
+ * For testing functions what GrepFile supports, there are some test scenarios
+ * in this TestCase.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
@@ -37,8 +39,8 @@ public class GrepFileTest extends TestCase {
 
 	public void testFindPattern() throws Exception {
 		File file = new File("./src/test/resources/anyframe-test.properties");
-		String[] stringArray = GrepFile.findPattern(file, Pattern
-				.compile("[a-zA-Z]*_[a-zA-Z]*"), 0);
+		String[] stringArray = GrepFile.findPattern(file,
+				Pattern.compile("[a-zA-Z]*_[a-zA-Z]*"), 0);
 		assertTrue(stringArray.length > 0);
 	}
 

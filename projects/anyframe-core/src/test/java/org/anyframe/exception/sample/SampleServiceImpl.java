@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.exception.sample;
 
 import java.util.Locale;
@@ -23,12 +23,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 
-
 /**
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-public class SampleServiceImpl implements ISampleService,
+public class SampleServiceImpl implements SampleService,
 		ApplicationContextAware {
 	private MessageSource messageSource;
 
@@ -59,15 +58,16 @@ public class SampleServiceImpl implements ISampleService,
 					"TEST BaseException"));
 		}
 	}
-	
-	public void testBaseExceptionWithLocale(int arg, Locale locale) throws BaseException {
+
+	public void testBaseExceptionWithLocale(int arg, Locale locale)
+			throws BaseException {
 		switch (arg) {
 		case 1:
-			throw new BaseException(messageSource, "error.base.msg1", locale, 
+			throw new BaseException(messageSource, "error.base.msg1", locale,
 					new Exception("TEST BaseException"));
 		case 2:
-			throw new BaseException(messageSource, "error.base.msg2", 
-					new Object[] { "sample" }, locale );
+			throw new BaseException(messageSource, "error.base.msg2",
+					new Object[] { "sample" }, locale);
 		case 3:
 			throw new BaseException(messageSource, "error.base.msg1", locale);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.sample.logging;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Enumeration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
-import org.apache.log4j.Logger;
 import org.apache.log4j.RollingFileAppender;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -39,7 +39,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:./src/test/resources/spring/context-*.xml" })
-public class RollingFileLoggerTest{
+public class RollingFileLoggerTest {
 
 	/**
 	 * [Flow #-1] Positive Case : try to log using RollingFileLogger
@@ -47,6 +47,7 @@ public class RollingFileLoggerTest{
 	 * @throws Exception
 	 *             fail to test
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRollingFileLogging() {
 		// 1. initialize
@@ -58,8 +59,8 @@ public class RollingFileLoggerTest{
 				logFiles[i].delete();
 
 		// 2. find all appenders of RollingFileLoggger
-		Enumeration appenders = Logger.getLogger(this.getClass())
-				.getAllAppenders();
+		Enumeration<Appender> appenders = org.apache.log4j.Logger.getLogger(
+				this.getClass()).getAllAppenders();
 
 		// 3. check RollingFileLoggger configurations
 		if (appenders.hasMoreElements()) {
@@ -81,7 +82,7 @@ public class RollingFileLoggerTest{
 		}
 
 		// 4. try to log
-		Log logger = LogFactory.getLog(this.getClass());
+		Logger logger = LoggerFactory.getLogger(this.getClass());
 		assertTrue(logger.isInfoEnabled());
 		for (int i = 0; i < 100; i++)
 			logger.info("log - testRollingFileLoggingConf");

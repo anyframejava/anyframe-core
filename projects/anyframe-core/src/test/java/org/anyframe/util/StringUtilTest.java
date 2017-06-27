@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -31,7 +31,7 @@ import org.junit.Test;
 /**
  * For testing functions what StringUtil supports, there are some test scenarios
  * in this TestCase.
- *
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  * @author HyunJung Jeong
@@ -79,48 +79,68 @@ public class StringUtilTest {
 	@Test
 	public void testGetContainsCount() {
 		assertEquals(3, StringUtil.getContainsCount("Anyframe Java Test", "a"));
-		assertEquals(0, StringUtil.getContainsCount("Anyframe Java Test", "test"));
-		assertEquals(1, StringUtil.getContainsCount("Anyframe Java Test", "Test"));
+		assertEquals(0,
+				StringUtil.getContainsCount("Anyframe Java Test", "test"));
+		assertEquals(1,
+				StringUtil.getContainsCount("Anyframe Java Test", "Test"));
 
-		assertEquals(3, StringUtil.getContainsCount("Anyframe Java Test", new char[] { 'a' }));
-		assertEquals(4, StringUtil.getContainsCount("Anyframe Java Test", new char[] { 'a', 'T' }));
+		assertEquals(3, StringUtil.getContainsCount("Anyframe Java Test",
+				new char[] { 'a' }));
+		assertEquals(
+				4,
+				StringUtil.getContainsCount("Anyframe Java Test", new char[] {
+						'a', 'T' }));
 	}
 
 	@Test
 	public void testCompareTo() {
-		assertEquals(0, StringUtil.compareTo("Anyframe Java Test", "Anyframe Java Test"));
+		assertEquals(0, StringUtil.compareTo("Anyframe Java Test",
+				"Anyframe Java Test"));
 		// 106(j's ascii code) - 74(J's ascii code) = 32
-		assertEquals(32, StringUtil.compareTo("Anyframe java Test", "Anyframe Java Test"));
+		assertEquals(32, StringUtil.compareTo("Anyframe java Test",
+				"Anyframe Java Test"));
 		// 97(a's ascii code) - 65(A's ascii code) = 32
-		assertEquals(32, StringUtil.compareTo("anyframe java test", "Anyframe Java Test"));
+		assertEquals(32, StringUtil.compareTo("anyframe java test",
+				"Anyframe Java Test"));
 
 		assertEquals(-1, StringUtil.compareTo("Anyframe Java Test", null));
 	}
 
 	@Test
 	public void testCompareToIgnoreCase() {
-		assertEquals(0, StringUtil.compareToIgnoreCase("anyframe java test", "Anyframe Java Test"));
-		assertEquals(0, StringUtil.compareToIgnoreCase("anyframe java test", "Anyframe Java Test"));
+		assertEquals(0, StringUtil.compareToIgnoreCase("anyframe java test",
+				"Anyframe Java Test"));
+		assertEquals(0, StringUtil.compareToIgnoreCase("anyframe java test",
+				"Anyframe Java Test"));
 
-		assertEquals(-1, StringUtil.compareToIgnoreCase("anyframe java test", null));
+		assertEquals(-1,
+				StringUtil.compareToIgnoreCase("anyframe java test", null));
 	}
 
 	@Test
 	public void testIndexOfIgnoreCase() {
-		assertEquals(9, StringUtil.indexOfIgnoreCase("Anyframe Java Test", "java"));
-		assertEquals(9, StringUtil.indexOfIgnoreCase("Anyframe Java Test", "Java"));
+		assertEquals(9,
+				StringUtil.indexOfIgnoreCase("Anyframe Java Test", "java"));
+		assertEquals(9,
+				StringUtil.indexOfIgnoreCase("Anyframe Java Test", "Java"));
 
-		assertEquals(-1, StringUtil.indexOfIgnoreCase("Anyframe Java Test", null));
+		assertEquals(-1,
+				StringUtil.indexOfIgnoreCase("Anyframe Java Test", null));
 	}
 
 	@Test
 	public void testGetContainsCountIgnoreCase() {
-		assertEquals(4, StringUtil.getContainsCountIgnoreCase("Anyframe Java Test", new char[] { 'a' }));
-		assertEquals(6, StringUtil.getContainsCountIgnoreCase("Anyframe Java Test", new char[] { 'a', 'T' }));
+		assertEquals(4, StringUtil.getContainsCountIgnoreCase(
+				"Anyframe Java Test", new char[] { 'a' }));
+		assertEquals(6, StringUtil.getContainsCountIgnoreCase(
+				"Anyframe Java Test", new char[] { 'a', 'T' }));
 
-		assertEquals(4, StringUtil.getContainsCountIgnoreCase("Anyframe Java Test", "a"));
-		assertEquals(1, StringUtil.getContainsCountIgnoreCase("Anyframe Java Test", "test"));
-		assertEquals(1, StringUtil.getContainsCountIgnoreCase("Anyframe Java Test", "Test"));
+		assertEquals(4, StringUtil.getContainsCountIgnoreCase(
+				"Anyframe Java Test", "a"));
+		assertEquals(1, StringUtil.getContainsCountIgnoreCase(
+				"Anyframe Java Test", "test"));
+		assertEquals(1, StringUtil.getContainsCountIgnoreCase(
+				"Anyframe Java Test", "Test"));
 	}
 
 	@Test
@@ -141,29 +161,40 @@ public class StringUtilTest {
 
 	@Test
 	public void testGetCutString() {
-		assertEquals("Anyframe Java ", StringUtil.getCutString("Anyframe Java Test", 14));
-		assertEquals("Anyframe Java Test", StringUtil.getCutString("Anyframe Java Test", 18));
+		assertEquals("Anyframe Java ",
+				StringUtil.getCutString("Anyframe Java Test", 14));
+		assertEquals("Anyframe Java Test",
+				StringUtil.getCutString("Anyframe Java Test", 18));
 	}
 
 	@Test
 	public void testRemoveWhitespace() {
-		assertEquals("AnyframeJavaTest", StringUtil.removeWhitespace("Anyframe Java Test"));
-		assertEquals("AnyframeJava", StringUtil.removeWhitespace("Anyframe Java"));
-		assertEquals("AnyframeJavaTest", StringUtil.removeWhitespace("Anyframe Java Test"));
-		assertEquals("AnyframeJavaUtilTest", StringUtil.removeWhitespace("Anyframe Java Util Test"));
-		assertEquals("AnyframeJavaUtilTest", StringUtil.removeWhitespace("  Anyframe Java Util Test  "));
+		assertEquals("AnyframeJavaTest",
+				StringUtil.removeWhitespace("Anyframe Java Test"));
+		assertEquals("AnyframeJava",
+				StringUtil.removeWhitespace("Anyframe Java"));
+		assertEquals("AnyframeJavaTest",
+				StringUtil.removeWhitespace("Anyframe Java Test"));
+		assertEquals("AnyframeJavaUtilTest",
+				StringUtil.removeWhitespace("Anyframe Java Util Test"));
+		assertEquals("AnyframeJavaUtilTest",
+				StringUtil.removeWhitespace("  Anyframe Java Util Test  "));
 	}
 
 	@Test
 	public void testLeftTrim() {
-		assertEquals("Anyframe Java Test", StringUtil.leftTrim("   Anyframe Java Test"));
-		assertEquals("Anyframe Java Test   ", StringUtil.leftTrim("   Anyframe Java Test   "));
+		assertEquals("Anyframe Java Test",
+				StringUtil.leftTrim("   Anyframe Java Test"));
+		assertEquals("Anyframe Java Test   ",
+				StringUtil.leftTrim("   Anyframe Java Test   "));
 	}
 
 	@Test
 	public void testRightTrim() {
-		assertEquals("Anyframe Java Test", StringUtil.rightTrim("Anyframe Java Test   "));
-		assertEquals("   Anyframe Java Test", StringUtil.rightTrim("   Anyframe Java Test   "));
+		assertEquals("Anyframe Java Test",
+				StringUtil.rightTrim("Anyframe Java Test   "));
+		assertEquals("   Anyframe Java Test",
+				StringUtil.rightTrim("   Anyframe Java Test   "));
 	}
 
 	@Test
@@ -171,7 +202,8 @@ public class StringUtilTest {
 		assertEquals("    Anyframe", StringUtil.leftPad("Anyframe", 12));
 		assertEquals("aaaaAnyframe", StringUtil.leftPad("Anyframe", 12, 'a'));
 		assertEquals("JavaAnyframe", StringUtil.leftPad("Anyframe", 12, "Java"));
-		assertEquals("JavaJaAnyframe", StringUtil.leftPad("Anyframe", 14, "Java"));
+		assertEquals("JavaJaAnyframe",
+				StringUtil.leftPad("Anyframe", 14, "Java"));
 
 		assertEquals(null, StringUtil.leftPad(null, 4, ' '));
 		assertEquals("zzz", StringUtil.leftPad("", 3, 'z'));
@@ -195,9 +227,12 @@ public class StringUtilTest {
 	public void testRightPad() {
 		assertEquals("Anyframe    ", StringUtil.rightPad("Anyframe", 12));
 		assertEquals("Anyframeaaaa", StringUtil.rightPad("Anyframe", 12, 'a'));
-		assertEquals("Anyframe Jav", StringUtil.rightPad("Anyframe", 12, " Java Test"));
-		assertEquals("Anyframe Java Test", StringUtil.rightPad("Anyframe", 18, " Java Test"));
-		assertEquals("Anyframe Java Test Java", StringUtil.rightPad("Anyframe", 23, " Java Test"));
+		assertEquals("Anyframe Jav",
+				StringUtil.rightPad("Anyframe", 12, " Java Test"));
+		assertEquals("Anyframe Java Test",
+				StringUtil.rightPad("Anyframe", 18, " Java Test"));
+		assertEquals("Anyframe Java Test Java",
+				StringUtil.rightPad("Anyframe", 23, " Java Test"));
 
 		assertEquals(null, StringUtil.rightPad(null, 4, ' '));
 		assertEquals("zzz", StringUtil.rightPad("", 3, 'z'));
@@ -235,27 +270,36 @@ public class StringUtilTest {
 
 	@Test
 	public void testRemoveAll() {
-		assertEquals("Anyfrme  Test", StringUtil.removeAll("Anyframe Java Test", "Java"));
-		assertEquals("Anyfrme Jv est", StringUtil.removeAll("Anyframe Java Test", "aT"));
-		assertEquals("frame ava Test", StringUtil.removeAll("Anyframe Java Test", "AnyJ"));
-		assertEquals("AnyfrmeJvTes", StringUtil.removeAll("Anyframe\nJava\nTest\n", "at\n"));
+		assertEquals("Anyfrme  Test",
+				StringUtil.removeAll("Anyframe Java Test", "Java"));
+		assertEquals("Anyfrme Jv est",
+				StringUtil.removeAll("Anyframe Java Test", "aT"));
+		assertEquals("frame ava Test",
+				StringUtil.removeAll("Anyframe Java Test", "AnyJ"));
+		assertEquals("AnyfrmeJvTes",
+				StringUtil.removeAll("Anyframe\nJava\nTest\n", "at\n"));
 	}
 
 	@Test
 	public void testConvertToCamelCase() {
-		assertEquals("anyframeJavaTest", StringUtil.convertToCamelCase("anyframe_java_test"));
-		assertEquals("anyframeJavaTest", StringUtil.convertToCamelCase("anyframe-java-test", '-'));
-		assertEquals("anyframeJavaTest", StringUtil.convertToCamelCase("anyframe.java.test", '.'));
+		assertEquals("anyframeJavaTest",
+				StringUtil.convertToCamelCase("anyframe_java_test"));
+		assertEquals("anyframeJavaTest",
+				StringUtil.convertToCamelCase("anyframe-java-test", '-'));
+		assertEquals("anyframeJavaTest",
+				StringUtil.convertToCamelCase("anyframe.java.test", '.'));
 	}
 
 	@Test
 	public void testConvertToUnderScore() {
-		assertEquals("anyframe_java_test", StringUtil.convertToUnderScore("anyframeJavaTest"));
+		assertEquals("anyframe_java_test",
+				StringUtil.convertToUnderScore("anyframeJavaTest"));
 	}
 
 	@Test
 	public void testReverse() {
-		assertEquals("tseT avaJ emarfynA", StringUtil.reverse("Anyframe Java Test"));
+		assertEquals("tseT avaJ emarfynA",
+				StringUtil.reverse("Anyframe Java Test"));
 		assertEquals(null, StringUtil.reverse(null));
 	}
 
@@ -263,7 +307,8 @@ public class StringUtilTest {
 	public void testNullToString() {
 		assertEquals("", StringUtil.null2str(null));
 		assertEquals("", StringUtil.null2str("    "));
-		assertEquals("Anyframe Java Test", StringUtil.null2str("Anyframe Java Test"));
+		assertEquals("Anyframe Java Test",
+				StringUtil.null2str("Anyframe Java Test"));
 		assertEquals("empty", StringUtil.null2str(null, "empty"));
 		assertEquals("empty", StringUtil.null2str("    ", "empty"));
 	}
@@ -280,26 +325,34 @@ public class StringUtilTest {
 	@Test
 	public void testReplaceFirst() {
 		assertEquals("Enterprise Java Test Anyframe Java Test",
-				StringUtil.replaceFirst("Anyframe Java Test Anyframe Java Test", "Anyframe", "Enterprise"));
+				StringUtil.replaceFirst(
+						"Anyframe Java Test Anyframe Java Test", "Anyframe",
+						"Enterprise"));
 
-		assertEquals(null, StringUtil.replaceFirst(null, "Anyframe", "Enterprise"));
+		assertEquals(null,
+				StringUtil.replaceFirst(null, "Anyframe", "Enterprise"));
 	}
 
 	@Test
 	public void testReplaceLast() {
 		assertEquals("Anyframe Java Test Enterprise Java Test",
-				StringUtil.replaceLast("Anyframe Java Test Anyframe Java Test", "Anyframe", "Enterprise"));
+				StringUtil.replaceLast("Anyframe Java Test Anyframe Java Test",
+						"Anyframe", "Enterprise"));
 		assertEquals("Anyframe Java Test Anyframe Java Test",
-				StringUtil.replaceLast("Anyframe Java Test Anyframe Java Test", "any", "Enterprise"));
+				StringUtil.replaceLast("Anyframe Java Test Anyframe Java Test",
+						"any", "Enterprise"));
 	}
 
 	@Test
 	public void testReplaceAll() {
 		assertEquals("Enterprise Java Test Enterprise Java Test",
-				StringUtil.replaceAll("Anyframe Java Test Anyframe Java Test", "Anyframe", "Enterprise"));
+				StringUtil.replaceAll("Anyframe Java Test Anyframe Java Test",
+						"Anyframe", "Enterprise"));
 		assertEquals("EnterpriseJavaTestEnterpriseJavaTest",
-				StringUtil.replaceAll("AnyframeJavaTestAnyframeJavaTest", "Anyframe", "Enterprise"));
-		assertEquals("123412341234", StringUtil.replaceAll("12ab12ab12ab", "ab", "34"));
+				StringUtil.replaceAll("AnyframeJavaTestAnyframeJavaTest",
+						"Anyframe", "Enterprise"));
+		assertEquals("123412341234",
+				StringUtil.replaceAll("12ab12ab12ab", "ab", "34"));
 
 		assertEquals(null, StringUtil.replaceAll(null, "ab", "34"));
 	}
@@ -312,15 +365,18 @@ public class StringUtilTest {
 
 	@Test
 	public void testRemoveEscapeChar() {
-		assertEquals("<html>Anyframe Java Test<html>",
-				StringUtil.removeEscapeChar("&lt;html&gt;Anyframe Java Test&lt;html&gt;"));
+		assertEquals(
+				"<html>Anyframe Java Test<html>",
+				StringUtil
+						.removeEscapeChar("&lt;html&gt;Anyframe Java Test&lt;html&gt;"));
 	}
 
 	@Test
 	public void testSwapFirstLetterCase() {
 		assertEquals("Java", StringUtil.swapFirstLetterCase("java"));
 		assertEquals("anyframe", StringUtil.swapFirstLetterCase("Anyframe"));
-		assertEquals("anyframe Java", StringUtil.swapFirstLetterCase("Anyframe Java"));
+		assertEquals("anyframe Java",
+				StringUtil.swapFirstLetterCase("Anyframe Java"));
 	}
 
 	@Test
@@ -328,22 +384,29 @@ public class StringUtilTest {
 		assertEquals("AnyframeJava", StringUtil.trim("Anyframe*Java", "*"));
 		assertEquals("AnyframeJava", StringUtil.trim("Anyframe**Java", "**"));
 		assertEquals("AnyframeJava", StringUtil.trim("Anyframe---Java", "---"));
-		assertEquals("AnyframeJava**Test", StringUtil.trim("Anyframe**Java**Test", "**"));
-		assertEquals("Anyframe*Java**Test", StringUtil.trim("Anyframe**Java**Test", "*"));
-		assertEquals("Anyframe**Java**Test", StringUtil.trim("Anyframe**Java**Test", "__"));
+		assertEquals("AnyframeJava**Test",
+				StringUtil.trim("Anyframe**Java**Test", "**"));
+		assertEquals("Anyframe*Java**Test",
+				StringUtil.trim("Anyframe**Java**Test", "*"));
+		assertEquals("Anyframe**Java**Test",
+				StringUtil.trim("Anyframe**Java**Test", "__"));
 	}
 
 	@Test
 	public void testGetLastString() {
-		assertEquals("Test", StringUtil.getLastString("Anyframe_Java_Test", "_"));
-		assertEquals("Test", StringUtil.getLastString("Anyframe__Java__Test", "__"));
+		assertEquals("Test",
+				StringUtil.getLastString("Anyframe_Java_Test", "_"));
+		assertEquals("Test",
+				StringUtil.getLastString("Anyframe__Java__Test", "__"));
 		assertEquals("Java", StringUtil.getLastString("Anyframe***Java", "***"));
-		assertEquals("Anyframe***Java", StringUtil.getLastString("Anyframe***Java", "___"));
+		assertEquals("Anyframe***Java",
+				StringUtil.getLastString("Anyframe***Java", "___"));
 	}
 
 	@Test
 	public void testGetStringArray() {
-		assertArrayEquals(new String[] { "Anyframe/Java/Test" }, StringUtil.getStringArray("Anyframe/Java/Test", "-"));
+		assertArrayEquals(new String[] { "Anyframe/Java/Test" },
+				StringUtil.getStringArray("Anyframe/Java/Test", "-"));
 		assertArrayEquals(new String[] { "Anyframe", "Java", "Test" },
 				StringUtil.getStringArray("Anyframe/Java/Test", "/"));
 	}
@@ -370,11 +433,16 @@ public class StringUtilTest {
 
 	@Test
 	public void testReplace() {
-		assertEquals("Anyframe|Common", StringUtil.replace("Anyframe/Common", "/", "|"));
-		assertEquals("Anyframe.Java", StringUtil.replace("Anyframe_Java", "_", "."));
-		assertEquals("Anyframe.Java_Test", StringUtil.replace("Anyframe_Java_Test", "_", "."));
-		assertEquals("AnyframeUtilavaTest", StringUtil.replace("AnyframeJavaTest", "Java", "Util"));
-		assertEquals("JavaUtilTest", StringUtil.replace(".UtilTest", ".", "Java"));
+		assertEquals("Anyframe|Common",
+				StringUtil.replace("Anyframe/Common", "/", "|"));
+		assertEquals("Anyframe.Java",
+				StringUtil.replace("Anyframe_Java", "_", "."));
+		assertEquals("Anyframe.Java_Test",
+				StringUtil.replace("Anyframe_Java_Test", "_", "."));
+		assertEquals("AnyframeUtilavaTest",
+				StringUtil.replace("AnyframeJavaTest", "Java", "Util"));
+		assertEquals("JavaUtilTest",
+				StringUtil.replace(".UtilTest", ".", "Java"));
 	}
 
 	@Test
@@ -392,9 +460,12 @@ public class StringUtilTest {
 		assertTrue(StringUtil.containsInvalidChars("abc*abc", "*"));
 		assertTrue(StringUtil.containsInvalidChars("abc-abc", "*/-"));
 		assertFalse(StringUtil.containsInvalidChars("abcabc", "*/-"));
-		assertTrue(StringUtil.containsInvalidChars("abc-abc", new char[] { '*', '/', '-' }));
-		assertFalse(StringUtil.containsInvalidChars("abc_edf_123", new char[] { '*', '/', '-' }));
-		assertTrue(StringUtil.containsInvalidChars("abc/", new char[] { '*', '/' }));
+		assertTrue(StringUtil.containsInvalidChars("abc-abc", new char[] { '*',
+				'/', '-' }));
+		assertFalse(StringUtil.containsInvalidChars("abc_edf_123", new char[] {
+				'*', '/', '-' }));
+		assertTrue(StringUtil.containsInvalidChars("abc/", new char[] { '*',
+				'/' }));
 
 		assertTrue(StringUtil.containsInvalidChars(null, "*"));
 	}
@@ -431,7 +502,8 @@ public class StringUtilTest {
 			System.out.println(tmp);
 		}
 
-		List<String> resultList2 = StringUtil.getTokens("Anyframe/Java/Test", "/");
+		List<String> resultList2 = StringUtil.getTokens("Anyframe/Java/Test",
+				"/");
 
 		assertFalse(resultList2.isEmpty());
 
@@ -458,9 +530,9 @@ public class StringUtilTest {
 			String encoded3 = StringUtil.encodePassword("password", "MD6");
 			// assertEquals("password", encoded3);
 			fail("NoSuchAlgorithmException expected");
-		}
-		catch (Exception e) {
-			assertTrue(e.getMessage().contains("MD6 MessageDigest not available"));
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains(
+					"MD6 MessageDigest not available"));
 		}
 	}
 
@@ -593,8 +665,9 @@ public class StringUtilTest {
 	/**
 	 * [Flow #-13] Positive, Negative Case : check that str matches the pattern
 	 * string
-	 *
-	 * @throws Exception fail to test
+	 * 
+	 * @throws Exception
+	 *             fail to test
 	 */
 	@Test
 	public void testIsPatternMatchingBC() throws Exception {

@@ -124,7 +124,7 @@ protected Object formBackingObject(HttpServletRequest request)
       		<para>
       			<programlisting language="java">public class UserService implements ApplicationContextAware{
     
-    private static Log logger = LogFactory.getLog(UserService.class);
+    private static Log logger = LogFactory.getLogger(UserService.class);
     private MessageSource messageSource;
     
     public UserVO getUser(UserVO userVO) throws Exception{

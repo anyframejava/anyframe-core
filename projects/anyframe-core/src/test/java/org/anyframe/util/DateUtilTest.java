@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ import org.junit.Test;
 /**
  * For testing functions what DateUtil supports, there are some test scenarios
  * in this TestCase.
- *
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  * @author HyunJung Jeong
@@ -88,19 +88,28 @@ public class DateUtilTest {
 		DateTime.Property dayOfWeek1 = dt1.dayOfWeek();
 		DateTime.Property dayOfWeek2 = dt2.dayOfWeek();
 
-		assertEquals(dayOfWeek1.getAsShortText(), DateUtil.getDayOfWeek("2010-11-25"));
-		assertEquals(dayOfWeek2.getAsShortText(), DateUtil.getDayOfWeek("2010-11-26"));
-		assertEquals(dayOfWeek1.getAsShortText(Locale.FRENCH), DateUtil.getDayOfWeek("2010-11-25", true, Locale.FRENCH));
-		assertEquals(dayOfWeek1.getAsText(Locale.US), DateUtil.getDayOfWeek("2010-11-25", false, Locale.US));
-		assertEquals(dayOfWeek1.getAsShortText(), DateUtil.getDayOfWeek("2010-11-25", true, null));
+		assertEquals(dayOfWeek1.getAsShortText(),
+				DateUtil.getDayOfWeek("2010-11-25"));
+		assertEquals(dayOfWeek2.getAsShortText(),
+				DateUtil.getDayOfWeek("2010-11-26"));
+		assertEquals(dayOfWeek1.getAsShortText(Locale.FRENCH),
+				DateUtil.getDayOfWeek("2010-11-25", true, Locale.FRENCH));
+		assertEquals(dayOfWeek1.getAsText(Locale.US),
+				DateUtil.getDayOfWeek("2010-11-25", false, Locale.US));
+		assertEquals(dayOfWeek1.getAsShortText(),
+				DateUtil.getDayOfWeek("2010-11-25", true, null));
 	}
 
 	@Test
 	public void testGetDays() {
-		assertEquals(14, DateUtil.getDays(new GregorianCalendar(2010, 11, 14), new GregorianCalendar(2010, 11, 28)));
-		assertEquals(44, DateUtil.getDays(new GregorianCalendar(2010, 10, 14), new GregorianCalendar(2010, 11, 28)));
-		assertEquals(29, DateUtil.getDays("2010-11-01", "2010-11-30", "yyyy-MM-dd"));
-		assertEquals(36, DateUtil.getDays("2010-11-24", "2010-12-30", "yyyy-MM-dd"));
+		assertEquals(14, DateUtil.getDays(new GregorianCalendar(2010, 11, 14),
+				new GregorianCalendar(2010, 11, 28)));
+		assertEquals(44, DateUtil.getDays(new GregorianCalendar(2010, 10, 14),
+				new GregorianCalendar(2010, 11, 28)));
+		assertEquals(29,
+				DateUtil.getDays("2010-11-01", "2010-11-30", "yyyy-MM-dd"));
+		assertEquals(36,
+				DateUtil.getDays("2010-11-24", "2010-12-30", "yyyy-MM-dd"));
 	}
 
 	@Test
@@ -159,11 +168,16 @@ public class DateUtilTest {
 
 	@Test
 	public void testAddYearMonthDay() {
-		assertEquals("2012-04-18", DateUtil.addYearMonthDay("2010-04-18", 2, 0, 0));
-		assertEquals("2010-08-18", DateUtil.addYearMonthDay("2010-04-18", 0, 4, 0));
-		assertEquals("2010-04-21", DateUtil.addYearMonthDay("2010-04-18", 0, 0, 3));
-		assertEquals("2012-08-21", DateUtil.addYearMonthDay("2010-04-18", 2, 4, 3));
-		assertEquals("2014-01-13", DateUtil.addYearMonthDay("2010-04-18", 4, -3, -5));
+		assertEquals("2012-04-18",
+				DateUtil.addYearMonthDay("2010-04-18", 2, 0, 0));
+		assertEquals("2010-08-18",
+				DateUtil.addYearMonthDay("2010-04-18", 0, 4, 0));
+		assertEquals("2010-04-21",
+				DateUtil.addYearMonthDay("2010-04-18", 0, 0, 3));
+		assertEquals("2012-08-21",
+				DateUtil.addYearMonthDay("2010-04-18", 2, 4, 3));
+		assertEquals("2014-01-13",
+				DateUtil.addYearMonthDay("2010-04-18", 4, -3, -5));
 	}
 
 	@Test
@@ -180,14 +194,18 @@ public class DateUtilTest {
 
 	@Test
 	public void testGetFirstDateOfPrevMonth() {
-		assertEquals("2010-10-01", DateUtil.getFirstDateOfPrevMonth("2010-11-20"));
-		assertEquals("2010-11-01", DateUtil.getFirstDateOfPrevMonth("2010-12-20"));
+		assertEquals("2010-10-01",
+				DateUtil.getFirstDateOfPrevMonth("2010-11-20"));
+		assertEquals("2010-11-01",
+				DateUtil.getFirstDateOfPrevMonth("2010-12-20"));
 	}
 
 	@Test
 	public void testGetLastDateOfPrevMonth() {
-		assertEquals("2010-10-31", DateUtil.getLastDateOfPrevMonth("2010-11-20"));
-		assertEquals("2010-11-30", DateUtil.getLastDateOfPrevMonth("2010-12-20"));
+		assertEquals("2010-10-31",
+				DateUtil.getLastDateOfPrevMonth("2010-11-20"));
+		assertEquals("2010-11-30",
+				DateUtil.getLastDateOfPrevMonth("2010-12-20"));
 	}
 
 	@Test
@@ -224,7 +242,8 @@ public class DateUtilTest {
 		Date date2 = new Date(1292311593000l);
 		assertEquals(date1, DateUtil.string2Date("2010-12-14"));
 		assertEquals(date1, DateUtil.string2Date("2010/12/14", "yyyy/MM/dd"));
-		assertEquals(date2, DateUtil.string2Date("2010-12-14 16:26:33", "yyyy-MM-dd HH:mm:ss"));
+		assertEquals(date2, DateUtil.string2Date("2010-12-14 16:26:33",
+				"yyyy-MM-dd HH:mm:ss"));
 	}
 
 	@Test
@@ -237,8 +256,10 @@ public class DateUtilTest {
 
 	@Test
 	public void testString2String() {
-		assertEquals("2010-12-14", DateUtil.string2String("20101214", "yyyyMMdd", "yyyy-MM-dd"));
-		assertEquals("2010/12/14", DateUtil.string2String("2010.12.14", "yyyy.MM.dd", "yyyy/MM/dd"));
+		assertEquals("2010-12-14",
+				DateUtil.string2String("20101214", "yyyyMMdd", "yyyy-MM-dd"));
+		assertEquals("2010/12/14", DateUtil.string2String("2010.12.14",
+				"yyyy.MM.dd", "yyyy/MM/dd"));
 	}
 
 	@Test
@@ -269,36 +290,44 @@ public class DateUtilTest {
 		Timestamp timestamp1 = new Timestamp(1292252400000l);
 		Timestamp timestamp2 = new Timestamp(1292311593000l);
 		assertEquals(timestamp1, DateUtil.string2Timestamp("2010-12-14"));
-		assertEquals(timestamp2, DateUtil.string2Timestamp("2010-12-14 16:26:33", "yyyy-MM-dd HH:mm:ss"));
+		assertEquals(timestamp2, DateUtil.string2Timestamp(
+				"2010-12-14 16:26:33", "yyyy-MM-dd HH:mm:ss"));
 	}
 
 	@Test
 	public void testTimestamp2String() {
 		Timestamp timestamp = new Timestamp(1292311593000l);
 		assertEquals("2010-12-14", DateUtil.timestamp2String(timestamp));
-		assertEquals("2010/12/14", DateUtil.timestamp2String(timestamp, "yyyy/MM/dd"));
-		assertEquals("2010/12/14 16/26", DateUtil.timestamp2String(timestamp, "yyyy/MM/dd HH/mm"));
+		assertEquals("2010/12/14",
+				DateUtil.timestamp2String(timestamp, "yyyy/MM/dd"));
+		assertEquals("2010/12/14 16/26",
+				DateUtil.timestamp2String(timestamp, "yyyy/MM/dd HH/mm"));
 		assertEquals("", DateUtil.timestamp2String(null, "yyyy/MM/dd HH/mm"));
 
 	}
 
 	@Test
 	public void testString2Calendar() {
-		assertEquals(new GregorianCalendar(2010, 11, 14, 12, 34, 12), DateUtil.string2Calender("20101214123412"));
+		assertEquals(new GregorianCalendar(2010, 11, 14, 12, 34, 12),
+				DateUtil.string2Calender("20101214123412"));
 		assertEquals(null, DateUtil.string2Calender("201012141234"));
 	}
 
 	@Test
 	public void testCalendar2String() {
-		assertEquals("20101214123412000", DateUtil.calendar2String(new GregorianCalendar(2010, 11, 14, 12, 34, 12)));
+		assertEquals("20101214123412000",
+				DateUtil.calendar2String(new GregorianCalendar(2010, 11, 14,
+						12, 34, 12)));
 	}
 
 	@Test
 	public void testGetMinutes() {
-		assertEquals(58, DateUtil.getMinutes(new GregorianCalendar(2010, 11, 14, 12, 34, 12), new GregorianCalendar(
-				2010, 11, 14, 13, 32, 12)));
-		assertEquals(357, DateUtil.getMinutes(new GregorianCalendar(2010, 11, 14, 12, 34, 12), new GregorianCalendar(
-				2010, 11, 14, 18, 31, 12)));
+		assertEquals(58, DateUtil.getMinutes(new GregorianCalendar(2010, 11,
+				14, 12, 34, 12),
+				new GregorianCalendar(2010, 11, 14, 13, 32, 12)));
+		assertEquals(357, DateUtil.getMinutes(new GregorianCalendar(2010, 11,
+				14, 12, 34, 12),
+				new GregorianCalendar(2010, 11, 14, 18, 31, 12)));
 	}
 
 	@Test
@@ -444,8 +473,7 @@ public class DateUtilTest {
 			dateStr1 = "2007-05-01";
 			sqlDate = DateUtil.string2SQLDate(dateStr1, "yyyy/MM/dd");
 			fail("fail to check date format");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// assertTrue(e instanceof ParseException);
 			// SimpleDateFormat 에서 joda-time 으로 변경 시 ParseException 이 아니라
 			// IllegalArgumentException 이 발생함
@@ -576,9 +604,9 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void testGetCurrentTimeBC() {
-		String currentTime = DateUtil.getCurrentTime();
+		String currentTime = DateUtil.getCurrentTimeString();
 		// 1. get current time with default format (yyyy-MM-dd HH:mm)
-		assertEquals(16, currentTime.length());
+		assertEquals(8, currentTime.length());
 		// 2. get current time with default format (yyyyMMdd)
 		currentTime = DateUtil.getCurrentTime("yyyyMMdd");
 		assertEquals(8, currentTime.length());
@@ -662,7 +690,8 @@ public class DateUtilTest {
 	@Test
 	public void testCalendar2StringBC() {
 		// 1. convert java.util.Calendar to String
-		Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT+09:00"), Locale.KOREA);
+		Calendar calendar = new GregorianCalendar(
+				TimeZone.getTimeZone("GMT+09:00"), Locale.KOREA);
 		calendar.setTime(new Date());
 		assertTrue(DateUtil.calendar2String(calendar).length() >= 12);
 	}

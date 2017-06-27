@@ -167,6 +167,17 @@ public class MovieDaoConfig {
         return movieDao;
     }
 }</programlisting>
+			<programlisting language="java">@Configuration
+@Import(value = { MovieDaoConfig.class })
+public class MovieFinderConfig {
+    <emphasis role="bold">@Autowired</emphasis>
+    private MovieDao movieDao;
+
+    @Bean
+    public MovieFinder movieFinder() {
+        return new MovieFinderImpl(movieDao);
+    }
+}</programlisting>
 			<para>
 				해당 Bean 이전에 초기화되어야 하는 하나 이상의 Bean을 명시적으로 강제하기 위해서는 @DependsOn을 활용할 수 있다. 
 				이것은 <![CDATA[<bean/>]]>의 depends-on와 동일한 역할을 수행한다.
@@ -290,7 +301,75 @@ public class MovieFinderConfig {
         return new MovieDaoImpl(dbUrl, userName, password);
     }
 }</programlisting>
-		</section>		
+		</section>
+
+		<section id="core_spring_javaconfig_bean_codeequivalents">
+			<title>Code Equivalents for Spring's XML namespaces</title>
+			<para>
+				코드 기반으로 Spring의 XML 네임스페이스(<![CDATA[<context:component-scan/>, <tx:annotation-driven/> and <mvc:annotation-driven>]]>)에 대응하는 @Enable Annotation이 Spring 3.1 버전부터 추가되었다. 
+				이러한 Annotation은 Spring 3.0부터 도입된 @Configuration 태그와 같이 사용하도록 설계되어 있다.
+			</para>
+			<section id="core_spring_javaconfig_bean_codeequivalents_componentscan">
+				<title>@ComponentScan</title>
+				<para>@Configuration 태그와 함께 사용하며 <![CDATA[<context:component-scan>]]>과 동일한 기능을 수행할 수 있다.</para>
+				<programlisting language="java">@Configuration
+@ComponentScan("com.acme.app.services")
+public class AppConfig {
+    // various @Bean definitions ...
+}</programlisting>
+			</section>
+			<section id="core_spring_javaconfig_bean_codeequivalents_txannotationdriven">
+				<title>@EnableTransactionManagement</title>
+				<para>Spring에서 제공하는 Annotation 기반의 트랜잭션 관리 기능을 활성화시킨다. @Configuration 태그와 함께 사용하며, <![CDATA[<tx:*>]]>과 동일한 기능을 수행할 수 있다.</para>
+				<programlisting language="java">@Configuration
+@EnableTransactionManagement
+public class AppConfig {
+    @Bean
+    public FooRepository fooRepository() {
+        // configure and return a class having @Transactional methods
+        return new JdbcFooRepository(dataSource());
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        // configure and return the necessary JDBC DataSource
+    }
+
+    @Bean
+    public PlatformTransactionManager txManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+}</programlisting>
+			</section>
+			<section id="core_spring_javaconfig_bean_codeequivalents_mvcannotationdriven">
+				<title>@EnableWebMvc</title>
+				<para>@Configuration 태그와 함께 사용하여 WebMvcConfigurationSupport클래스에 정의된 Spring MVC의 설정을 다음과 같이 불러올 수 있다.</para>
+				<programlisting language="java">@Configuration
+@EnableWebMvc
+@ComponentScan(basePackageClasses = { MyConfiguration.class })
+public class MyWebConfiguration {
+
+}</programlisting>
+				<para>WebMvcConfigurer 인터페이스를 구현하거나, WebMvcConfigurerAdapter 기반의 클래스를 확장하고 메소드를 오버라이딩 하여 불러들여진 설정을 다음과 같이 사용자화 할 수 있다.</para>
+				<programlisting language="java">@Configuration
+@EnableWebMvc
+@ComponentScan(basePackageClasses = { MyConfiguration.class })
+public class MyConfiguration extends WebMvcConfigurerAdapter {
+
+       @Override
+       public void addFormatters(FormatterRegistry formatterRegistry) {
+               formatterRegistry.addConverter(new MyConverter());
+       }
+
+       @Override
+       public void configureMessageConverters(List<![CDATA[<HttpMessageConverter<?>>]]> converters) {
+               converters.add(new MyHttpMessageConverter());
+       }
+
+       // More overridden methods ...
+}</programlisting>
+			</section>
+		</section>
 	</section>
 	<section id="core_spring_javaconfig_combine">
 		<title>Combining Java and XML Configuration</title>
@@ -486,7 +565,7 @@ public class MovieFinderConfig {
 							<tbody>										
 								<row>
 									<entry align="center">anyframe-sample-javaconfig.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/anyframe-sample-javaconfig.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-javaconfig.zip">Download</ulink>
 									</entry>
 								</row>														
 							</tbody>

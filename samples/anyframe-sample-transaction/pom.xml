@@ -4,20 +4,20 @@
 	<parent>
 		<groupId>org.anyframe</groupId>
 		<artifactId>anyframe-sample-parent</artifactId>
-		<version>5.0.0</version>
+		<version>5.2.0</version>
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.anyframe</groupId>
 	<artifactId>anyframe-sample-transaction</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<packaging>jar</packaging>
 	<dependencies>
 		<!-- core plugin dependencies START -->
 		<dependency>
 			<groupId>org.anyframe</groupId>
 			<artifactId>anyframe-core</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
+			<version>4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -157,19 +157,19 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
+			  <groupId>org.slf4j</groupId>
+			  <artifactId>jcl-over-slf4j</artifactId>
+			  <version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -207,10 +207,10 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 	</dependencies>
 	<properties>
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>3.1.1.RELEASE</spring.version>
 	</properties>
 </project>

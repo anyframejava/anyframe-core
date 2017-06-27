@@ -92,7 +92,7 @@ public class MovieServiceImpl implements MovieService {
       		MovieService.java 코드이다. 
       		<programlisting language="java">public interface MovieService {
     // MovieServiceImpl에서 사용할 Logger 정의
-    <emphasis role="bold">Log LOGGER = LogFactory.getLog(MovieService.class);</emphasis>
+    <emphasis role="bold">Log LOGGER = LogFactory.getLogger(MovieService.class);</emphasis>
     String greet();
 }       </programlisting>
 		</para>

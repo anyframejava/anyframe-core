@@ -11,7 +11,7 @@
 
     	<para>
     		<emphasis role="bold">Description copied from class: 
-    			<ulink url="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jdbc/datasource/DriverManagerDataSource.html">DriverManagerDataSource
+    			<ulink url="http://static.springsource.org/spring/docs/3.1.x/javadoc-api/org/springframework/jdbc/datasource/SimpleDriverDataSource.html">SimpleDriverDataSource
     			</ulink></emphasis></para>
 
 		<para>
@@ -50,7 +50,7 @@
 					</row>
 	
 	          		<row>
-	            		<entry>driverClassName</entry>
+	            		<entry>driverClass</entry>
 	
 	            		<entry>JDBC driver class name을 설정한다.</entry>
 	
@@ -97,8 +97,8 @@
 					</para>
 
                     <programlisting language="xml"><![CDATA[<bean id="dataSource" 
-    class="]]><emphasis role="bold">org.springframework.jdbc.datasource.DriverManagerDataSource</emphasis><![CDATA[">
-    <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+    class="]]><emphasis role="bold">org.springframework.jdbc.datasource.SimpleDriverDataSource</emphasis><![CDATA[">
+    <property name="driverClass" value="org.hsqldb.jdbcDriver" />
     <property name="url" value="jdbc:hsqldb:file:/./db/sampledb" />
     <property name="username" value="sa" />
 </bean>]]></programlisting>
@@ -605,9 +605,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     ]]><emphasis role="bold">xmlns:jee="http://www.springframework.org/schema/jee"</emphasis><![CDATA[
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
     ]]><emphasis role="bold">http://www.springframework.org/schema/jee 
-        http://www.springframework.org/schema/jee/spring-jee-3.0.xsd</emphasis><![CDATA[">
+        http://www.springframework.org/schema/jee/spring-jee-3.1.xsd</emphasis><![CDATA[">
 
     <jee:jndi-lookup id="dataSource" jndi-name="AnyframeDS" resource-ref="true">
         <jee:environment>
@@ -683,11 +683,11 @@
 							<tbody>
 								<row>
 									<entry align="center">hsqldb.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/hsqldb.zip">Download</ulink></entry>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/hsqldb.zip">Download</ulink></entry>
 								</row>										
 								<row>
 									<entry align="center">anyframe-sample-datasource.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/anyframe-sample-datasource.zip">Download</ulink></entry>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-datasource.zip">Download</ulink></entry>
 								</row>
 							</tbody>
 						</tgroup>
@@ -698,8 +698,8 @@
 					<itemizedlist>
 						<listitem>
 							<para><ulink 
-								url="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/jdbc/datasource/DriverManagerDataSource.html">
-								JDBCDataSource - DriverManagerDataSource</ulink>
+								url="http://static.springsource.org/spring/docs/3.1.x/javadoc-api/org/springframework/jdbc/datasource/SimpleDriverDataSource.html">
+								JDBCDataSource - SimpleDriverDataSource</ulink>
 							</para>
 						</listitem>
 						<listitem>

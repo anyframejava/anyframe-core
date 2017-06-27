@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package org.anyframe.spring.message;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
@@ -44,7 +44,8 @@ import org.springframework.context.NoSuchMessageException;
  * @author SoYon Lim
  */
 public class AggregatingMessageSource implements MessageSource {
-	private Log logger = LogFactory.getLog(AggregatingMessageSource.class);
+	private Logger logger = LoggerFactory
+			.getLogger(AggregatingMessageSource.class);
 
 	private List<MessageSource> messageSources;
 
@@ -92,12 +93,10 @@ public class AggregatingMessageSource implements MessageSource {
 				String result = messageSource.getMessage(code, args, locale);
 				return result;
 			} catch (NoSuchMessageException e) {
-				logger
-						.debug(String
-								.format(
-										"Message Source [%s] does not contain message with key '%s' and locale '%s'",
-										messageSource.getClass().getName(),
-										code, locale));
+				logger.debug(String
+						.format("Message Source [%s] does not contain message with key '%s' and locale '%s'",
+								messageSource.getClass().getName(), code,
+								locale));
 			}
 		}
 

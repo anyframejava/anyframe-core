@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.exception;
 
 import java.util.Locale;
@@ -22,9 +22,9 @@ import org.anyframe.exception.message.Message;
 import org.anyframe.exception.message.MessageHandler;
 import org.springframework.context.MessageSource;
 
-
 /**
- * General Exception
+ * Framework General Exception
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
@@ -48,7 +48,7 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * Contains user defined message, solution message and reason.
 	 */
 	protected Message message = new Message();
-	
+
 	/**
 	 * Default Locale
 	 */
@@ -78,7 +78,7 @@ public class BaseException extends Exception implements DetailMessageSource {
 		this.message = MessageHandler.handleExMessage(messageSource,
 				messageKey, messageParameters, defaultMessage);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -90,7 +90,7 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param messageParameters
 	 *            the parameters to substitute in the message
 	 * @param locale
-	 *            the locale for language			
+	 *            the locale for language
 	 * @param defaultMessage
 	 *            default message
 	 * @param wrappedException
@@ -122,9 +122,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			Object[] messageParameters, Throwable wrappedException) {
-		this(messageSource, messageKey, messageParameters, Locale.getDefault(),  null , wrappedException);
+		this(messageSource, messageKey, messageParameters, Locale.getDefault(),
+				null, wrappedException);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -136,16 +137,17 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param messageParameters
 	 *            the parameters to substitute in the message
 	 * @param locale
-	 *            the locale for language		
+	 *            the locale for language
 	 * @param wrappedException
 	 *            the exception that is wrapped in this exception
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
-			Object[] messageParameters, Locale locale,  Throwable wrappedException) {
-		this(messageSource, messageKey, messageParameters, locale,  null , wrappedException);
+			Object[] messageParameters, Locale locale,
+			Throwable wrappedException) {
+		this(messageSource, messageKey, messageParameters, locale, null,
+				wrappedException);
 	}
-	
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -159,9 +161,9 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			Throwable wrappedException) {
-		this(messageSource, messageKey, null, Locale.getDefault(), null, wrappedException);
+		this(messageSource, messageKey, null, Locale.getDefault(), null,
+				wrappedException);
 	}
-	
 
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
@@ -174,12 +176,11 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param wrappedException
 	 *            the exception that is wrapped in this exception
 	 */
-	public BaseException(MessageSource messageSource, String messageKey, Locale locale, Throwable wrappedException) {
+	public BaseException(MessageSource messageSource, String messageKey,
+			Locale locale, Throwable wrappedException) {
 		this(messageSource, messageKey, null, locale, null, wrappedException);
 	}
-	
-	
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -189,7 +190,7 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param messageKey
 	 *            the message key of this exception
 	 * @param locale
-	 *            the locale for language		
+	 *            the locale for language
 	 * @param defaultMessage
 	 *            default message
 	 * @param wrappedException
@@ -197,9 +198,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			String defaultMessage, Throwable wrappedException) {
-		this(messageSource, messageKey, null, Locale.getDefault(), defaultMessage, wrappedException);
+		this(messageSource, messageKey, null, Locale.getDefault(),
+				defaultMessage, wrappedException);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -213,9 +215,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param wrappedException
 	 *            the exception that is wrapped in this exception
 	 */
-	public BaseException(MessageSource messageSource, String messageKey, Locale locale,
-			String defaultMessage, Throwable wrappedException) {
-		this(messageSource, messageKey, null, locale, defaultMessage, wrappedException);
+	public BaseException(MessageSource messageSource, String messageKey,
+			Locale locale, String defaultMessage, Throwable wrappedException) {
+		this(messageSource, messageKey, null, locale, defaultMessage,
+				wrappedException);
 	}
 
 	/**
@@ -231,9 +234,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			Object[] messageParameters) {
-		this(messageSource, messageKey, messageParameters, Locale.getDefault(), null, null);
+		this(messageSource, messageKey, messageParameters, Locale.getDefault(),
+				null, null);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -245,7 +249,7 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param messageParameters
 	 *            the parameters to substitute in the message
 	 * @param locale
-	 *            the locale for language		
+	 *            the locale for language
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			Object[] messageParameters, Locale locale) {
@@ -267,9 +271,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			Object[] messageParameters, String defaultMessage) {
-		this(messageSource, messageKey, messageParameters, Locale.getDefault(), defaultMessage, null);
+		this(messageSource, messageKey, messageParameters, Locale.getDefault(),
+				defaultMessage, null);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -281,13 +286,14 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param defaultMessage
 	 *            default message
 	 * @param locale
-	 *            the locale for language		
+	 *            the locale for language
 	 * @param messageParameters
 	 *            the parameters to substitute in the message
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			Object[] messageParameters, Locale locale, String defaultMessage) {
-		this(messageSource, messageKey, messageParameters, locale, defaultMessage, null);
+		this(messageSource, messageKey, messageParameters, locale,
+				defaultMessage, null);
 	}
 
 	/**
@@ -302,7 +308,7 @@ public class BaseException extends Exception implements DetailMessageSource {
 	public BaseException(MessageSource messageSource, String messageKey) {
 		this(messageSource, messageKey, null, Locale.getDefault(), null, null);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -312,9 +318,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param messageKey
 	 *            the message key of this exception
 	 * @param locale
-	 *            the locale for language		
+	 *            the locale for language
 	 */
-	public BaseException(MessageSource messageSource, String messageKey, Locale locale) {
+	public BaseException(MessageSource messageSource, String messageKey,
+			Locale locale) {
 		this(messageSource, messageKey, null, locale, null, null);
 	}
 
@@ -331,9 +338,10 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 */
 	public BaseException(MessageSource messageSource, String messageKey,
 			String defaultMessage) {
-		this(messageSource, messageKey, null, Locale.getDefault(), defaultMessage, null);
+		this(messageSource, messageKey, null, Locale.getDefault(),
+				defaultMessage, null);
 	}
-	
+
 	/**
 	 * The constructor with a message key, with parameters, and with a wrapped
 	 * exception (with all the formal parameters).
@@ -343,12 +351,12 @@ public class BaseException extends Exception implements DetailMessageSource {
 	 * @param messageKey
 	 *            the message key of this exception
 	 * @param locale
-	 *            the locale for language		
+	 *            the locale for language
 	 * @param defaultMessage
 	 *            default message
 	 */
-	public BaseException(MessageSource messageSource, String messageKey, Locale locale,
-			String defaultMessage) {
+	public BaseException(MessageSource messageSource, String messageKey,
+			Locale locale, String defaultMessage) {
 		this(messageSource, messageKey, null, locale, defaultMessage, null);
 	}
 
@@ -372,8 +380,8 @@ public class BaseException extends Exception implements DetailMessageSource {
 	}
 
 	/**
-	 * The constructor with a message and parameters. No Throwable or
-	 * Exception is transfered.
+	 * The constructor with a message and parameters. No Throwable or Exception
+	 * is transfered.
 	 * 
 	 * @param message
 	 *            the message of this exception

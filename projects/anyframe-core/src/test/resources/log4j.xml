@@ -10,7 +10,7 @@
         </layout>   
     </appender>
     
-    <logger name="anyframe.core.properties.IPropertiesService">
+    <logger name="org.anyframe.util.properties.PropertiesService">
         <level value="DEBUG"/>
         <appender-ref ref="console"/>
     </logger>       

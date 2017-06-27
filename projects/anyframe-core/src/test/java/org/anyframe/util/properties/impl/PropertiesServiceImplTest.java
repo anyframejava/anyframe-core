@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,17 @@
  */
 package org.anyframe.util.properties.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import javax.inject.Inject;
+
 import org.anyframe.exception.message.DetailMessageSource;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * For testing functions what Properties Service supports, there are some test
@@ -25,19 +34,13 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-public class PropertiesServiceImplTest extends
-		AbstractDependencyInjectionSpringContextTests {
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "file:./src/test/resources/spring/context-*.xml" })
+public class PropertiesServiceImplTest {
+
+	@Inject
 	private PropertiesServiceImpl propertiesService;
-
-	/**
-	 * overrided
-	 * 
-	 * @return String[]
-	 */
-	protected String[] getConfigLocations() {
-		return new String[] { "spring/context-*.xml" };
-	}
 
 	/**
 	 * [Flow #-1] Negative Case : test refreshPropertyFiles method after
@@ -46,13 +49,10 @@ public class PropertiesServiceImplTest extends
 	 * @throws Exception
 	 *             fail to test
 	 */
+	@Test
 	public void testRefreshPropertyFiles() throws Exception {
-		// 1. initialize PropertiesService
-		propertiesService = (PropertiesServiceImpl) applicationContext
-				.getBean("propertiesService");
-
 		try {
-			// 2. try to refresh
+			// 1. try to refresh
 			propertiesService.refreshPropertyFiles();
 		} catch (Exception e) {
 			assertTrue(e instanceof DetailMessageSource);
@@ -67,14 +67,12 @@ public class PropertiesServiceImplTest extends
 	 * @throws Exception
 	 *             fail to test
 	 */
+	@Test
 	public void testDestroy() throws Exception {
-		// 1. initialize
-		propertiesService = (PropertiesServiceImpl) applicationContext
-				.getBean("propertiesService");
-		// 2. destroy propertiesService
+		// 1. destroy propertiesService
 		propertiesService.destroy();
 
-		// 3. get a specific property
+		// 2. get a specific property
 		assertNull(propertiesService.getString("tokens_on_multiple_lines"));
 	}
 

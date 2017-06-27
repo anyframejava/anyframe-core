@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.sample.datasource.dsconfig;
 
 import static org.junit.Assert.assertEquals;
@@ -24,13 +24,14 @@ import org.junit.runners.JUnit4;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
 /**
+ * Unit testcase for each datasource
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
 @RunWith(JUnit4.class)
-public class SimpleConfigurationTest{
+public class SimpleConfigurationTest {
 
 	ApplicationContext context;
 
@@ -77,7 +78,7 @@ public class SimpleConfigurationTest{
 				"classpath:spring/context-datasource-jndi-unit.xml");
 
 		// JdbcSomeDAO sfBean = (JdbcSomeDAO) context.getBean("someDAO");
-		//		
+		//
 		// assertEquals(sfBean.getJdbcTemplate().getDataSource().getClass()
 		// .getName(),
 		// "org.springframework.jdbc.datasource.DriverManagerDataSource");

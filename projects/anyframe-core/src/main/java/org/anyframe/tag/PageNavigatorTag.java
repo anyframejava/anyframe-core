@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,32 +88,44 @@ public class PageNavigatorTag extends TagSupport {
 
 			// 1. define image-button part for moving first page
 			if (pages.hasPreviousPageUnit()) {
-				generatedCodes = appendCodes(generatedCodes, getLinkedTag(
-						"btnFirst", pageNumScript, pages
-								.getPageOfPreviousPageUnit(),
-						pageFirstImageStyleClass, "previousPageUnit" , firstImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getLinkedTag("btnFirst", pageNumScript,
+								pages.getPageOfPreviousPageUnit(),
+								pageFirstImageStyleClass, "previousPageUnit",
+								firstImg));
 
-				generatedCodes = appendCodes(generatedCodes,
+				generatedCodes = appendCodes(
+						generatedCodes,
 						checkPartialRendering(
 								pages.getPageOfPreviousPageUnit(),
 								"previousPageUnit", isPartial)
 								+ "</label>");
 			} else {
-				generatedCodes = appendCodes(generatedCodes, getUnlinkedTag("btnFirst", pageFirstImageStyleClass, "previousPageUnit",  firstImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getUnlinkedTag("btnFirst", pageFirstImageStyleClass,
+								"previousPageUnit", firstImg));
 			}
 
 			// 2. define image-button part for moving previous page
 			if (pages.hasPreviousPage()) {
-				generatedCodes = appendCodes(generatedCodes, getLinkedTag(
-						"btnPrev", pageNumScript, pages.getPreviousPage(),
-						pagePreviousImageStyleClass, "previousPage", prevImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getLinkedTag("btnPrev", pageNumScript,
+								pages.getPreviousPage(),
+								pagePreviousImageStyleClass, "previousPage",
+								prevImg));
 
-				generatedCodes = appendCodes(generatedCodes,
+				generatedCodes = appendCodes(
+						generatedCodes,
 						checkPartialRendering(pages.getPreviousPage(),
-								"previousPage", isPartial)
-								+ "</label>");
+								"previousPage", isPartial) + "</label>");
 			} else {
-				generatedCodes = appendCodes(generatedCodes, getUnlinkedTag("btnPrev", pagePreviousImageStyleClass, "previousPage", prevImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getUnlinkedTag("btnPrev", pagePreviousImageStyleClass,
+								"previousPage", prevImg));
 			}
 
 			// 3. define page number part for moving a specific page
@@ -123,48 +135,61 @@ public class PageNavigatorTag extends TagSupport {
 				for (int i = pages.getBeginUnitPage(); i <= pages
 						.getEndListPage(); i++) {
 					if (i == pages.getCurrentPage()) {
-						generatedCodes = appendCodes(generatedCodes,
-								"<span>"+ i + "</span>");
+						generatedCodes = appendCodes(generatedCodes, "<span>"
+								+ i + "</span>");
 					} else {
 						String id = new Integer(i).toString();
 						generatedCodes = appendCodes(generatedCodes,
 								"<span><a id='page" + id + "' " + "href='"
 										+ pageNumScript + id + ";" + linkUrl
 										+ "'>");
-						generatedCodes = appendCodes(generatedCodes, i
-								+ "</a></span>"
-								+ checkPartialRendering(i, "page" + id,
-										isPartial));
+						generatedCodes = appendCodes(
+								generatedCodes,
+								i
+										+ "</a></span>"
+										+ checkPartialRendering(i, "page" + id,
+												isPartial));
 					}
 				}
 			}
 
 			// 4. define image-button part for moving next page
 			if (pages.hasNextPage()) {
-				generatedCodes = appendCodes(generatedCodes, getLinkedTag(
-						"btnNext", pageNumScript, pages.getNextPage(),
-						pageNextImageStyleClass, "nextPage", nextImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getLinkedTag("btnNext", pageNumScript,
+								pages.getNextPage(), pageNextImageStyleClass,
+								"nextPage", nextImg));
 
-				generatedCodes = appendCodes(generatedCodes,
+				generatedCodes = appendCodes(
+						generatedCodes,
 						checkPartialRendering(pages.getNextPage(), "nextPage",
-								isPartial)
-								+ "</label>");
+								isPartial) + "</label>");
 			} else {
-				generatedCodes = appendCodes(generatedCodes, getUnlinkedTag("btnNext", pageNextImageStyleClass, "nextPage",  nextImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getUnlinkedTag("btnNext", pageNextImageStyleClass,
+								"nextPage", nextImg));
 			}
 
 			// 5. define image-button part for moving last page
 			if (pages.hasNextPageUnit()) {
-				generatedCodes = appendCodes(generatedCodes, getLinkedTag("btnLast", pageNumScript, pages
-								.getPageOfNextPageUnit(),
-						pageLastImageStyleClass, "nextPageUnit", lastImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getLinkedTag("btnLast", pageNumScript,
+								pages.getPageOfNextPageUnit(),
+								pageLastImageStyleClass, "nextPageUnit",
+								lastImg));
 
-				generatedCodes = appendCodes(generatedCodes,
+				generatedCodes = appendCodes(
+						generatedCodes,
 						checkPartialRendering(pages.getPageOfNextPageUnit(),
-								"nextPageUnit", isPartial)
-								+ "</label>");
+								"nextPageUnit", isPartial) + "</label>");
 			} else {
-				generatedCodes = appendCodes(generatedCodes,  getUnlinkedTag("btnLast", pageLastImageStyleClass,"nextPageUnit", lastImg));
+				generatedCodes = appendCodes(
+						generatedCodes,
+						getUnlinkedTag("btnLast", pageLastImageStyleClass,
+								"nextPageUnit", lastImg));
 			}
 
 			if (isPartial) {
@@ -206,8 +231,8 @@ public class PageNavigatorTag extends TagSupport {
 		if (isPartial) {
 			checkResult = StringUtils.replace(PARTIAL_RENDERING, "{elementId}",
 					elementId);
-			checkResult = StringUtils.replace(checkResult, "{formId}", this
-					.getFormName());
+			checkResult = StringUtils.replace(checkResult, "{formId}",
+					this.getFormName());
 			checkResult = StringUtils.replace(checkResult, "{pageIndex}",
 					new Integer(pageIndex).toString());
 			checkResult = StringUtils.replace(checkResult, "{dynamicAttrName}",
@@ -229,34 +254,40 @@ public class PageNavigatorTag extends TagSupport {
 	}
 
 	private String getLinkedTag(String id, String pageNumScript,
-			int pageIndexValue, String styleClassName, String alt, String imagePath) {
-		
+			int pageIndexValue, String styleClassName, String alt,
+			String imagePath) {
+
 		String onClick = pageNumScript + pageIndexValue + ";" + linkUrl;
-		
-		return "<label for=\""+ alt + "\">" + getImgTag( id, imagePath, alt, styleClassName, onClick) ;
-		
-		
+
+		return "<label for=\"" + alt + "\">"
+				+ getImgTag(id, imagePath, alt, styleClassName, onClick);
+
 	}
 
-	private String getUnlinkedTag(String id, String styleClassName, String alt, String imagePath ) {
-		return "<label for=\"" + alt + "\">" + getImgTag(id, imagePath, alt, styleClassName, "") + "</label>";
+	private String getUnlinkedTag(String id, String styleClassName, String alt,
+			String imagePath) {
+		return "<label for=\"" + alt + "\">"
+				+ getImgTag(id, imagePath, alt, styleClassName, "")
+				+ "</label>";
 	}
 
-	private String getImgTag(String id, String imagePath, String alt, String styleClassName, String onClick) {
-		
-		String imgTag = "<input type=\"button\" id=\"" + alt + "\" name=\"" + id + "\" alt=\"" + alt + "\"";
-		
-		if( imagePath.length() > 0  ){
+	private String getImgTag(String id, String imagePath, String alt,
+			String styleClassName, String onClick) {
+
+		String imgTag = "<input type=\"button\" id=\"" + alt + "\" name=\""
+				+ id + "\" alt=\"" + alt + "\"";
+
+		if (imagePath.length() > 0) {
 			imgTag = imgTag + " src=\"" + imagePath + "\"";
 		}
-		if( styleClassName.length() > 0 ){
-			imgTag = imgTag + " class=\"" +styleClassName + "\"";
+		if (styleClassName.length() > 0) {
+			imgTag = imgTag + " class=\"" + styleClassName + "\"";
 		}
-		if( onClick.length() > 0 ){
-			imgTag = imgTag + " onclick=\"" + onClick  +"\"";
+		if (onClick.length() > 0) {
+			imgTag = imgTag + " onclick=\"" + onClick + "\"";
 		}
 		imgTag = imgTag + "/>";
-		
+
 		return imgTag;
 	}
 
@@ -383,8 +414,8 @@ public class PageNavigatorTag extends TagSupport {
 	}
 
 	protected String appendCodes(String all, String part) {
-		StringBuilder result = new StringBuilder(all.length() + part.length() + 1)
-				.append(all).append(part).append("\n");
+		StringBuilder result = new StringBuilder(all.length() + part.length()
+				+ 1).append(all).append(part).append("\n");
 		return result.toString();
 	}
 }

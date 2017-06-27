@@ -53,7 +53,7 @@
 				있음을 알 수 있다. contextProperties Bean으로부터 'pageSize', 'pageUnit' 정보를 추출하여 해당하는 field의 값을 셋팅하고 이를 활용하게 될 것이다.
 			</para>	
 			<programlisting language="java">@Repository("coreMovieDao")
-public class MovieDao extends SimpleJdbcDaoSupport {
+public class MovieDao extends JdbcDaoSupport {
     <emphasis role="bold">@Value("#{contextProperties['pageSize'] ?: 10}")</emphasis>
     int pageSize;
 
@@ -599,7 +599,7 @@ String randomPhrase =
 							<tbody>										
 								<row>
 									<entry align="center">anyframe-sample-spel.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/anyframe-sample-spel.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-spel.zip">Download</ulink>
 									</entry>
 								</row>														
 							</tbody>

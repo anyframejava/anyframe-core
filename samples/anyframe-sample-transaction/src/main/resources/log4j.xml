@@ -8,7 +8,7 @@
         </layout>   
     </appender>
     
-    <logger name="anyframe.sample.transaction">
+    <logger name="org.anyframe.sample.transaction">
     	<level value="DEBUG"/>
     	<appender-ref ref="console"/>
     </logger>

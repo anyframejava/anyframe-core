@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,39 +21,38 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
+ * This class is test case for xml configuration.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
 public class SimpleConfigurationTest extends TestCase {
 
-    ApplicationContext context;
+	ApplicationContext context;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
+	protected void tearDown() throws Exception {
+		super.tearDown();
 
-    }
+	}
 
-    public void test_dbcp() throws Exception {
-        context =
-            new ClassPathXmlApplicationContext(
-                "spring/unit/context-tx-dbcp.xml");
+	public void test_dbcp() throws Exception {
+		context = new ClassPathXmlApplicationContext(
+				"spring/unit/context-tx-dbcp.xml");
 
-    }
+	}
 
-    public void _test_jndi() throws Exception {
-        context =
-            new ClassPathXmlApplicationContext(
-                "spring/unit/context-tx-jndi.xml");
-    }
+	public void _test_jndi() throws Exception {
+		context = new ClassPathXmlApplicationContext(
+				"spring/unit/context-tx-jndi.xml");
+	}
 
-    public void test_tx_advice() throws Exception {
-        context =
-            new ClassPathXmlApplicationContext(
-                "spring/unit/context-tx-advice.xml");
-    }
+	public void test_tx_advice() throws Exception {
+		context = new ClassPathXmlApplicationContext(
+				"spring/unit/context-tx-advice.xml");
+	}
 
 }

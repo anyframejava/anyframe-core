@@ -183,7 +183,7 @@ public class MovieController {
 			<para>
 				또한, Spring 3 부터 REST 스타일의 Web Application 개발을 위해서 URI templates을 지원하기 시작했다. 
 				Spring 3에서 추가된 REST 관련 기능들과 REST Style 웹 어플리케이션 개발에 대한 자세한 내용은
-				본 매뉴얼 <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.1/reference/htmlsingle/springrest.html#springrest_restsupport_part">Spring REST Plugin</ulink>을 
+				본 매뉴얼 <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.2/reference/htmlsingle/springrest.html#springrest_restsupport_part">Spring REST Plugin</ulink>을 
 				참고하기 바란다.
 			</para>
 			<para>다음은 @RequestMapping을 사용하여 처리할 URL을 매핑한 코드예이다.    
@@ -223,6 +223,7 @@ public class MovieController {
 								<entry>
 									<para>"value='/getMovie.do'"와 같은 형식의 매핑 URL 값이다. 디폴트 속성이기 때문에
 									value만 정의하는 경우에는 'value='은 생략할 수 있다.</para>
+									<para>URL Pattern의 배열 형태로 입력 받으며, OR 조건으로 처리한다.</para>
 									<para>예 : @RequestMapping(value={"/addMovie.do", "/updateMovie.do" }) 
 									이와 같은 경우 "/addMovie.do", "/updateMovie.do" 두 URL 모두 처리한다.</para>
 								</entry>
@@ -234,10 +235,16 @@ public class MovieController {
 								</entry>
 
 								<entry>
+								<para>
 									GET, POST, HEAD 등으로 표현되는 HTTP Request method에 따라 requestMapping을 할 수 있다. 
 									'method=RequestMethod.GET' 형식으로 사용한다. method 값을 정의하지 않는 경우 모든 HTTP 
-									Request method에 대해서 처리한다. 예 :@RequestMapping(method = RequestMethod.POST). 
-									이 경우 value 값은 클래스 선언에 정의한 @RequestMapping의 value 값을 상속받는다.
+									Request method에 대해서 처리한다. 
+								</para>
+								<para>HTTP Request method의 배열 형태로 입력 받으며, OR 조건으로 처리한다.</para>
+								<para>
+									예 : @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
+									이 경우, POST, GET 두 메소드 타입을 모두 처리한다. 또, value 값은 클래스 선언에 정의한 @RequestMapping의 value 값을 상속받는다.
+								</para>
 								</entry>
 							</row>
 
@@ -251,8 +258,11 @@ public class MovieController {
 									HTTP Request로 들어오는 파라미터 표현이다.'params={"param1=a",
 									"param2", "!myParam"}' 로 다양하게 표현 가능하다.</para>
 									<para>
-									예 : @RequestMapping(params = 
-									{"param1=a", "param2", "!myParam"})위의 경우 HTTP Request에 param1과 param2 파라미터가 
+										HTTP Request에 포함된 parameter의 배열 형태로 입력 받으며, AND 조건으로 처리한다.
+									</para>
+									<para>
+									예 : @RequestMapping(params = {"param1=a", "param2", "!myParam"})
+									위의 경우 HTTP Request에 param1과 param2 파라미터가 
 									존재해야하고 param1의 값은 'a'이어야하며, myParam이라는 파라미터는 존재하지 않아야한다. 
 									또한, value 값은 클래스 선언에 정의한 @RequestMapping의 value 값을 상속받는다.
 									</para>
@@ -264,12 +274,64 @@ public class MovieController {
 								</entry>
 
 								<entry>
+								<para>
 									HTTP Request의 헤더 값이다.'headers="someHeader=someValue"', 'headers="someHeader"', 'headers="!someHeader"' 로 다양하게 표현 가능하다.
 									Accept나 Content-Type 같은 헤더에 대해서 media type 표현 시 '*' 도 지원한다. 
-									예 : @RequestMapping(value="/movie.do", headers="content-type=text/*") 의 경우 
+								</para>
+									HTTP Request의 헤더값을 배열로 입력 받으며, AND 조건으로 처리된다. 단, 이때 Accept와 Content-type 조건은 제외된다.
+									자세한 내용은 아래의 consumes, produces 부분을 참고한다.
+								<para>
+									예 : @RequestMapping(value="/movie.do", headers="Content-type=text/*") 의 경우 
 									HTTP Request에 Content-Type 헤더 값이 "text/html", "text/plain" 모두 매칭이 된다.
 									또한, Type-Level, Method-Level에서 모두 사용할 수 있는데, Type-Level에 정의된 경우, 
 									하위의 모든 핸들러 메소드에서도 Type-Level에서 정의한 헤더값 제한이 적용된다.
+								</para>
+								</entry>
+							</row>
+							<row>
+								<entry>
+									<emphasis role="bold">consumes </emphasis>
+								</entry>
+
+								<entry>
+								<para>
+									Spring 3.1에서부터 제공하는 기능으로, 
+									HTTP Request의 헤더 값 중에서 'Content-Type'으로 정의된 media type 표현식의 배열을 입력값으로 받으며, OR 조건으로 처리된다.
+								</para>
+								<para>
+									예 : @RequestMapping(consumes={"text/plain", "application/*"}) 의 경우 
+									HTTP Request에 Content-Type 헤더 값이 "text/plain", "application/*" 모두 매칭이 된다.
+								</para>
+								<para>
+									또한, headers에 대한 입력값으로 Content-Type을 입력한 경우 내부적으로 consumes에 대한 입력값으로 처리된다.
+								</para>
+								<para>
+									예 : @RequestMapping(headers="Content-Type=text/*", consumes="application/*") 의 경우
+									HTTP Request에 Content-Type 헤더 값이 "text/*", "application/*"인 경우 모두 매칭이 된다.
+								</para>
+								</entry>
+							</row>
+							<row>
+								<entry>
+									<emphasis role="bold">produces </emphasis>
+								</entry>
+
+								<entry>
+								<para>
+									Spring 3.1에서부터 제공하는 기능으로, 
+									HTTP Request의 헤더 값 중에서 'Accept'로 정의된 MediaType 표현식의 배열을 입력값으로 받으며, OR 조건으로 처리된다.
+								</para>
+								<para>
+									예 : @RequestMapping(produces={"text/html", "application/*"}) 의 경우
+									HTTP Request에 Accept 헤더 값이 "text/html", "application/*" 모든 경우 매칭이 된다.
+								</para>
+								<para>
+									또한, @RequestMapping 의 header 입력값 중 'Accept'를 입력한 경우 내부적으로 produces에 대한 입력값으로 처리된다.
+								</para>
+								<para>
+									예 : @RequestMapping(headers="Accept=text/*", produces="application/*") 의 경우
+									HTTP Request에 Accept 헤더 값이 "text/*", "application/*" 인 경우 모두 매칭이 된다.
+								</para>
 								</entry>
 							</row>
 						</tbody>
@@ -416,10 +478,10 @@ protected ModelAndView handleRequestInternal( <emphasis role="bold">HttpSession 
     return new ModelAndView("/index.jsp");
 }</programlisting>
 							<note>
-								<title>AnnotationMethodHandlerAdapter의 'synchronizeOnSession' 속성</title>
+								<title>RequestMappingHandlerAdapter의 'synchronizeOnSession' 속성</title>
 								<para>Servlet 환경에서 Session 접근은 thread-safe하지 않기 때문에, 
 								Session에 저장된 정보에 여러개의 thread가 동시에 접근하여 변경할 가능성이 있는 경우
-								반드시 AnnotationMethodHandlerAdapter의 "synchronizeOnSession" 속성을 "true"로 셋팅하도록 한다.
+								반드시 RequestMappingHandlerAdapter의 "synchronizeOnSession" 속성을 "true"로 셋팅하도록 한다.
 								</para>
 							</note>
 						</para>
@@ -488,7 +550,7 @@ public String addMovie(<emphasis role="bold">OutputStream os</emphasis>, Movie m
 						</para>
 
 						<para>URI template 내의 변수를 핸들러 메소드에서 접근할 경우</para>
-						<para>@PathVariable에 대한 자세한 사용 방법은 본 매뉴얼 >> Spring REST Plugin >> <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.1/reference/htmlsingle/springrest.html#springrest_restsupport_uritemplate">URI Template</ulink> 참고</para>
+						<para>@PathVariable에 대한 자세한 사용 방법은 본 매뉴얼 >> Spring REST Plugin >> <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.2/reference/htmlsingle/springrest.html#springrest_restsupport_uritemplate">URI Template</ulink> 참고</para>
                         <programlisting language="java">@RequestMapping(<emphasis role="bold">value = "/movies/{movieId}/edit"</emphasis>, method = RequestMethod.GET)
 public String get(<emphasis role="bold">@PathVariable String movieId</emphasis>, Model model)
         throws Exception {
@@ -928,7 +990,7 @@ public String add(<emphasis role="bold">@RequestBody Movie movie</emphasis>) thr
 				위와 같은 MessageConverter들이 어플리케이션에서 사용되려면 AnnotationMethodHandlerAdapter에 설정되어 있어야한다.
 				AnnotationMethodHandlerAdapter에 <emphasis role="bold">"messageConverters" 속성을 이용</emphasis>하여 설정할 수도 있지만, 
 				앞서 언급했던 <emphasis role="bold"><![CDATA[<mvc:annotation-driven />]]></emphasis>만 정의하면 디폴트로 자동으로 등록해준다.
-				MessageConverter에 대한 더 자세한 내용은 본 매뉴얼 >> Spring REST Plugin >> <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.1/reference/htmlsingle/springrest.html#springrest_restsupport_httpmessageconversion">HTTP Message Conversion</ulink>을 참고하기 바란다.
+				MessageConverter에 대한 더 자세한 내용은 본 매뉴얼 >> Spring REST Plugin >> <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.2/reference/htmlsingle/springrest.html#springrest_restsupport_httpmessageconversion">HTTP Message Conversion</ulink>을 참고하기 바란다.
 			</para>
 		</section>
 		
@@ -1090,9 +1152,9 @@ public String displayHeaderInfo(<emphasis role="bold">@CookieValue("JSESSIONID")
 	    <itemizedlist>
 	    	<listitem>
 				<para>
-					<emphasis role="bold">반드시 AnnotationMethodHandlerAdapter의 synchronizeOnSession 속성을 true로 설정</emphasis>
-                    <programlisting language="xml"><![CDATA[<bean id="annotationHandlerAdaptor"
-        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+					<emphasis role="bold">반드시 RequestMappingHandlerAdapter의 synchronizeOnSession 속성을 true로 설정</emphasis>
+                    <programlisting language="xml"><![CDATA[<bean id="requestMappingHandlerAdapter"
+        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     ]]><emphasis role="bold"><![CDATA[<property name="synchronizeOnSession" value="true" />]]></emphasis>
 <![CDATA[</bean>]]></programlisting>
 				</para>

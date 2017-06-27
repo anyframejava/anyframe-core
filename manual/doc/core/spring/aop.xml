@@ -926,7 +926,15 @@ public class LoggingAspect {
       			메소드의 실행 부분이 Aspect을 적용할 Pointcut임을 의미한다. 해당 Pointcut은 serviceMethod()라는
       			이름으로 이용 가능하다.
 				<programlisting language="java"><emphasis role="bold">@Pointcut</emphasis>("execution(* org.anyframe.sample..*Impl.*(..))")
-public void serviceMethod(){}</programlisting>	
+public void serviceMethod(){}
+
+@Before(<emphasis role="bold">"serviceMethod()</emphasis>")>
+public void beforeLogging(JoinPoint thisJoinPoint) {
+...</programlisting>	
+      		</para>
+      		<para>
+      			또는 @Pointcut을 생략하고  @Before, @AfterReturning, @AfterThrowing, @After의 속성으로 바로 Pointcut을 정의할 수 있다.
+      			축약된 표현의 장점은 별도의 메소드 정의(serviceMethod()와 같은)를 하지 않아도 된다는 것이며 이에 대한 예제는 다음절에서 자세히 살펴보도록 하겠다.
       		</para>
     	</section>
     	
@@ -965,21 +973,29 @@ public void beforeLogging(JoinPoint thisJoinPoint) {
     }
 
     StringBuilder messageBuf = new StringBuilder();
-    messageBuf.append("before executing " + methodName + "(" + argBuf.toString() + ") method");
+    messageBuf.append("before executing {} ({}) method");
     messageBuf.append("\n-------------------------------------------------------------------------------\n");
-    messageBuf.append(argValueBuf.toString());
-    messageBuf.append("-------------------------------------------------------------------------------");
+    messageBuf.append(" {} -------------------------------------------------------------------------------");
 
-    Log logger = LogFactory.getLog(clazz);
-    if (logger.isDebugEnabled()) {
-        logger.debug(messageBuf.toString());
-    }
+    Logger logger = LoggerFactory.getLogger(clazz);
+    logger.debug(
+            messageBuf.toString(),
+            new Object[]{methodName, argBuf.toString(), argValueBuf.toString()});
 }]]></programlisting>
          		</para>
         		<para>
         			beforeLogging()는 1개의 입력 인자(JoinPoint)를 가지고 있는데 Target
         			클래스명, 메소드명 등과 같은 Target 정보를 포함하고 있다. Target 정보가 불필요한 Advice인 경우에는
         			JoinPoint라는 입력 인자를 선언하지 않아도 된다.</para>
+        		<para>
+        			또는 @Pointcut 태그를 생략하고 다음과 같이 @Before 태그내의 속성을 이용하여 축약형으로 정의할 수도 있다. 
+        			이 경우 serviceMethod()와 같이 @Pointcut 태그를 지정하기 위해 사용했던 메소드 정의는 생략된다. 
+				<programlisting language="java"><emphasis role="bold"><![CDATA[@Before("execution(* org.anyframe.sample..*Impl.*(..))")]]></emphasis><![CDATA[
+public void beforeLogging(JoinPoint thisJoinPoint) {
+...
+}]]></programlisting>
+         		</para>
+        			
       		</section>
       
       		<section id="core_spring_aop_annotation_advice_afterreturning">
@@ -991,7 +1007,7 @@ public void beforeLogging(JoinPoint thisJoinPoint) {
          			AfterReturning Advice인 afterReturningExecuteGetMethod()는 앞서 정의한 Pointcut 후에 , "AfterReturning
         			Advice of PrintStringUsingAnnotation"라는 문자열과 해당 Pointcut을 가진 클래스명,
         			메소드명을 출력하는 역할을 수행한다. <programlisting language="java">@<emphasis
-              		role="bold">AfterReturning(pointcut = "serviceMethod()", returning = "retVal")</emphasis>
+              		role="bold">AfterReturning(pointcut = "execution(* org.anyframe.sample..*Impl.*(..))", returning = "retVal")</emphasis>
 public void afterReturningExecuteGetMethod(JoinPoint thisJoinPoint, Object <emphasis role="bold">retVal</emphasis>) {
     Class targetClass = thisJoinPoint.getTarget().getClass();
     Signature signature = thisJoinPoint.getSignature();
@@ -1017,17 +1033,17 @@ public void afterReturningExecuteGetMethod(JoinPoint thisJoinPoint, Object <emph
         	<para>
         		@AfterThrowing을 이용하여 AfterThrowing Advice를 정의한다. 다음은 transfer의 AfterThrowing Advice 정의 부분으로
         		 해당 Pointcut 실행시 발생한 Exception 객체를 exception이라는 변수에 담도록 정의하고 있다. AfterThrowing
-        		Advice인 serviceMethod()는 앞서 정의한 Pointcut에서 Exception이 발생한 후에 Exception을 핸들링하고 Exception의 종류에 따라
+        		Advice는 정의한 Pointcut에서 Exception이 발생한 후에 Exception을 핸들링하고 Exception의 종류에 따라
         		Exception meesage를 출력하게된다.
         		<programlisting language="java"><emphasis 
-        		role="bold">@AfterThrowing(pointcut = "serviceMethod()", throwing = "exception")</emphasis>
+        		role="bold">@AfterThrowing(pointcut = "execution(* org.anyframe.sample..*Impl.*(..))", throwing = "exception")</emphasis>
 public void transfer(JoinPoint thisJoinPoint, Exception exception) throws MovieFinderException {
     Object target = thisJoinPoint.getTarget();
     while (target instanceof Advised) {
     try {
         target = ((Advised) target).getTargetSource().getTarget();
     } catch (Exception e) {
-        LogFactory.getLog(this.getClass()).error("Fail to get target object
+        LogFactory.getLogger(this.getClass()).error("Fail to get target object
                     from JointPoint.", e);
         break;
         }
@@ -1035,7 +1051,7 @@ public void transfer(JoinPoint thisJoinPoint, Exception exception) throws MovieF
 	
     String className = target.getClass().getSimpleName().toLowerCase();
     String opName = (thisJoinPoint.getSignature().getName()).toLowerCase();
-    Log logger = LogFactory.getLog(target.getClass());
+    Log logger = LogFactory.getLogger(target.getClass());
 
     if (exception instanceof MovieFinderException) {
         SalesException empEx = (SalesException) exception;
@@ -1051,8 +1067,8 @@ public void transfer(JoinPoint thisJoinPoint, Exception exception) throws MovieF
     }		
 	
     logger.error(messageSource.getMessage("error." + className + "."
-                                        + opName, new String[] {}, "no messages",
-                                        Locale.getDefault()),exception);
+                                        + opName, new String[] {},
+                                        Locale.getDefault()), exception);
     throw new MovieFinderException(messageSource, "error." + className + "." + opName,
                      new String[] {}, exception);
 }</programlisting>
@@ -1073,10 +1089,10 @@ public void transfer(JoinPoint thisJoinPoint, Exception exception) throws MovieF
         		<para>
         			@After를 이용하여 After(finally) Advice를 정의한다. 다음은
         			PrintStringUsingAnnotation 의 After(finally) Advice 정의 부분이다.
-        			After(finally) Advice인 afterExecuteGetMethod()는 앞서 정의한 getMethods()라는
+        			After(finally) Advice인 afterExecuteGetMethod()는 get 메소드들을 정의한 
         			Pointcut 후에 "After(finally) Advice of PrintStringUsingAnnotation"라는
         			문자열과 해당 Pointcut을 가진 클래스명, 메소드명을 출력하는 역할을 수행한다.
-        			<programlisting language="java">@<emphasis role="bold">After("getMethods()")</emphasis>
+        			<programlisting language="java">@<emphasis role="bold">After("execution(* org.anyframe.sample..*Impl.get*(..))")</emphasis>
 public void afterExecuteGetMethod(JoinPoint thisJoinPoint) {
     Class targetClass = thisJoinPoint.getTarget().getClass();
     Signature signature = thisJoinPoint.getSignature();
@@ -1100,10 +1116,10 @@ public void afterExecuteGetMethod(JoinPoint thisJoinPoint) {
         		<para>
         			@Around를 이용하여 Around Advice를 정의한다. 다음은
         			PrintStringAroundUsingAnnotation 의 Around Advice 정의 부분이다. Around
-        			Advice인 aroundExecuteUpdateMethod()는 updateMethods()라는 Pointcut 후에
+        			Advice인 aroundExecuteUpdateMethod()는 update 메소드를 정의한 Pointcut 후에
         			"Around Advice of PrintStringUsingAnnotation"라는 문자열과 해당 Pointcut을 가진
         			클래스명, 메소드명을 출력하는 역할을 수행한다.
-        			<programlisting language="java">@<emphasis role="bold">Around("updateMethods()")</emphasis>
+        			<programlisting language="java">@<emphasis role="bold">Around("execution(* org.anyframe.sample..*Impl.update*(..))")</emphasis>
 public Object aroundExecuteUpdateMethod(ProceedingJoinPoint thisJoinPoint) throws Throwable {
     Class targetClass = thisJoinPoint.getTarget().getClass();
     Signature signature = thisJoinPoint.getSignature();
@@ -1233,9 +1249,9 @@ title=Shrek (2001), genreId=GR-03]
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:aop="http://www.springframework.org/schema/aop"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
     http://www.springframework.org/schema/aop
-    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
     <bean id="methodLoggingAspect" class="org.anyframe.sample.aop.common.aspect.LoggingAspect" />
     <bean id="exceptionTransfer" class="org.anyframe.sample.aop.common.aspect.ExceptionTransfer">
@@ -1305,15 +1321,14 @@ title=Shrek (2001), genreId=GR-03]
         }
 
         StringBuilder messageBuf = new StringBuilder();
-        messageBuf.append("before executing " + methodName + "("+ argBuf.toString() + ") method");
+        messageBuf.append("before executing {} ({}) method");
         messageBuf.append("\n-------------------------------------------------------------------------------\n");
-        messageBuf.append(argValueBuf.toString());
-        messageBuf.append("-------------------------------------------------------------------------------");
+        messageBuf.append(" {} -------------------------------------------------------------------------------");
 
-        Log logger = LogFactory.getLog(clazz);
-        if (logger.isDebugEnabled()) {
-            logger.debug(messageBuf.toString());
-        }
+        Logger logger = LoggerFactory.getLogger(clazz);
+        logger.debug(
+                messageBuf.toString(),
+                new Object[]{methodName, argBuf.toString(), argValueBuf.toString()});
     }
 }]]></programlisting>
 				</para>
@@ -1399,7 +1414,7 @@ title=Shrek (2001), genreId=GR-03]
             try {
                 target = ((Advised) target).getTargetSource().getTarget();
             } catch (Exception e) {
-                LogFactory.getLog(this.getClass()).error(
+                LogFactory.getLogger(this.getClass()).error(
                     "Fail to get target object from JointPoint.", e);
                 break;
             }
@@ -1407,7 +1422,7 @@ title=Shrek (2001), genreId=GR-03]
 
         String className = target.getClass().getSimpleName().toLowerCase();
         String opName = (thisJoinPoint.getSignature().getName()).toLowerCase();
-        Log logger = LogFactory.getLog(target.getClass());
+        Log logger = LogFactory.getLogger(target.getClass());
 
         if (exception instanceof SalesException) {
             SalesException empEx = (SalesException) exception;
@@ -1423,7 +1438,8 @@ title=Shrek (2001), genreId=GR-03]
         }		
 
         logger.error(messageSource.getMessage("error." + className + "."
-                + opName, new String[] {}, "no messages", Locale.getDefault()), exception);
+                                            + opName, new String[] {},
+                                            Locale.getDefault()), exception);
 
         throw new SalesException(messageSource, "error." + className + "."
                 + opName, new String[] {}, exception);
@@ -1564,7 +1580,8 @@ title=Shrek (2001), genreId=GR-03]
     </sourceroots>
     <classpath>
         <pathelement location="${lib.dir}/aspectjrt-1.5.4.jar" />
-        <pathelement location="${lib.dir}/commons-logging-1.0.4.jar" />
+        <pathelement location="${lib.dir}/slf4j-api-1.6.4.jar" />
+        <pathelement location="${lib.dir}/slf4j-log4j12-1.6.4.jar" />
     </classpath>]]>
    <emphasis role="bold"><![CDATA[</iajc>]]></emphasis>
 <![CDATA[</target>]]></programlisting>
@@ -1789,6 +1806,19 @@ title=Shrek (2001), genreId=GR-03]
         			Spring 속성 정의 XML 파일에 다음과 같이 추가해주어야 한다.
         			<programlisting language="xml"><![CDATA[<aop:aspectj-autoproxy/>]]></programlisting>
         		</para>
+        		<para>
+        			log 출력을 위하여 log4j.xml 의 설정 내용을 확인하고 적절히 수정해 주어야 한다. 이번 예제에서는 org.anyframe.sample 패키지를 기준으로 로그를 출력할 예정이므로, 다음과 같이 DEBUG 레벨의 로거를 설정하여 준다. 
+        			<programlisting language="xml"><![CDATA[<logger name="org.anyframe.sample" additivity="false">	
+    <level value="DEBUG"/>
+    <appender-ref ref="console"/>
+</logger>]]></programlisting>
+        		</para>
+        		
+        		
+        			<logger name="org.anyframe.plugin" additivity="false">	
+        <level value="INFO"/>
+        <appender-ref ref="console"/>
+    </logger>
       		</section>
       		
       		<section id="core_spring_aop_examples_logging_aspect">
@@ -1801,11 +1831,7 @@ title=Shrek (2001), genreId=GR-03]
 @Service
 public class LoggingAspect {
 
-    @Pointcut("execution(* org.anyframe.sample..*Impl.*(..))")
-    public void serviceMethod() {
-    }
-
-    @Before("serviceMethod()")
+    @Before("execution(* org.anyframe.sample..*Impl.*(..))")
     public void beforeLogging(JoinPoint thisJoinPoint) {
         Class<? extends Object> clazz = thisJoinPoint.getTarget().getClass();
         String methodName = thisJoinPoint.getSignature().getName();
@@ -1828,15 +1854,14 @@ public class LoggingAspect {
         }
 
         StringBuilder messageBuf = new StringBuilder();
-        messageBuf.append("before executing " + methodName + "("+ argBuf.toString() + ") method");
+        messageBuf.append("before executing {} ({}) method");
         messageBuf.append("\n-------------------------------------------------------------------------------\n");
-        messageBuf.append(argValueBuf.toString());
-        messageBuf.append("-------------------------------------------------------------------------------");
+        messageBuf.append(" {} -------------------------------------------------------------------------------");
 
-        Log logger = LogFactory.getLog(clazz);
-        if (logger.isDebugEnabled()) {
-            logger.debug(messageBuf.toString());
-        }
+        Log logger = LogFactory.getLogger(clazz);
+        logger.debug(
+            messageBuf.toString(), 
+            new Object[]{methodName, argBuf.toString(), argValueBuf.toString()});
     }
 }]]></programlisting></para>
 
@@ -1948,7 +1973,7 @@ before executing remove(String arg1) method
             try {
                 target = ((Advised) target).getTargetSource().getTarget();
             } catch (Exception e) {
-                LogFactory.getLog(this.getClass()).error(
+                LogFactory.getLogger(this.getClass()).error(
                         "Fail to get target object from JointPoint.", e);
                 break;
             }
@@ -1956,7 +1981,7 @@ before executing remove(String arg1) method
 
         String className = target.getClass().getSimpleName().toLowerCase();
         String opName = (thisJoinPoint.getSignature().getName()).toLowerCase();
-        Log logger = LogFactory.getLog(target.getClass());
+        Log logger = LogFactory.getLogger(target.getClass());
 
         if (exception instanceof SalesException) {
             SalesException empEx = (SalesException) exception;
@@ -1972,7 +1997,7 @@ before executing remove(String arg1) method
         }		
 
         logger.error(messageSource.getMessage("error." + className + "."
-                + opName, new String[] {}, "no messages", Locale.getDefault()),	exception);
+                + opName, new String[] {}, Locale.getDefault()), exception);
 
         throw new SalesException(messageSource, "error." + className + "."
                 + opName, new String[] {}, exception);
@@ -2022,11 +2047,7 @@ before executing remove(String arg1) method
 		        	이용하여 메소드 실행에 소요되는 시간을 측정하고, 이를 콘솔에 남기는 역할을 수행하게 될 것이다.
 		        	<programlisting language="java">@<emphasis role="bold">Aspect</emphasis>
 public class SimpleProfiler {
-    @<emphasis role="bold">Pointcut("execution(* org.anyframe.sample.aop.movidfinder.service..*Impl.create*(..))")</emphasis>
-    public void createMethods() {
-    }
-		
-    @<emphasis role="bold">Around("createMethods()")</emphasis>
+    @<emphasis role="bold">Around("execution(* org.anyframe.sample.aop.movidfinder.service..*Impl.create*(..))")</emphasis>
     public Object profile(ProceedingJoinPoint thisJoinPoint) throws Throwable {
         String className = thisJoinPoint.getSignature().getDeclaringTypeName();
         StopWatch stopWatch = new StopWatch("Profiling for [" + className + "]");

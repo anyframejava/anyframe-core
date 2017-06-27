@@ -269,49 +269,66 @@
 	    		<title>입력 화면</title>
 	    		
 	    		<para>
-	    			다음은 입력 화면 작성 예인 userForm.jsp 파일의 일부이다. 
+	    			다음은 영화 정보 입력 화면 작성 예인 form.jsp 파일의 일부이다. 
 	    			<programlisting language="xml"><![CDATA[<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<form:form commandName="users" name="form" enctype="multipart/form-data">
-    <table>
-    <tr><td colspan="3"><center><strong>
-        <spring:message code="title.user.form"></spring:message>
-    </strong></center><br/><br/></td></tr>
-        <tr>
-            <td> Name :</td>
-            <td><form:input path="userName" />(required)</td>
-            <td><form:errors path="userName" /></td>
-        </tr>
-        <tr>
-            <td>password :</td>
-            <td><form:password path="password" />(required, 6자이상입력)</td>
-            <td><form:errors path="password" /></td>
-        </tr>
-        <tr>
-            <td>confirm password :</td>
-            <td><form:password path="confirmPassword" />(위의 password와 동일해야함)</td>
-            <td><form:errors path="confirmPassword" /></td>
-        </tr>
-        <tr>
-            <td>sex :</td>
-            <td><form:radiobutton path="sex" value="M" label="남자" /> 
-            <form:radiobutton path="sex" value="F" label="여자" /></td>
-        </tr>
-        <tr>
-            <td>address :</td>
-            <!-- items 속성을 사용하여 컨트롤러의 
-            formbackingObject()에서 넘겨준  Map 형태의 객체를 받아 출력해준다. -->
-            <td><form:select path="address" items="${address}"/>
-        </tr>
-        <tr>
-            <td>hobby :</td>
-            <td><form:checkboxes path="hobby" items="${hobby}" /></td>
-        </tr>
-        <tr>
-            <td>Note :</td>
-            <td><form:textarea path="comment" rows="3" cols="20"></form:textarea></td>
-        </tr>
-    </table>
-    <a href="javascript:fncGetUser();">submit</a>
+<form:form modelAttribute="movie" name="movieForm" method="post">
+	<c:if test="${not empty movie.movieId}">
+		<form:hidden path="movieId" />
+	</c:if>
+	<table summary="This table shows detail information about genre, title, director, actors, runtime, release date, ticket price of the movie">
+		<caption>Detail information</caption>
+		<colgroup>
+			<col style="width:20%;" />
+			<col style="width:80%;" />
+		</colgroup>
+		<tbody>
+			<tr>
+				<th><label for="title"><spring:message code="movie.title" />&nbsp;*</label></th>
+				<td><form:input path="title" cssClass="w_normal" /><form:errors path="title" cssClass="errors" /></td>
+			</tr>
+			<tr>
+				<th><label for="director"><spring:message code="movie.director" />&nbsp;*</label></th>
+				<td><form:input path="director" cssClass="w_normal" /><form:errors path="director" cssClass="errors" /></td>
+			</tr>
+			<tr>
+				<th><label for="genre"><spring:message code="movie.genre" />&nbsp;*</label></th>
+				<td>
+					<!-- items 속성을 사용하여 컨트롤러의  populateGenreList() 에서 넘겨준
+					Map 형태의 객체를 받아서 출력해준다. -->
+					<form:select id="genre" path="genre.genreId">
+					<form:options items="${genreList}" itemValue="genreId" itemLabel="name"/>
+					</form:select>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="actors"><spring:message code="movie.actors" />&nbsp;*</label></th>
+				<td><form:input path="actors" cssClass="w_normal" /><form:errors path="actors" cssClass="errors" /></td>
+			</tr>
+			<tr>
+				<th><label for="runtime"><spring:message code="movie.runtime" /></label></th>
+				<td><form:input path="runtime" cssClass="w_time" />min.<form:errors path="runtime" cssClass="errors" /></td>
+			</tr>
+			<tr>
+				<th><label for="releaseDate"><spring:message code="movie.releaseDate" /></label></th>
+				<td>
+				<form:input path="releaseDate" cssClass="w_date"  maxlength="10" />
+				<a class="underline_none" href="javascript:popUpCalendar(document.movieForm.releaseDate, 'yyyy-mm-dd');">
+					<img id="calendar" src="<c:url value='/sample/images/btn_calendar_i.gif'/>" alt="Calendar" />
+				</a>
+				<form:errors path="releaseDate" cssClass="errors" /></td>
+			</tr>
+			<tr>
+				<th><label for="ticketPrice"><spring:message code="movie.ticketPrice" /></label></th>
+				<td><form:input path="ticketPrice" cssClass="w_price" /><form:errors path="ticketPrice" cssClass="errors" /></td>
+			</tr>
+			<tr>
+				<th><label for="nowPlaying"><spring:message code="movie.nowPlaying" /></label></th>
+				<td><span class="float_left"><spring:message code="movie.isNowPlaying" /></span>
+				<span class="float_left margin_left5"><form:checkbox id="nowPlaying" path="nowPlaying" value="Y" /></span>
+				<input type="hidden" name="!nowPlaying" value="N" /></td>
+			</tr>
+		</tbody>
+	</table>
 </form:form>]]></programlisting>
 				</para>
 			</section>
@@ -320,51 +337,36 @@
 				<title>Controller 클래스</title>
 				
 				<para>
-					다음은 Form에서 사용할 객체를 셋팅해주는 UserController.java 파일의 formBackingObjet()메소드와 요청 처리 결과를 
-					모델 객체에 셋팅해서 view로 넘겨주는 onSubmit()메소드의 일부이다. 
-					<programlisting language="java">public class <emphasis role="bold">UserController</emphasis> extends SimpleFormController {
+					다음은 Form에서 사용할 객체를 셋팅해주는 MovieController 파일의 populateGenreList()메소드와 요청 처리 결과를 
+					모델 객체에 셋팅해서 view로 넘겨주는 create()메소드의 일부이다. 
+					<programlisting language="java">@Controller("movieController")
+@RequestMapping("/movie.do")
+public class <emphasis role="bold">MovieController</emphasis> {
     ... 중략...
-    // setting command class for data binding
-    public UserController() {
-        setCommandClass(UserVO.class);
-        //form tag에서 사용할 commandName 된다. 
-        setCommandName("<emphasis role="bold">users</emphasis>"); 
-        setFormView("/jsp/user/userForm.jsp");
-    }
 
-    // override onSubmit() method.
-    protected ModelAndView onSubmit(Object command) throws Exception {
-        // data binding using command object
-        UserVO userVO = (UserVO) command;
+	// genreList select box에서 사용할 데이터를 view로 전달
+	@ModelAttribute("genreList")
+	public Collection<![CDATA[<Genre>]]>populateGenreList() throws Exception {
+		return this.genreService.getList();
+	}
+	
+	@RequestMapping(params = "method=create")
+	public String create(
+			@Valid Movie movie, BindingResult results, SessionStatus status, Model model
+			HttpSession session) throws Exception {
 
-        // call business service
-        userVO = userService.getUser(userVO);
-        // setting view name
-        ModelAndView mav = new ModelAndView("/jsp/user/getUser.jsp");
-        //view에 "userVO"라는 모델 객체를 넘겨준다. 
-        <emphasis role="bold">mav.addObject</emphasis>(<emphasis role="bold">userVO</emphasis>);
-        // return a ModelAndView object.
-        return mav;
-    }
+		if (results.hasErrors())
+			return "core/moviefinder/movie/form";
+			
+		// call business service
+		this.movieService.create(movie);
+		status.setComplete();
+		
+		// view에 "movie" 라는 객체를 넘겨준다.
+		model.addAttribute("movie", movie);
 
-    protected Object formBackingObject(HttpServletRequest request)
-            throws Exception {
-        Map address = new HashMap();
-        address.put("seoul", "서울");
-        address.put("daegu", "대구");
-        address.put("busan", "부산");
-
-        Map hobby = new HashMap();
-        hobby.put("reading", "독서");
-        hobby.put("listeningMusic", "음악감상");
-        hobby.put("study", "공부");
-        
-        request.setAttribute("address", address);
-        request.setAttribute("hobby", hobby);
-        
-        //commandName인 "users"에 return값이 셋팅된다. 
-        return new UserVO();
-    }
+		return "moviefinder/movie/get";
+	}
 }</programlisting>
 				</para>
 			</section>
@@ -373,15 +375,17 @@
 				<title>출력 화면</title>
 				
 				<para>
-					다음은 EL문을 사용한 데이터 출력을 작성한 getUser.jsp 파일의 일부이다. 
-					<programlisting language="xml"><![CDATA[<tr><td>User Name : </td><td>${userVO.userName}</td></tr>
-<tr><td>User Password : </td><td>${userVO.password}</td></tr>
-<tr><td>User Address : </td><td>${userVO.address}</td></tr>
-<tr><td>User hobby : </td><td>${userVO.hobby}</td></tr>]]></programlisting>
+					다음은 EL문을 사용한 데이터 출력을 작성한 get.jsp 파일의 일부이다. 
+					<programlisting language="xml"><![CDATA[<tr><td>Title : </td><td>${movie.title}</td></tr>
+<tr><td>Director : </td><td>${movie.director}</td></tr>
+<tr><td>actors : </td><td>${movie.actors}</td></tr>
+<tr><td>runtime : </td><td>${movie.runtime}</td></tr>
+... 중략
+]]></programlisting>
 				</para>
 				
 				<para>
-					위의 JSP 코드처럼 Expression Language(JSP 2.0에서 지원)를 사용하여 Controller에서 넘겨준 "userVO"라는 이름의 모델 객체의 값을 출력할 수 있다.
+					위의 JSP 코드처럼 Expression Language(JSP 2.0에서 지원)를 사용하여 Controller에서 넘겨준 "movie"라는 이름의 모델 객체의 값을 출력할 수 있다.
 				</para>
 			</section>
 		</section>
@@ -390,7 +394,7 @@
 	<section id="core_springmvc_view_tilesintegration">
     	<title>Tiles Integration</title>
     	<para>
-    		<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/tiles/1.0.1/reference/htmlsingle/tiles.html">Tiles Plugin 매뉴얼</ulink>을 참조한다. 
+    		<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/tiles/1.0.2/reference/htmlsingle/tiles.html">Tiles Plugin 매뉴얼</ulink>을 참조한다. 
     	</para>
 	</section>
 </chapter>

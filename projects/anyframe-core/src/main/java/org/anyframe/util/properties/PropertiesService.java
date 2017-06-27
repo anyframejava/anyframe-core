@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package org.anyframe.util.properties;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This service enables applications to approach the value of singular key
- * Containig the pairs of key-value internally. It enhances the flexibility
+ * Containing the pairs of key-value internally. It enhances the flexibility
  * through managing the information for system environment. It is not needed for
  * EJB components because they present the functions originally.
  * 
@@ -45,8 +45,9 @@ import org.apache.commons.logging.LogFactory;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
+@SuppressWarnings("unchecked")
 public interface PropertiesService {
-	Log LOGGER = LogFactory.getLog(PropertiesService.class);
+	Logger LOGGER = LoggerFactory.getLogger(PropertiesService.class);
 
 	/**
 	 * The purpose of this method is to get the configuration resource with the

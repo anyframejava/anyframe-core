@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util;
 
 import java.lang.reflect.Field;
@@ -22,16 +22,18 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.anyframe.util.DateUtil;
-import org.anyframe.util.ObjectUtil;
-import org.anyframe.util.sample.User;
-
 import junit.framework.TestCase;
 
+import org.anyframe.util.sample.User;
+
 /**
+ * For testing functions what ObjectUtil supports, there are some test scenarios
+ * in this TestCase.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
+@SuppressWarnings("unchecked")
 public class ObjectUtilTest extends TestCase {
 
 	public void testLoadClassString() {
@@ -48,21 +50,14 @@ public class ObjectUtilTest extends TestCase {
 	}
 
 	public void testLoadClassStringClassLoader() {
-		Class clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil",
-				this.getClass().getClassLoader());
+		Class clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil", this
+				.getClass().getClassLoader());
 		assertEquals(ObjectUtil.class, clazz);
 	}
 
 	public void testGetObject() {
-		Object loader = ObjectUtil
-				.getObject("org.anyframe.util.sample.User");
+		Object loader = ObjectUtil.getObject("org.anyframe.util.sample.User");
 		assertEquals(User.class.getName(), loader.getClass().getName());
-		try {
-			ObjectUtil.getObject("org.anyframe.util.ObjectUtil");
-			fail();
-		} catch (Exception e) {
-
-		}
 		try {
 			ObjectUtil.getObject("org.anyframe.common.Repository");
 			fail();
@@ -194,8 +189,8 @@ public class ObjectUtilTest extends TestCase {
 		ObjectUtil.setProperty(source, "date", "2007-05-02", "Date");
 		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
 
-		ObjectUtil.setProperty(source, "date", DateUtil
-				.string2Date("2007-05-02"), "Date");
+		ObjectUtil.setProperty(source, "date",
+				DateUtil.string2Date("2007-05-02"), "Date");
 		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
 
 		// ObjectUtil.setProperty(source, "date",
@@ -203,8 +198,8 @@ public class ObjectUtilTest extends TestCase {
 		// assertEquals(DateUtil.string2Date("2007-05-02 12:12:12"),
 		// source.getDate());
 
-		ObjectUtil.setProperty(source, "date", DateUtil.string2Timestamp("2007-05-02 12:12:12", "yyyy-MM-dd HH:mm:ss"),
-				"Date");
+		ObjectUtil.setProperty(source, "date", DateUtil.string2Timestamp(
+				"2007-05-02 12:12:12", "yyyy-MM-dd HH:mm:ss"), "Date");
 		// 현재 ObjectUtil 의 Date 필드 setProperty 시 시각을 제외한 날짜 영역만 설정하고 있음. 확인필요!
 		// assertEquals(DateUtil.string2Date("2007-05-02 12:12:12"),
 		// source.getDate());
@@ -213,15 +208,15 @@ public class ObjectUtilTest extends TestCase {
 
 	public void testSetPropertyObjectStringObject() {
 		Hello source = new Hello();
-		ObjectUtil.setProperty(source, "date", DateUtil
-				.string2Date("2007-05-02"));
+		ObjectUtil.setProperty(source, "date",
+				DateUtil.string2Date("2007-05-02"));
 		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
 	}
 
 	public void testGetField() throws Exception {
 		Hello source = new Hello();
-		ObjectUtil.setProperty(source, "date", DateUtil
-				.string2Date("2007-05-02"));
+		ObjectUtil.setProperty(source, "date",
+				DateUtil.string2Date("2007-05-02"));
 		Field field = ObjectUtil.getField(source, "date");
 		field.setAccessible(true);
 		assertEquals(DateUtil.string2Date("2007-05-02"), field.get(source));
@@ -354,28 +349,17 @@ public class ObjectUtilTest extends TestCase {
 	}
 
 	public class BadHello {
-		private String badAttribute = null;
 
 		public String getAttribute() {
 			throw new RuntimeException();
-		}
-
-		private void setAttribute(String badAttribute) {
-			this.badAttribute = badAttribute;
 		}
 
 		public String getExceptionMethod() {
 			throw new RuntimeException();
 		}
 
-		private void setPrivateMethod(String a) {
-		}
-
 		public void setExceptionMethod(String a) {
 			throw new RuntimeException();
-		}
-
-		private void addPrivateMethod(String a) {
 		}
 
 		public void addExceptionMethod(String a) {
@@ -395,20 +379,4 @@ public class ObjectUtilTest extends TestCase {
 		}
 	}
 
-	private static class BadHelloAccessError {
-		private String attribute = null;
-
-		private String getAttribute() {
-			return attribute;
-		}
-
-		private void setAttribute1(String badAttribute) {
-			this.attribute = badAttribute;
-		}
-
-		private String getPrivateMethod() {
-			return "";
-		}
-
-	}
 }

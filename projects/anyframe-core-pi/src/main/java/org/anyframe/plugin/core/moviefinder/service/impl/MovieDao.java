@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Repository;
  * @author Sooyeon Park
  */
 @Repository("coreMovieDao")
-public class MovieDao extends SimpleJdbcDaoSupport {
+public class MovieDao extends JdbcDaoSupport {
 
 	@Value("#{contextProperties['pageSize'] ?: 10}")
 	int pageSize;
@@ -60,7 +60,7 @@ public class MovieDao extends SimpleJdbcDaoSupport {
 		String sql = "INSERT INTO MOVIE (movie_id, title, director, genre_id, actors, runtime, release_date, ticket_price, now_playing) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		this.getSimpleJdbcTemplate().update(
+		this.getJdbcTemplate().update(
 				sql,
 				new Object[] { movie.getMovieId(), movie.getTitle(),
 						movie.getDirector(), movie.getGenre().getGenreId(),
@@ -71,12 +71,12 @@ public class MovieDao extends SimpleJdbcDaoSupport {
 
 	public void remove(String movieId) throws Exception {
 		String sql = "DELETE FROM MOVIE WHERE movie_id = ?";
-		this.getSimpleJdbcTemplate().update(sql, new Object[] { movieId });
+		this.getJdbcTemplate().update(sql, new Object[] { movieId });
 	}
 
 	public void update(Movie movie) throws Exception {
 		String sql = "UPDATE MOVIE SET title = ?, director = ?, genre_id = ?, actors = ?, runtime = ?, release_date = ?, ticket_price = ?, now_playing = ? WHERE movie_id = ?";
-		this.getSimpleJdbcTemplate().update(
+		this.getJdbcTemplate().update(
 				sql,
 				new Object[] { movie.getTitle(), movie.getDirector(),
 						movie.getGenre().getGenreId(), movie.getActors(),
@@ -88,7 +88,7 @@ public class MovieDao extends SimpleJdbcDaoSupport {
 
 	public Movie get(String movieId) throws Exception {
 		String sql = "SELECT movie_id, title, director, genre_id, release_date, ticket_price, actors, runtime, now_playing FROM MOVIE WHERE movie_id = ?";
-		return this.getSimpleJdbcTemplate().queryForObject(sql,
+		return this.getJdbcTemplate().queryForObject(sql,
 				new BeanPropertyRowMapper<Movie>(Movie.class) {
 					public Movie mapRow(ResultSet rs, int i)
 							throws SQLException {
