@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbexplorer>
+    <dataSource dialect="org.hibernate.dialect.HSQLDialect"
+        driverArtifactId="hsqldb"
+        driverClassName="org.hsqldb.jdbcDriver" driverGroupId="hsqldb"
+        driverJar="C:\Users\SeongJong\.m2\repository\hsqldb\hsqldb\2.0.0\hsqldb-2.0.0.jar"
+        driverVersion="2.0.0" isDefault="true" name="hsqldb"
+        password="ENC_vP43PXUyLUw=" runExplainPlan="false"
+        schema="PUBLIC" type="hsqldb"
+        url="jdbc:hsqldb:hsql://localhost/sampledb"
+        useDbSpecific="false" username="SA"/>
+</dbexplorer>
