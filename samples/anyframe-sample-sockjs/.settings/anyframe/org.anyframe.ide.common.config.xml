@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <anyframe>
-    <pjthome>C:\workspace\anyframe-5.6.0\anyframe-sample-sockjs</pjthome>
+    <pjthome>C:\workspace\anyframe-5.6.0-SNAPSHOT\anyframe-sample-sockjs</pjthome>
     <pjtname>anyframe-sample-sockjs</pjtname>
     <package>com.anyframe.sample.websocket</package>
     <path>
-        <template>C:\workspace\anyframe-5.6.0\anyframe-sample-sockjs\.\.settings\anyframe\templates</template>
-        <jdbcdrivers>C:\workspace\anyframe-5.6.0\anyframe-sample-sockjs\.settings\anyframe</jdbcdrivers>
-        <databases>C:\workspace\anyframe-5.6.0\anyframe-sample-sockjs\.settings\anyframe</databases>
+        <template>C:\workspace\anyframe-5.6.0-SNAPSHOT\anyframe-sample-sockjs\.\.settings\anyframe\templates</template>
+        <jdbcdrivers>C:\workspace\anyframe-5.6.0-SNAPSHOT\anyframe-sample-sockjs\.settings\anyframe</jdbcdrivers>
+        <databases>C:\workspace\anyframe-5.6.0-SNAPSHOT\anyframe-sample-sockjs\.settings\anyframe</databases>
     </path>
 </anyframe>
