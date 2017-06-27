@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util.file;
 
 import java.io.File;
@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-@SuppressWarnings("unchecked")
 public abstract class GrepFile {
 	private GrepFile() {
 
@@ -53,12 +52,10 @@ public abstract class GrepFile {
 	 * @param pattern
 	 *            the pattern that is being searched.
 	 * @return true if the file contains the string, false otherwise.
-	 * @throws IOException
 	 */
-	public static boolean containsPattern(File file, Pattern pattern)
-			throws IOException {
-
-		Matcher pm = pattern.matcher(file.getName()); // Pattern matcher
+	public static boolean containsPattern(File file, Pattern pattern) {
+		// Pattern matcher
+		Matcher pm = pattern.matcher(file.getName());
 		if (pm.find())
 			return true;
 
@@ -74,15 +71,15 @@ public abstract class GrepFile {
 	 *            the pattern to search for
 	 * @param group
 	 *            which group in the pattern to return
-	 * @return an <code>array</code> of occurences of pattern (i.e. the
-	 *         groupth group of the match)
+	 * @return an <code>array</code> of occurences of pattern (i.e. the groupth
+	 *         group of the match)
 	 * @throws IOException
 	 *             if the file could not be read.
 	 */
 	public static String[] findPattern(File file, Pattern pattern, int group)
 			throws IOException {
 
-		ArrayList occurences = new ArrayList();
+		List<String> occurences = new ArrayList<String>();
 
 		// Open the file and then get a channel from the stream
 		FileInputStream fis = new FileInputStream(file);
@@ -106,7 +103,7 @@ public abstract class GrepFile {
 		fc.close();
 		fis.close();
 
-		return (String[]) occurences.toArray(new String[occurences.size()]);
+		return occurences.toArray(new String[occurences.size()]);
 
 	}
 
@@ -118,12 +115,9 @@ public abstract class GrepFile {
 	 * @param pattern
 	 *            the pattern to search for.
 	 * @return an array of files which contain the pattern
-	 * @throws IOException
-	 *             if any of the files could not be opened.
 	 */
-	private static List findInternal(File file, Pattern pattern)
-			throws IOException {
-		ArrayList fileList = new ArrayList();
+	private static List<File> findInternal(File file, Pattern pattern) {
+		List<File> fileList = new ArrayList<File>();
 
 		if (file.isDirectory()) {
 			String[] children = file.list();
@@ -137,9 +131,8 @@ public abstract class GrepFile {
 		return fileList;
 	}
 
-	private static List findInternalWithDirectory(File file, Pattern pattern)
-			throws IOException {
-		ArrayList fileList = new ArrayList();
+	private static List<File> findInternalWithDirectory(File file, Pattern pattern) {
+		List<File> fileList = new ArrayList<File>();
 
 		if (file.isDirectory()) {
 			fileList.add(file);
@@ -163,23 +156,19 @@ public abstract class GrepFile {
 	 * @param searchString
 	 *            the string to search for.
 	 * @return an array of files which contain the search string.
-	 * @throws IOException
-	 *             if any of the files could not be opened.
 	 */
-	public static File[] find(File file, String searchString)
-			throws IOException {
+	public static File[] find(File file, String searchString) {
 		Pattern pattern = Pattern.compile(searchString);
 
-		List fileList = findInternal(file, pattern);
-		return (File[]) fileList.toArray(new File[fileList.size()]);
+		List<File> fileList = findInternal(file, pattern);
+		return fileList.toArray(new File[fileList.size()]);
 	}
 
 	public static File[] find(File file, String searchString,
-			boolean containsDirectory) throws IOException {
+			boolean containsDirectory) {
 		Pattern pattern = Pattern.compile(searchString);
-		List fileList = containsDirectory ? findInternalWithDirectory(file,
-				pattern) : findInternal(file, pattern);
-		return (File[]) fileList.toArray(new File[fileList.size()]);
+		List<File> fileList = containsDirectory ? findInternalWithDirectory(
+				file, pattern) : findInternal(file, pattern);
+		return fileList.toArray(new File[fileList.size()]);
 	}
-
 }

@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.anyframe.exception.BaseException;
-import org.anyframe.exception.NestedRuntimeException;
+import org.anyframe.exception.FileReloadException;
+import org.anyframe.exception.InitializationException;
 import org.anyframe.util.StringUtil;
 import org.anyframe.util.properties.PropertiesService;
 import org.apache.commons.collections.ExtendedProperties;
@@ -45,14 +45,13 @@ import org.springframework.util.Assert;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-@SuppressWarnings("unchecked")
 public class PropertiesServiceImpl implements PropertiesService,
 		InitializingBean, DisposableBean, ResourceLoaderAware {
 	private ExtendedProperties anyframeProperties = null;
 	private ResourceLoader resourceLoader = null;
 
 	private Watcher watcher;
-	private long dynamicReload = -1;
+	private long dynamicReload = -1; 
 	private String fileNames = "";
 	private String encoding = "";
 
@@ -177,7 +176,8 @@ public class PropertiesServiceImpl implements PropertiesService,
 	 * 
 	 * @return all the keys
 	 */
-	public Iterator getKeys() {
+	@SuppressWarnings("unchecked")
+	public Iterator<String> getKeys() {
 		return getConfiguration().getKeys();
 	}
 
@@ -189,7 +189,8 @@ public class PropertiesServiceImpl implements PropertiesService,
 	 *            A String prefix to test against
 	 * @return all the keys that match the prefix
 	 */
-	public Iterator getKeys(String prefix) {
+	@SuppressWarnings("unchecked")
+	public Iterator<String> getKeys(String prefix) {
 		return getConfiguration().getKeys(prefix);
 	}
 
@@ -265,7 +266,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 	 *            The resource name
 	 * @return The value of the named resource as a vector
 	 */
-	public Vector getVector(String name) {
+	public Vector<?> getVector(String name) {
 		return getConfiguration().getVector(name);
 	}
 
@@ -279,7 +280,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 	 *            The default value of the resource
 	 * @return The value of the named resource as a vector
 	 */
-	public Vector getVector(String name, Vector def) {
+	public Vector<?> getVector(String name, Vector<?> def) {
 		return getConfiguration().getVector(name, def);
 	}
 
@@ -296,37 +297,39 @@ public class PropertiesServiceImpl implements PropertiesService,
 	/**
 	 * The purpose of this method is to refresh the configuration resource if
 	 * some configuration resources is changed.
+	 * 
+	 * @throws FileReloadException
+	 *             if there is any problem refreshing the property files
+	 * 
 	 */
 	public void refreshPropertyFiles() {
-
 		String fileName = null;
+
 		try {
 			List<String> fileNameList = StringUtil.getTokens(this.fileNames);
 			for (int i = 0; i < fileNameList.size(); i++) {
 				fileName = fileNameList.get(i).trim();
 				loadPropertiesDefinition(fileName, this.encoding);
 			}
-		} catch (Exception e) {
-
+		} catch (Exception ex) {
 			PropertiesService.LOGGER.error(
 					"Properties Service : Fail to refresh file properties {}.",
 					new Object[] { fileName });
 			PropertiesService.LOGGER
 					.error("Properties Service : Some property files doesn't exist or there are wrong definitions in property files.");
 
-			throw new NestedRuntimeException(
+			throw new FileReloadException(
 					"Properties Service : Fail to refresh file properties "
-							+ fileName + ".", e);
+							+ fileName + ".", ex);
 		}
 	}
 
 	/**
 	 * initialize PropertiesService
 	 * 
-	 * @throws Exception
-	 *             fail to initialize
+	 * @throws InitializationException
 	 */
-	public void afterPropertiesSet() throws BaseException {
+	public void afterPropertiesSet() {
 		try {
 			setUpWatcher();
 
@@ -343,16 +346,12 @@ public class PropertiesServiceImpl implements PropertiesService,
 				PropertiesService.LOGGER
 						.debug("Properties Service : Watcher is started...");
 			}
-		} catch (Exception e) {
-			if (e instanceof BaseException)
-				throw (BaseException) e;
-			else {
-				PropertiesService.LOGGER
-						.error("[Properties Service] There are something wrong definitions in a service configuration file or property files.");
-				throw new BaseException(
-						"[Properties Service] Fail to initialize a Properties Service.",
-						e);
-			}
+		} catch (Exception ex) {
+			PropertiesService.LOGGER
+					.error("[Properties Service] There are something wrong definitions in a service configuration file or property files.");
+			throw new InitializationException(
+					"[Properties Service] Fail to initialize a Properties Service.\n Reason = ["
+							+ ex.getMessage() + "]", ex);
 		}
 	}
 
@@ -375,7 +374,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 	}
 
 	private void loadPropertiesDefinition(String location, String encoding)
-			throws Exception {
+			throws IOException {
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
@@ -395,7 +394,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 	}
 
 	private void loadPropertiesDefinitions(Resource[] resources, String encoding)
-			throws Exception {
+			throws IOException {
 		Assert.notNull(resources, "Resource array must not be null");
 		for (int i = 0; i < resources.length; i++) {
 			loadPropertiesDefinition(resources[i], encoding);
@@ -403,7 +402,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 	}
 
 	private void loadPropertiesDefinition(Resource resource, String encoding)
-			throws Exception {
+			throws IOException {
 		PropertiesService.LOGGER
 				.debug("[Properties Service] Property file is a "
 						+ resource.getFilename()
@@ -415,7 +414,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 		anyframeProperties.combine(anyframeProperty);
 	}
 
-	public Hashtable getResources() {
+	public Hashtable<Resource, Long> getResources() {
 		return this.watcher.getResources();
 	}
 
@@ -423,13 +422,13 @@ public class PropertiesServiceImpl implements PropertiesService,
 
 		private final int scanRate = 10;
 
-		private Hashtable resources = new Hashtable();
+		private final Hashtable<Resource, Long> resources = new Hashtable<Resource, Long>();
 
-		private boolean done = false;
+		private final boolean done = false;
 
 		private long refreshRate = 0;
 
-		public Hashtable getResources() {
+		public Hashtable<Resource, Long> getResources() {
 			return resources;
 		}
 
@@ -452,7 +451,7 @@ public class PropertiesServiceImpl implements PropertiesService,
 			return refreshRate;
 		}
 
-		public void addResource(Resource resource) throws Exception {
+		public void addResource(Resource resource) throws IOException {
 			resources
 					.put(resource, new Long(resource.getFile().lastModified()));
 			PropertiesService.LOGGER.info("appended " + resource.getFilename()
@@ -472,12 +471,12 @@ public class PropertiesServiceImpl implements PropertiesService,
 				while (!done) {
 					synchronized (this) {
 						boolean modificationChk = false;
-						Enumeration en = resources.keys();
+						Enumeration<Resource> en = resources.keys();
 						while (en.hasMoreElements()) {
 							try {
-								Resource resource = (Resource) en.nextElement();
+								Resource resource = en.nextElement();
 
-								long modified = ((Long) resources.get(resource))
+								long modified = resources.get(resource)
 										.longValue();
 
 								if (!resource.exists()) {
@@ -497,11 +496,11 @@ public class PropertiesServiceImpl implements PropertiesService,
 													+ " is changed.");
 									continue;
 								}
-							} catch (Exception e) {
+							} catch (Exception ex) {
 								PropertiesService.LOGGER
 										.error(
 												"Properties Service : Fail to check whether propertis files are modified.",
-												e);
+												ex);
 							}
 						}
 
@@ -511,18 +510,18 @@ public class PropertiesServiceImpl implements PropertiesService,
 								refreshPropertyFiles();
 
 							}
-						} catch (Exception e) {
+						} catch (Exception ex) {
 							PropertiesService.LOGGER
 									.error(
 											"Properties Service : Fail to reload properties.",
-											e);
+											ex);
 						}
 						sleep(getRefreshRate());
 					}
 				}
-			} catch (InterruptedException e) {
+			} catch (InterruptedException ex) {
 				PropertiesService.LOGGER.error(
-						"Properties Service : Fail to run Watcher.", e);
+						"Properties Service : Fail to run Watcher.", ex);
 			}
 		}
 	}

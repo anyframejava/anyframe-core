@@ -12,7 +12,7 @@
      	<para>
 			아래는 MovieController class를 테스트하기 위해 작성된 MovieControllerTest 코드의 일부이다.
 			MovieController bean을 @Inject annotation을 이용하여 직접 호출하고 있다.	
-    	</para>
+   	</para>
 
 		<para>
 			<programlisting language="java">@RunWith(SpringJUnit4ClassRunner.class)

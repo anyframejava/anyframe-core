@@ -18,6 +18,7 @@ package org.anyframe.util.properties;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.anyframe.exception.FileReloadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-@SuppressWarnings("unchecked")
 public interface PropertiesService {
 	Logger LOGGER = LoggerFactory.getLogger(PropertiesService.class);
 
@@ -142,7 +142,7 @@ public interface PropertiesService {
 	 * 
 	 * @return all the keys
 	 */
-	Iterator getKeys();
+	Iterator<String> getKeys();
 
 	/**
 	 * Get keys contained in the configuration repository that match the
@@ -152,7 +152,7 @@ public interface PropertiesService {
 	 *            A String prefix to test against
 	 * @return all the keys that match the prefix
 	 */
-	Iterator getKeys(String prefix);
+	Iterator<String> getKeys(String prefix);
 
 	/**
 	 * The purpose of this method is to get the configuration resource with the
@@ -216,7 +216,7 @@ public interface PropertiesService {
 	 *            The resource name
 	 * @return The value of the named resource as a vector
 	 */
-	Vector getVector(String name);
+	Vector<?> getVector(String name);
 
 	/**
 	 * The purpose of this method is to get the configuration resource with the
@@ -228,11 +228,14 @@ public interface PropertiesService {
 	 *            The default value of the resource
 	 * @return The value of the named resource as a vector
 	 */
-	Vector getVector(String name, Vector def);
+	Vector<?> getVector(String name, Vector<?> def);
 
 	/**
 	 * The purpose of this method is to refresh the configuration resource if
 	 * some configuration resources is changed.
+	 * 
+	 * @throws FileReloadException
+	 *             if there is any problem refreshing the property files
 	 */
-	void refreshPropertyFiles();
+	void refreshPropertyFiles() throws FileReloadException;
 }

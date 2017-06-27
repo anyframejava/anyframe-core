@@ -33,12 +33,11 @@ import org.anyframe.util.sample.User;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-@SuppressWarnings("unchecked")
 public class ObjectUtilTest extends TestCase {
 
 	public void testLoadClassString() {
 
-		Class clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil",
+		Class<?> clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil",
 				new URLClassLoader(new URL[] {}, null));
 		clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil");
 		assertEquals(ObjectUtil.class.getName(), clazz.getName());
@@ -50,8 +49,8 @@ public class ObjectUtilTest extends TestCase {
 	}
 
 	public void testLoadClassStringClassLoader() {
-		Class clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil", this
-				.getClass().getClassLoader());
+		Class<?> clazz = ObjectUtil.loadClass("org.anyframe.util.ObjectUtil",
+				this.getClass().getClassLoader());
 		assertEquals(ObjectUtil.class, clazz);
 	}
 
@@ -79,11 +78,11 @@ public class ObjectUtilTest extends TestCase {
 		}
 	}
 
-	public void testIsEmpty() {
-		assertTrue(ObjectUtil.isEmpty(new Hello()));
+	public void testIsEmptyObject() {
+		assertTrue(ObjectUtil.isEmptyObject(new Hello()));
 
 		try {
-			ObjectUtil.isEmpty(new BadHello());
+			ObjectUtil.isEmptyObject(new BadHello());
 			fail();
 		} catch (Exception e) {
 
@@ -187,39 +186,34 @@ public class ObjectUtilTest extends TestCase {
 		assertEquals(1L, source.getLongValue());
 
 		ObjectUtil.setProperty(source, "date", "2007-05-02", "Date");
-		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
+		assertEquals(DateUtil.stringToDate("2007-05-02"), source.getDate());
 
-		ObjectUtil.setProperty(source, "date",
-				DateUtil.string2Date("2007-05-02"), "Date");
-		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
+		ObjectUtil.setProperty(source, "date", DateUtil
+				.stringToDate("2007-05-02"), "Date");
+		assertEquals(DateUtil.stringToDate("2007-05-02"), source.getDate());
 
-		// ObjectUtil.setProperty(source, "date",
-		// DateUtil.string2Timestamp("2007-05-02 12:12:12"), "Date");
-		// assertEquals(DateUtil.string2Date("2007-05-02 12:12:12"),
-		// source.getDate());
-
-		ObjectUtil.setProperty(source, "date", DateUtil.string2Timestamp(
+		ObjectUtil.setProperty(source, "date", DateUtil.stringToTimestamp(
 				"2007-05-02 12:12:12", "yyyy-MM-dd HH:mm:ss"), "Date");
 		// 현재 ObjectUtil 의 Date 필드 setProperty 시 시각을 제외한 날짜 영역만 설정하고 있음. 확인필요!
 		// assertEquals(DateUtil.string2Date("2007-05-02 12:12:12"),
 		// source.getDate());
-		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
+		assertEquals(DateUtil.stringToDate("2007-05-02"), source.getDate());
 	}
 
 	public void testSetPropertyObjectStringObject() {
 		Hello source = new Hello();
-		ObjectUtil.setProperty(source, "date",
-				DateUtil.string2Date("2007-05-02"));
-		assertEquals(DateUtil.string2Date("2007-05-02"), source.getDate());
+		ObjectUtil.setProperty(source, "date", DateUtil
+				.stringToDate("2007-05-02"));
+		assertEquals(DateUtil.stringToDate("2007-05-02"), source.getDate());
 	}
 
 	public void testGetField() throws Exception {
 		Hello source = new Hello();
-		ObjectUtil.setProperty(source, "date",
-				DateUtil.string2Date("2007-05-02"));
+		ObjectUtil.setProperty(source, "date", DateUtil
+				.stringToDate("2007-05-02"));
 		Field field = ObjectUtil.getField(source, "date");
 		field.setAccessible(true);
-		assertEquals(DateUtil.string2Date("2007-05-02"), field.get(source));
+		assertEquals(DateUtil.stringToDate("2007-05-02"), field.get(source));
 
 		try {
 			ObjectUtil.getField(source, "date222");
@@ -233,10 +227,10 @@ public class ObjectUtilTest extends TestCase {
 		Hello source = new Hello();
 		ObjectUtil.getMethod(source, "setDate", new Class[] { Date.class })
 				.invoke(source,
-						new Object[] { DateUtil.string2Date("2007-05-02") });
+						new Object[] { DateUtil.stringToDate("2007-05-02") });
 		Field field = ObjectUtil.getField(source, "date");
 		field.setAccessible(true);
-		assertEquals(DateUtil.string2Date("2007-05-02"), field.get(source));
+		assertEquals(DateUtil.stringToDate("2007-05-02"), field.get(source));
 	}
 
 	public void testIsNull() {
@@ -247,24 +241,27 @@ public class ObjectUtilTest extends TestCase {
 		Hello source = new Hello();
 		source.setClassName(HashMap.class.getName());
 		source.setAttribute("attribute");
-		Object target = ObjectUtil.getModel(source);
+		Object target = ObjectUtil.copyModelObject(source);
 		assertEquals(HashMap.class, target.getClass());
 	}
 
 	public void testAddProperty() {
 		Hello source = new Hello();
-		ObjectUtil.addProperty(source, "intValue", new Integer(10));
+		ObjectUtil.invokdeAddPropertyValueMethod(source, "intValue",
+				new Integer(10));
 		assertEquals(10, source.getIntValue());
 
 		BadHello badsource = new BadHello();
 		try {
-			ObjectUtil.addProperty(badsource, "privateMethod", "");
+			ObjectUtil.invokdeAddPropertyValueMethod(badsource,
+					"privateMethod", "");
 			fail();
 		} catch (RuntimeException e) {
 
 		}
 		try {
-			ObjectUtil.addProperty(badsource, "exceptionMethod", "");
+			ObjectUtil.invokdeAddPropertyValueMethod(badsource,
+					"exceptionMethod", "");
 			fail();
 		} catch (RuntimeException e) {
 

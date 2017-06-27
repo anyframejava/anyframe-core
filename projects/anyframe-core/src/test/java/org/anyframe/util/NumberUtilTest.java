@@ -104,64 +104,64 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	public void testInteger2String() {
-		assertEquals("150", NumberUtil.integer2string(150));
+	public void testIntToString() {
+		assertEquals("150", NumberUtil.intToString(150));
 	}
 
 	@Test
-	public void testString2Integer() {
-		assertEquals(150, NumberUtil.string2integer("150"));
-		assertEquals(150, NumberUtil.string2integer("150 "));
-		assertEquals(150, NumberUtil.string2integer(" 150"));
-		assertEquals(150, NumberUtil.string2integer(" 150 "));
-		assertEquals(-1, NumberUtil.string2integer(""));
+	public void testStringToInt() {
+		assertEquals(150, NumberUtil.stringToInt("150"));
+		assertEquals(150, NumberUtil.stringToInt("150 "));
+		assertEquals(150, NumberUtil.stringToInt(" 150"));
+		assertEquals(150, NumberUtil.stringToInt(" 150 "));
+		assertEquals(0, NumberUtil.stringToInt(""));
 	}
 
 	@Test
 	public void testFormatNumberByLocale() {
-		assertEquals("￦3,527,900",
-				NumberUtil.formatNumberByLocale(3527900, Locale.KOREA));
-		assertEquals("$3,527,900.00",
-				NumberUtil.formatNumberByLocale(3527900, Locale.US));
+		assertEquals("￦3,527,900", NumberUtil.formatNumberByLocale(3527900,
+				Locale.KOREA));
+		assertEquals("$3,527,900.00", NumberUtil.formatNumberByLocale(3527900,
+				Locale.US));
 	}
 
 	@Test
 	public void testFormatNumber() {
-		assertEquals("1,023,412",
-				NumberUtil.formatNumber(1023412, "###,###,###"));
-		assertEquals("1,023,412,123",
-				NumberUtil.formatNumber(1023412123, "###,###"));
-		assertEquals("10,23,41,21,23",
-				NumberUtil.formatNumber(1023412123, "##,##"));
+		assertEquals("1,023,412", NumberUtil.formatNumber(1023412,
+				"###,###,###"));
+		assertEquals("1,023,412,123", NumberUtil.formatNumber(1023412123,
+				"###,###"));
+		assertEquals("10,23,41,21,23", NumberUtil.formatNumber(1023412123,
+				"##,##"));
 		assertEquals("1023412123", NumberUtil.formatNumber(1023412123, "##.##"));
-		assertEquals("1023412123/",
-				NumberUtil.formatNumber(1023412123, "##/##"));
+		assertEquals("1023412123/", NumberUtil
+				.formatNumber(1023412123, "##/##"));
 	}
 
 	@Test
 	public void testFormatNumberByPoint() {
-		assertEquals("10,231,023,123.121",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 0));
-		assertEquals("10,231,023,123.1",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 1));
-		assertEquals("10,231,023,123.12",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 2));
-		assertEquals("10,231,023,123.121",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 3));
-		assertEquals("10,231,023,123.1213",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 4));
-		assertEquals("10,231,023,123.12130",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 5));
-		assertEquals("10,231,023,123.121",
-				NumberUtil.formatNumberByPoint(10231023123.1213, 6));
-		assertEquals("10,231,023,123.1",
-				NumberUtil.formatNumberByPoint(10231023123.1, 6));
+		assertEquals("10,231,023,123.121", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 0));
+		assertEquals("10,231,023,123.1", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 1));
+		assertEquals("10,231,023,123.12", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 2));
+		assertEquals("10,231,023,123.121", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 3));
+		assertEquals("10,231,023,123.1213", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 4));
+		assertEquals("10,231,023,123.12130", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 5));
+		assertEquals("10,231,023,123.121", NumberUtil.formatNumberByPoint(
+				10231023123.1213, 6));
+		assertEquals("10,231,023,123.1", NumberUtil.formatNumberByPoint(
+				10231023123.1, 6));
 	}
 
 	@Test
 	public void testNullToZero() {
-		assertEquals("", NumberUtil.nullToZero(null));
-		assertEquals("123", NumberUtil.nullToZero(new BigDecimal(123)));
+		assertEquals("", NumberUtil.bigDecimalToString(null));
+		assertEquals("123", NumberUtil.bigDecimalToString(new BigDecimal(123)));
 	}
 
 	@Test
@@ -169,7 +169,6 @@ public class NumberUtilTest {
 		assertTrue(NumberUtil.isNumber("12312312"));
 		assertTrue(NumberUtil.isNumber("12312312.2f"));
 		assertTrue(NumberUtil.isNumber("-12312312.2f"));
-		// assertTrue(NumberUtil.isNumber("875634512312312l"));
 		assertTrue(NumberUtil.isNumber("4.9E-324"));
 		assertTrue(NumberUtil.isNumber("1.7976931348623157E308"));
 		assertTrue(NumberUtil.isNumber("12312312.2f"));
@@ -180,8 +179,8 @@ public class NumberUtilTest {
 	@Test
 	public void testReplaceNum() {
 		assertEquals(156756.2, NumberUtil.replaceNumber(123456.2, 234, 567), 1);
-		assertEquals(4556745.8567,
-				NumberUtil.replaceNumber(452345.823, 23, 567), 1);
+		assertEquals(4556745.8567, NumberUtil
+				.replaceNumber(452345.823, 23, 567), 1);
 	}
 
 	@Test

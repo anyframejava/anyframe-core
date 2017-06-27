@@ -262,25 +262,6 @@ public class MessagesTagTest extends AbstractTagTests {
 				message.toString());
 	}
 
-	// public void testMessagesTagWithTextAndHtmlEscapeAndJavaScriptEscape()
-	// throws JspException {
-	// PageContext pc = createPageContext();
-	// final StringBuffer message = new StringBuffer();
-	// MessagesTag tag = new MessagesTag() {
-	// protected void writeMessage(String msg) {
-	// message.append(msg);
-	// }
-	// };
-	// tag.setPageContext(pc);
-	// tag.setText("' test & text \\");
-	// tag.setHtmlEscape("true");
-	// tag.setJavaScriptEscape("true");
-	// assertTrue("Correct doStartTag return value", tag.doStartTag() ==
-	// Tag.EVAL_BODY_INCLUDE);
-	// assertEquals("Correct message", "\\' test &amp; text \\\\",
-	// message.toString());
-	// }
-
 	public void testMessageWithVarAndScope() throws JspException {
 		PageContext pc = createPageContext();
 		MessagesTag tag = new MessagesTag();
@@ -336,7 +317,6 @@ public class MessagesTagTest extends AbstractTagTests {
 		tag.doStartTag();
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testRequestContext() throws ServletException {
 		PageContext pc = createPageContext();
 		RequestContext rc = new RequestContext(
@@ -351,7 +331,8 @@ public class MessagesTagTest extends AbstractTagTests {
 		assertEquals("test arg1 message arg2", rc.getMessage("testArgs",
 				Arrays.asList(new String[] { "arg1", "arg2" }), "default"));
 		assertEquals("default", rc.getMessage("testa", "default"));
-		assertEquals("default", rc.getMessage("testa", (List) null, "default"));
+		assertEquals("default", rc.getMessage("testa", (List<?>) null,
+				"default"));
 		MessageSourceResolvable resolvable = new DefaultMessageSourceResolvable(
 				new String[] { "test" });
 		assertEquals("test message", rc.getMessage(resolvable));

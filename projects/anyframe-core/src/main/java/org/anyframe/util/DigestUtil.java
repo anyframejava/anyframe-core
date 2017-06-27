@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.anyframe.exception.BaseRuntimeException;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,17 +35,11 @@ import org.slf4j.LoggerFactory;
 public class DigestUtil {
 
 	private DigestUtil() {
-		throw new AssertionError();
+		throw new AssertionError(); 
 	}
-
-	// ~ Static fields/initializers
-	// =============================================
 
 	/** The <code>Log</code> instance for this class. */
 	private static Logger logger = LoggerFactory.getLogger(DigestUtil.class);
-
-	// ~ Methods
-	// ================================================================
 
 	/**
 	 * Encodes this String into a sequence of bytes using the named charset,
@@ -55,14 +50,16 @@ public class DigestUtil {
 	 * @param charsetName
 	 *            the name of a supported charset
 	 * @return The resultant string
+	 * @deprecated Use {@link #convertStringCharset(String, String)}
 	 */
+	@Deprecated
 	public static String encodeCharset(String str, String charsetName) {
 		String result = "";
 		try {
 			result = new String(str.getBytes(charsetName));
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Exception: {}", new Object[] { e });
-			throw new RuntimeException("UnsupportedEncodingException : "
+			throw new BaseRuntimeException("UnsupportedEncodingException : "
 					+ e.getMessage(), e);
 		}
 		return result;
@@ -77,7 +74,9 @@ public class DigestUtil {
 	 * @param charsetName
 	 *            the name of a supported charset
 	 * @return The resultant string
+	 * @deprecated Use {@link #convertStringCharset(String, String)}
 	 */
+	@Deprecated
 	public static String decodeCharset(String str, String charsetName) {
 		return encodeCharset(str, charsetName);
 	}
@@ -118,20 +117,15 @@ public class DigestUtil {
 	 * @param algorithm
 	 *            Algorithm used to do the digest
 	 * @return encrypted password based on the algorithm.
+	 * @throws NoSuchAlgorithmException
 	 */
-	public static String encodePassword(String password, String algorithm) {
+	public static String encodePassword(String password, String algorithm)
+			throws NoSuchAlgorithmException {
 		byte[] unencodedPassword = password.getBytes();
 
 		MessageDigest md = null;
 
-		try {
-			// first create an instance, given the provider
-			md = MessageDigest.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
-			logger.error("NoSuchAlgorithmException: {}", new Object[] { e });
-			throw new RuntimeException("NoSuchAlgorithmException : "
-					+ e.getMessage(), e);
-		}
+		md = MessageDigest.getInstance(algorithm);
 
 		md.reset();
 
@@ -154,4 +148,5 @@ public class DigestUtil {
 
 		return buf.toString();
 	}
+
 }

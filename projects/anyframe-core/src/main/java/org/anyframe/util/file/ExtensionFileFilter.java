@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util.file;
 
 import java.io.File;
@@ -24,18 +24,18 @@ import java.io.FilenameFilter;
  * @author SoYon Lim
  */
 public class ExtensionFileFilter implements FilenameFilter {
-	private String[] m_extensions;
+	private final String[] extensions;
 
 	public ExtensionFileFilter(final String extension) {
-		m_extensions = new String[] { extension };
-	}
+		extensions = new String[] { extension };
+	} 
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean accept(File dir, String name) {
-		for (int i = 0; i < m_extensions.length; i++) {
-			if (name.endsWith(m_extensions[i])) {
+		for (int i = 0; i < extensions.length; i++) {
+			if (name.endsWith(extensions[i])) {
 				return true;
 			}
 		}

@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.anyframe</groupId>
 	<artifactId>anyframe-sample-di-qualifier</artifactId>
-	<version>1.0.4</version>
+	<version>1.5.0</version>
 	<packaging>jar</packaging>
 	
 	<dependencies>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
+			<version>1.2.16</version>
 			<scope>runtime</scope>
 		</dependency>		
 		<dependency>

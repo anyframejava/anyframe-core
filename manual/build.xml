@@ -14,7 +14,7 @@
 	<property name="subv.password" value="${env.SVN_PASSWORD}" />
 	
 	<property name="book.name" value="core" />
-	<property name="version" value="1.0.4"/>
+	<property name="version" value="1.5.0"/>
 	<property name="service.name" value="anyframe-core" />
 	<property name="spring.version" value="3.1.1.RELEASE"/>
 	
@@ -268,7 +268,7 @@
 		<zip destfile="${target.dir}/sample/hsqldb.movie.zip" basedir="${sample.home}/hsqldb.movie" 
 			update="true" excludes="**/.svn/**"/>	
 		<zip destfile="${target.dir}/sample/hsqldb.test.movie.zip" basedir="${sample.home}/hsqldb.test.movie" 
-			update="true" excludes="**/.svn/**"/>
+			update="true" excludes="**/.svn/**"/>	
 		
 		<zip destfile="${target.dir}/sample/anyframe-sample-javaconfig-mvc.zip" basedir="${sample.home}/anyframe-sample-javaconfig-mvc" 
 					update="true" excludes="target/**, **/.svn/**, **/*.jar"/>

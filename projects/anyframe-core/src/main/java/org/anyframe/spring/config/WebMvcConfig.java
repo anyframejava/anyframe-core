@@ -23,26 +23,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 /**
- * Anyframe Spring MVC configuration set
- * extended configuration set of EnableWebMvc
- *
+ * Anyframe Spring MVC configuration set extended configuration set of
+ * EnableWebMvc
+ * 
  * @author jaehyoung.eum
  * @since 1.0.4
  */
 @Configuration
-public class WebMvcConfig extends WebMvcConfigurationSupport implements ImportAware {
-	
-	private boolean SYNCHRONIZE_ON_SESSION = false; 
-	
+public class WebMvcConfig extends WebMvcConfigurationSupport implements
+		ImportAware {
+
+	private boolean synchronizeOnSession = false;
+
 	@Override
 	public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-		RequestMappingHandlerAdapter adapter = super.requestMappingHandlerAdapter();
-		adapter.setSynchronizeOnSession(SYNCHRONIZE_ON_SESSION);
+		RequestMappingHandlerAdapter adapter = super
+				.requestMappingHandlerAdapter();
+		adapter.setSynchronizeOnSession(synchronizeOnSession);
 		return adapter;
 	}
 
 	public void setImportMetadata(AnnotationMetadata importMetadata) {
-		String bool = (String)importMetadata.getAnnotationAttributes(EnableWebMvcAnyframe.class.getName()).get("synchronizeOnSession");
-		SYNCHRONIZE_ON_SESSION = Boolean.parseBoolean(bool);
+		String bool = (String) importMetadata.getAnnotationAttributes(
+				EnableWebMvcAnyframe.class.getName()).get(
+				"synchronizeOnSession");
+		synchronizeOnSession = Boolean.parseBoolean(bool);
 	}
 }

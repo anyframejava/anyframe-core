@@ -15,6 +15,7 @@
  */
 package org.anyframe.util;
 
+import java.lang.reflect.Field;
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -30,9 +31,10 @@ import org.slf4j.LoggerFactory;
  */
 @Deprecated
 public class ClasspathUtil {
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ClasspathUtil.class);
 
+	@SuppressWarnings("restriction")
 	public static sun.misc.URLClassPath getURLClassPath(ClassLoader loader)
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!(loader instanceof URLClassLoader)) {
@@ -41,15 +43,14 @@ public class ClasspathUtil {
 		return (sun.misc.URLClassPath) getUcpField().get(loader);
 	}
 
-	@SuppressWarnings("unchecked")
-	private static java.lang.reflect.Field getUcpField() {
-		java.lang.reflect.Field ucpField = null;
+	private static Field getUcpField() {
+		Field ucpField = null;
 		if (ucpField == null) {
 			// Add them to the URLClassLoader's classpath
-			ucpField = (java.lang.reflect.Field) AccessController
-					.doPrivileged(new PrivilegedAction() {
-						public Object run() {
-							java.lang.reflect.Field ucp = null;
+			ucpField = AccessController
+					.doPrivileged(new PrivilegedAction<Field>() {
+						public Field run() {
+							Field ucp = null;
 
 							try {
 								ucp = URLClassLoader.class
@@ -57,12 +58,13 @@ public class ClasspathUtil {
 								ucp.setAccessible(true);
 
 							} catch (SecurityException e) {
-								logger.error(
-										"Cannot access field 'ucp'. Error : {}",
-										new Object[] { e.getMessage() });
+								LOGGER
+										.error(
+												"Cannot access field 'ucp'. Error : {}",
+												new Object[] { e.getMessage() });
 
 							} catch (NoSuchFieldException e) {
-								logger.error(
+								LOGGER.error(
 										"Cannot find field 'ucp'. Error : {}",
 										new Object[] { e.getMessage() });
 							}

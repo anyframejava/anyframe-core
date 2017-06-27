@@ -17,6 +17,7 @@ package org.anyframe.util;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +34,8 @@ import java.util.regex.Pattern;
 import org.springframework.web.util.HtmlUtils;
 
 /**
- * String Utility Class
+ * String Utility Class This class provides utility method to manipulate String
+ * Object.
  * 
  * @author SoYon Lim
  * @author JongHoon Kim
@@ -42,13 +44,10 @@ import org.springframework.web.util.HtmlUtils;
 public class StringUtil {
 
 	private StringUtil() {
-		throw new AssertionError();
+		throw new AssertionError(); 
 	}
 
-	// ~ Static fields/initializers
-	// =============================================
-
-	private static final char[] alphas = new char[] { 'A', 'B', 'C', 'D', 'E',
+	private static final char[] ALPHAS = new char[] { 'A', 'B', 'C', 'D', 'E',
 			'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
 			'S', 'T', 'U', 'X', 'Y', 'V', 'W', 'Z', 'a', 'b', 'c', 'd', 'e',
 			'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
@@ -56,11 +55,8 @@ public class StringUtil {
 
 	public static final String DEFAULT_EMPTY_STRING = "";
 
-	private static final Random generator = new Random(System
+	private static final Random GENERATOR = new Random(System
 			.currentTimeMillis());
-
-	// ~ Methods
-	// ================================================================
 
 	/** For UTF-8 character set, 1 byte code */
 	private static final int ONE_BYTE = 0x00007F;
@@ -72,62 +68,81 @@ public class StringUtil {
 	private static final int TWO_BYTE = 0x0007FF;
 
 	/**
-	 * Appends spaces to Stringwith the input length. <br>
-	 * <div class="ko"> 주어진 String에 주어진 길이만큼 공백 문자열을 붙인다. - 주어진 길이가 0보다 작을 경우
-	 * 무시된다. </div>
+	 * Appends spaces to Stringwidth the input length. <br>
 	 * 
 	 * ex) addSpace("12345", 5) => "12345     "
 	 * 
 	 * @param str
 	 *            string to be modified
-	 * @param length
+	 * @param size
 	 *            length of spaces
 	 * @return string that is appended with spaces
 	 */
-	public static String addSpace(String str, int length) {
+	public static String addSpace(String str, int size) {
 		StringBuffer stringBuffer = new StringBuffer();
 		if (str == null) {
-			if (length <= 0) {
+			if (size == 0) {
 				return null;
 			}
 		} else {
 			stringBuffer.append(str);
 		}
-		for (int j = 0; j < length; j++) {
+		for (int j = 0; j < size; j++) {
 			stringBuffer.append(' ');
 		}
 		return stringBuffer.toString();
 	}
 
 	/**
+	 * Make a new String that filled original to a special char as ciphers
+	 * 
+	 * @param str
+	 *            original String
+	 * @param padChar
+	 *            a special char
+	 * @param ciphers
+	 *            ciphers
+	 * @return filled String
+	 * @deprecated Use {@link #leftPad(String, int, char)}
+	 */
+	@Deprecated
+	public static String fillString(String str, char padChar, int ciphers) {
+		int originalStrLength = str.length();
+
+		if (ciphers < originalStrLength)
+			return null;
+
+		int difference = ciphers - originalStrLength;
+
+		StringBuilder strBuf = new StringBuilder();
+		for (int i = 0; i < difference; i++)
+			strBuf.append(padChar);
+
+		strBuf.append(str);
+		return strBuf.toString();
+	}
+
+	/**
 	 * Appends a string to string array. <br>
-	 * <div class="ko"> 주어진 String[]에 하나의 String을 추가한다. </div>
 	 * 
 	 * ex) String[] test = {"aaa", "bbb", "ccc"}; addStringToArray(test, "ddd");
 	 * 
-	 * @param array
+	 * @param strings
 	 *            string array to be modified
 	 * @param str
 	 *            string to be appended
 	 * @return string array that is appended with string
 	 */
-	public static String[] addStringToArray(String array[], String str) {
-		String newArray[] = new String[array.length + 1];
-		System.arraycopy(array, 0, newArray, 0, array.length);
-		newArray[array.length] = str;
+	public static String[] addStringToArray(String[] strings, String str) {
+		String newArray[] = new String[strings.length + 1];
+		System.arraycopy(strings, 0, newArray, 0, strings.length);
+		newArray[strings.length] = str;
 		return newArray;
 	}
 
 	/**
 	 * Apply initial law to String. <br>
-	 * <div class="ko"> 입력된 문자열에 두음법칙을 적용하여 반환한다.<br>
-	 * 
-	 * 1단계는 1번째 한글 문자 치환<br>
-	 * 예) 라로량리림랑류뢰란 -> 나노양이임낭유뇌난<br>
-	 * 2번째 한글 문자부터 치환<br>
-	 * 례륭란률래로량락라님림련년니리륜랑룰린람녕령롱룡료립록류렬릉녀려뇨뉴렴념닉력루르론뢰 ->
-	 * 예융난율내노양낙나임임연연이이윤낭울인남영영농용요입녹유열능여여요뉴염염익역누느논뇌<br>
-	 * ex) applyInitialLaw("림업례제") => "임업예제" </div>
+	 * <div class="ko"> ex) applyInitialLaw("림업례제") => "임업예제" </div>
 	 * 
 	 * @param str
 	 *            string to be modified
@@ -199,54 +214,149 @@ public class StringUtil {
 
 	/**
 	 * Joins the elements of the provided array into a single String containing
-	 * the provided list of elements. <div class="ko"> Object[]를 입력으로 받아
-	 * ","(delimiter)로 각 element를 연결하여 String을 생성한다. - 주어진 Object[]가 null일 경우,
-	 * null을 return한다. </div>
-	 * 
-	 * ex) String[] test = {"aaa", "bbb", "ccc"};
+	 * the provided list of elements. ex) String[] test = {"aaa", "bbb", "ccc"};
 	 * arrayToCommaDelimitedString(test) => "aaa,bbb,ccc"
 	 * 
 	 * @param array
 	 *            the array of values to join together
 	 * @return the joined String that is seperatd by comma
+	 * @deprecated Use {@link #arrayToDelimitedString(Object[])}
 	 */
-	public static String arrayToCommaDelimitedString(Object array[]) {
+	@Deprecated
+	public static String arrayToCommaDelimitedString(Object[] array) {
 		return arrayToDelimitedString(array, ",");
 	}
 
 	/**
 	 * Joins the elements of the provided array into a single String containing
-	 * the provided list of elements. <div class="ko"> Object[]를 입력으로 받아
-	 * delimiter로 각 element를 연결하여 String을 생성한다. - 주어진 Object[]가 null일 경우, null을
-	 * return한다. - delimiter가 null일 경우, delimiter 없이 연결하여 String을 return한다.
-	 * </div>
+	 * the provided list of elements. ex) String[] test = {"aaa", "bbb", "ccc"};
+	 * arrayToDelimitedString(test) => "aaa,bbb,ccc"
+	 * 
+	 * @param objects
+	 *            the array of values to join together
+	 * @return the joined String that is seperatd by comma
+	 */
+	public static String arrayToDelimitedString(Object[] objects) {
+		return arrayToDelimitedString(objects, ",");
+	}
+
+	/**
+	 * Joins the elements of the provided array into a single String containing
+	 * the provided list of elements.
 	 * 
 	 * ex) String[] test = {"aaa", "bbb", "ccc"};
 	 * arrayToDelimitedString(test,",") => "aaa,bbb,ccc"
 	 * 
-	 * @param array
+	 * @param objects
 	 *            the array of values to join together
 	 * @param delimiter
 	 *            delimiter for conversioin
 	 * @return the joined String
 	 */
-	public static String arrayToDelimitedString(Object array[], String delimiter) {
-		if (array == null) {
+	public static String arrayToDelimitedString(Object[] objects,
+			String delimiter) {
+		if (objects == null) {
 			return null;
 		}
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < array.length; i++) {
+		for (int i = 0; i < objects.length; i++) {
 			if (i > 0 && delimiter != null) {
 				sb.append(delimiter);
 			}
-			sb.append(array[i]);
+			sb.append(objects[i]);
 		}
 		return sb.toString();
 	}
 
 	/**
-	 * Converts asterisk to space in a String. <div class="ko"> 입력인자로 전달된 문자열에
-	 * '*'나 '**'가 있으면 공백으로 변환한다. </div>
+	 * Joins the elements of the provided collection into a single String
+	 * containing the provided list of elements with comma delimeter.
+	 * 
+	 * @param collection
+	 *            the collection of values to join together
+	 * @return the joined String that is seperatd by comma
+	 * @deprecated Use {@link #collectionToDelimitedString(Collection<String>)}
+	 */
+	@Deprecated
+	public static String collectionToCommaDelimitedString(
+			Collection<String> collection) {
+		return collectionToDelimitedString(collection, ",");
+	}
+
+	/**
+	 * Joins the elements of the provided collection into a single String
+	 * containing the provided list of elements with comma delimeter.
+	 * 
+	 * @param strings
+	 *            the collection of values to join together
+	 * @return the joined String that is seperatd by comma
+	 */
+	public static String collectionToDelimitedString(Collection<String> strings) {
+		return collectionToDelimitedString(strings, ",");
+	}
+
+	/**
+	 * Joins the elements of the provided collection into a single String
+	 * containing the provided list of elements with delimeter.
+	 * 
+	 * @param strings
+	 *            the collection of values to join together
+	 * @param delimiter
+	 *            delimiter for conversioin
+	 * @return the joined String that is seperatd by delimeter
+	 */
+	public static String collectionToDelimitedString(
+			Collection<String> strings, String delimiter) {
+		if (strings == null) {
+			return null;
+		}
+		StringBuffer sb = new StringBuffer();
+		Iterator<String> it = strings.iterator();
+		int i = 0;
+		for (; it.hasNext(); sb.append(it.next())) {
+			if (i++ > 0 && delimiter != null) {
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts a single String with comma delimiter to Set of String.
+	 * 
+	 * @param str
+	 *            the single String to convert with comma delimiter
+	 * @return Set of String values
+	 */
+	public static Set<String> commaDelimitedStringToSet(String str) {
+		Set<String> set = new HashSet<String>();
+		String tokens[] = tokenizeToStringArray(str);
+		if (tokens == null) {
+			return null;
+		}
+		for (int i = 0; i < tokens.length; i++) {
+			set.add(tokens[i]);
+		}
+		return set;
+	}
+
+	/**
+	 * Converts a single String with comma delimiter to string array. ex)
+	 * String[] test; test = commaDelimitedStringToStringArray("aaa,bbb,ccc") =>
+	 * test[0]="aaa", test[1]="bbb"...
+	 * 
+	 * @param str
+	 *            the silgle String to convert
+	 * @return array of String values
+	 * @deprecated Use {@link #tokenizeToStringArray(String)}
+	 */
+	@Deprecated
+	public static String[] commaDelimitedStringToStringArray(String str) {
+		return delimitedStringToStringArray(str, ",");
+	}
+
+	/**
+	 * Converts asterisk to space in a String.
 	 * 
 	 * ex) convertAsteriskToSpace("test**test") => "test  test"
 	 * 
@@ -262,8 +372,27 @@ public class StringUtil {
 	}
 
 	/**
-	 * Changes case of first character in a String. <div class="ko"> 주어진 String의
-	 * 첫번째 글자를 대문자나 소문자로 변환한다. </div>
+	 * convert first letter to a big letter or a small letter.<br>
+	 * 
+	 * <pre>
+	 * StringUtil.swapFirstLetterCase("Password") = "password'
+	 * StringUtil.swapFirstLetterCase("password') = "Password"
+	 * </pre>
+	 * 
+	 * @param str
+	 *            String to be swapped
+	 * @return String converting result
+	 */
+	public static String swapFirstLetterCase(String str) {
+		if (Character.isLowerCase(str.substring(0, 1).toCharArray()[0])) {
+			return changeFirstCharacterCase(true, str);
+		} else {
+			return changeFirstCharacterCase(false, str);
+		}
+	}
+
+	/**
+	 * Changes case of first character in a String.
 	 * 
 	 * ex) changeFirstCharacterCase(true, "abcd") => "Abcd"
 	 * changeFirstCharacterCase(false, "ABCD") => "aBCD"
@@ -276,11 +405,10 @@ public class StringUtil {
 	 */
 	private static String changeFirstCharacterCase(boolean capitalize,
 			String str) {
-		int strLen;
-		if (str == null || (strLen = str.length()) == 0) {
+		if (str == null || str.length() == 0) {
 			return str;
 		}
-		StringBuffer buf = new StringBuffer(strLen);
+		StringBuffer buf = new StringBuffer(str.length());
 		if (capitalize) {
 			buf.append(Character.toUpperCase(str.charAt(0)));
 		} else {
@@ -291,105 +419,23 @@ public class StringUtil {
 	}
 
 	/**
-	 * Joins the elements of the provided collection into a single String
-	 * containing the provided list of elements with comma delimeter. <div
-	 * class="ko"> Collection을 입력으로 받아 ","(delimiter)로 각 element를 연결하여 String을
-	 * 생성한다. - 주어진 Collection이 null일 경우, null을 return한다. </div>
-	 * 
-	 * @param collection
-	 *            the collection of values to join together
-	 * @return the joined String that is seperatd by comma
-	 */
-	public static String collectionToCommaDelimitedString(
-			Collection<String> collection) {
-		return collectionToDelimitedString(collection, ",");
-	}
-
-	/**
-	 * Joins the elements of the provided collection into a single String
-	 * containing the provided list of elements with delimeter. <div class="ko">
-	 * Collection을 입력으로 받아 delimiter로 각 element를 연결하여 String을 생성한다. - 주어진
-	 * Collection이 null일 경우, null을 return한다. - delimiter가 null일 경우, delimiter 없이
-	 * 연결하여 String을 return한다. </div>
-	 * 
-	 * @param collection
-	 *            the collection of values to join together
-	 * @param delimiter
-	 *            delimiter for conversioin
-	 * @return the joined String that is seperatd by delimeter
-	 */
-	public static String collectionToDelimitedString(
-			Collection<String> collection, String delimiter) {
-		if (collection == null) {
-			return null;
-		}
-		StringBuffer sb = new StringBuffer();
-		Iterator<String> it = collection.iterator();
-		int i = 0;
-		for (; it.hasNext(); sb.append(it.next())) {
-			if (i++ > 0 && delimiter != null) {
-				sb.append(delimiter);
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * Converts a single String with comma delimiter to Set of String. <div
-	 * class="ko"> 주어진 String에 대해서 ","(delimiter)를 이용하여 tokenize한 후 Set으로 뽑아낸다.
-	 * - StringTokenizer를 이용하지 않고 처리하여, 연속된 delimiter 사이는 비어 있는 token으로 간주된다. -
-	 * 주어진 String이 null일 경우, null을 return한다. </div>
-	 * 
-	 * @param str
-	 *            the silgle String to convert
-	 * @return Set of String values
-	 */
-	public static Set<String> commaDelimitedStringToSet(String str) {
-		Set<String> set = new HashSet<String>();
-		String tokens[] = commaDelimitedStringToStringArray(str);
-		if (tokens == null) {
-			return null;
-		}
-		for (int i = 0; i < tokens.length; i++) {
-			set.add(tokens[i]);
-		}
-		return set;
-	}
-
-	/**
-	 * Converts a single String with comma delimiter to string array. <div
-	 * class="ko"> 주어진 String에 대해서 ","(delimiter)를 이용하여 tokenize한 후 String[]로
-	 * 변환한다. - StringTokenizer를 이용하지 않고 처리하여, 연속된 delimiter 사이는 비어 있는 token으로
-	 * 간주된다. - 주어진 String이 null일 경우, null을 return한다. </div> ex) String[] test;
-	 * test = commaDelimitedStringToStringArray("aaa,bbb,ccc") => test[0]="aaa",
-	 * test[1]="bbb"...
-	 * 
-	 * @param str
-	 *            the silgle String to convert
-	 * @return array of String values
-	 */
-	public static String[] commaDelimitedStringToStringArray(String str) {
-		return delimitedStringToStringArray(str, ",");
-	}
-
-	/**
 	 * Compare two words in lexicographical order. if the input string or string
 	 * to compare with is <code>null</code>, return -1.
 	 * 
 	 * @param sourceStr
 	 *            input string
-	 * @param anotherStr
+	 * @param targetStr
 	 *            string to be compared with If return value is 0, the same
 	 *            word, if it is under 0, the smaller one in lexicographical
 	 *            order, if it is over 0, the bigger one in lexicographical
 	 *            order.
 	 * @see String#compareTo(String)
 	 */
-	public static int compareTo(String sourceStr, String anotherStr) {
-		if (sourceStr == null || anotherStr == null) {
+	public static int compareTo(String sourceStr, String targetStr) {
+		if (sourceStr == null || targetStr == null) {
 			return -1;
 		}
-		return sourceStr.compareTo(anotherStr);
+		return sourceStr.compareTo(targetStr);
 	}
 
 	/**
@@ -398,18 +444,18 @@ public class StringUtil {
 	 * 
 	 * @param sourceStr
 	 *            input string
-	 * @param anotherStr
+	 * @param targetStr
 	 *            string to be compared with
 	 * @return int If return value is 0, the same word, if it is under 0, the
 	 *         smaller one in lexicographical order, if it is over 0, the bigger
 	 *         one in lexicographical order.
 	 * @see String#compareToIgnoreCase(String)
 	 */
-	public static int compareToIgnoreCase(String sourceStr, String anotherStr) {
-		if (sourceStr == null || anotherStr == null) {
+	public static int compareToIgnoreCase(String sourceStr, String targetStr) {
+		if (sourceStr == null || targetStr == null) {
 			return -1;
 		}
-		return sourceStr.compareToIgnoreCase(anotherStr);
+		return sourceStr.compareToIgnoreCase(targetStr);
 	}
 
 	/**
@@ -436,17 +482,56 @@ public class StringUtil {
 	 * @param invalidChars
 	 *            an array of invalid chars, may be null
 	 * @return false if it contains none of the invalid chars, or is null
+	 * @deprecated Use {@link #containsAny(String, char[])}
 	 */
+	@Deprecated
 	public static boolean containsInvalidChars(String str, char[] invalidChars) {
 		if (str == null || invalidChars == null) {
 			return false;
 		}
+		return containsAnyChar(str, invalidChars);
+	}
+
+	/**
+	 * 
+	 * Checks that the String contains certain characters.
+	 * 
+	 * 
+	 * A <code>null</code> String will return <code>false</code>. A
+	 * <code>null</code> invalid character array will return <code>false</code>.
+	 * An empty String ("") always returns false.
+	 * 
+	 * <pre>
+	 * StringUtil.containsAny(null, *)       = false
+	 * StringUtil.containsAny(*, null)       = false
+	 * StringUtil.containsAny("", *)         = false
+	 * StringUtil.containsAny("ab", "".toCharArrray())      = false
+	 * StringUtil.containsAny("abab", "xyz".toCharArray()) = false
+	 * StringUtil.containsAny("ab1", 'xyz".toCharArray())  = false
+	 * StringUtil.containsAny("xbz", "xyz".toCharArray())  = true
+	 * </pre>
+	 * 
+	 * @param str
+	 *            the String to check, may be null
+	 * @param chars
+	 *            an array of invalid chars, may be null
+	 * @return false if it contains none of the invalid chars, or is null
+	 */
+	public static boolean containsAny(String str, char[] chars) {
+		if (str == null || chars == null) {
+			return false;
+		}
+
+		return containsAnyChar(str, chars);
+	}
+
+	private static boolean containsAnyChar(String str, char[] chars) {
 		int strSize = str.length();
-		int validSize = invalidChars.length;
+		int validSize = chars.length;
 		for (int i = 0; i < strSize; i++) {
 			char ch = str.charAt(i);
 			for (int j = 0; j < validSize; j++) {
-				if (invalidChars[j] == ch) {
+				if (chars[j] == ch) {
 					return true;
 				}
 			}
@@ -476,12 +561,44 @@ public class StringUtil {
 	 * @param invalidChars
 	 *            a String of invalid chars, may be null
 	 * @return false if it contains none of the invalid chars, or is null
+	 * @deprecated Use {@link #containsAny(String, String)}
 	 */
+	@Deprecated
 	public static boolean containsInvalidChars(String str, String invalidChars) {
 		if (str == null || invalidChars == null) {
 			return true;
 		}
 		return containsInvalidChars(str, invalidChars.toCharArray());
+	}
+
+	/**
+	 * Checks that the String contains certain characters.
+	 * 
+	 * A <code>null</code> String will return <code>false</code>. A
+	 * <code>null</code> character array will return <code>false</code>. An
+	 * empty String ("") always returns false.
+	 * 
+	 * <pre>
+	 * StringUtil.containsAny(null, *)       = false
+	 * StringUtil.containsAny(*, null)       = false
+	 * StringUtil.containsAny("", *)         = false
+	 * StringUtil.containsAny("ab", "")      = false
+	 * StringUtil.containsAny("abab", "xyz") = false
+	 * StringUtil.containsAny("ab1", "xyz")  = false
+	 * StringUtil.containsAny("xbz", "xyz")  = true
+	 * </pre>
+	 * 
+	 * @param str
+	 *            the String to check, may be null
+	 * @param chars
+	 *            a String of invalid chars, may be null
+	 * @return false if it contains none of the invalid chars, or is null
+	 */
+	public static boolean containsAny(String str, String chars) {
+		if (str == null || chars == null) {
+			return false;
+		}
+		return containsAnyChar(str, chars.toCharArray());
 	}
 
 	/**
@@ -498,10 +615,48 @@ public class StringUtil {
 	 * @param maxSeqNumber
 	 *            a sequence of the same character
 	 * @return which contains a sequence of the same character
+	 * @deprecated Use {@link #containsMaxOccurences(String, String)}
 	 */
+	@Deprecated
 	public static boolean containsMaxSequence(String str, String maxSeqNumber) {
 		int occurence = 1;
-		int max = NumberUtil.string2integer(maxSeqNumber);
+		int max = NumberUtil.stringToInt(maxSeqNumber);
+		if (str == null) {
+			return false;
+		}
+
+		int sz = str.length();
+		for (int i = 0; i < (sz - 1); i++) {
+			if (str.charAt(i) == str.charAt(i + 1)) {
+				occurence++;
+
+				if (occurence == max)
+					return true;
+			} else {
+				occurence = 1;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * It returns true if string contains a sequence of the same character.
+	 * 
+	 * <pre>
+	 * StringUtil.containsMaxOccurences("password", "2") = true
+	 * StringUtil.containsMaxOccurences("my000", "3")    = true
+	 * StringUtil.containsMaxOccurences("abbbbc", "5")   = false
+	 * </pre>
+	 * 
+	 * @param str
+	 *            original String
+	 * @param maxSeqNumber
+	 *            a sequence of the same character
+	 * @return which contains a sequence of the same character
+	 */
+	public static boolean containsMaxOccurences(String str, String maxSeqNumber) {
+		int occurence = 1;
+		int max = NumberUtil.stringToInt(maxSeqNumber);
 		if (str == null) {
 			return false;
 		}
@@ -523,29 +678,31 @@ public class StringUtil {
 	/**
 	 * Convert a string that may contain underscores to camel case.
 	 * 
-	 * @param underScore
-	 *            Underscore name.
+	 * @param str
+	 *            the String to convert
 	 * @return Camel case representation of the underscore string.
 	 */
-	public static String convertToCamelCase(String underscore) {
-		return convertToCamelCase(underscore, '_');
+	public static String convertToCamelCase(String str) {
+		return convertToCamelCase(str, '_');
 	}
 
 	/**
 	 * Convert a camel case string to underscore representation.
 	 * 
-	 * @param camelCase
+	 * @param str
 	 *            Camel case name.
-	 * @return Underscore representation of the camel case string.
+	 * @param delimiter
+	 * 			  delimiter for conversioin
+	 * @return Camel case representation of the inputString.
 	 */
-	public static String convertToCamelCase(String targetString, char posChar) {
+	public static String convertToCamelCase(String str, char delimiter) {
 		StringBuilder result = new StringBuilder();
 		boolean nextUpper = false;
-		String allLower = targetString.toLowerCase();
+		String allLower = str.toLowerCase();
 
 		for (int i = 0; i < allLower.length(); i++) {
 			char currentChar = allLower.charAt(i);
-			if (currentChar == posChar) {
+			if (currentChar == delimiter) {
 				nextUpper = true;
 			} else {
 				if (nextUpper) {
@@ -561,14 +718,14 @@ public class StringUtil {
 	/**
 	 * Convert a camel case string to underscore representation.
 	 * 
-	 * @param camelCase
-	 *            Camel case name.
+	 * @param str
+	 *            the String to convert
 	 * @return Underscore representation of the camel case string.
 	 */
-	public static String convertToUnderScore(String camelCase) {
+	public static String convertToUnderScore(String str) {
 		String result = "";
-		for (int i = 0; i < camelCase.length(); i++) {
-			char currentChar = camelCase.charAt(i);
+		for (int i = 0; i < str.length(); i++) {
+			char currentChar = str.charAt(i);
 			// This is starting at 1 so the result does not end up with an
 			// underscore at the begin of the value
 			if (i > 0 && Character.isUpperCase(currentChar)) {
@@ -581,17 +738,17 @@ public class StringUtil {
 	}
 
 	/**
-	 * Count the number of occurrences of pattern in a String. <div class="ko">
-	 * 한 String 객체(sub)의 패턴이 다른 String 객체(main)안에서 몇 번 등장하는지 계산한다. - 등장 패턴의 위치는
-	 * 좌측에서부터 계산하고 겹치지 않는 형태로 계산한다. + 예를 들어, "aa"는 "aaa"에서 두 번 등장하는 것이 아니라, 한 번
-	 * 등장하는 것으로 계산한다. </div> ex) countPattern("aaa", "aa") => 1
+	 * Count the number of occurrences of pattern in a String. ex)
+	 * countPattern("aaa", "aa") => 1
 	 * 
 	 * @param str
 	 *            the String to check
 	 * @param pattern
 	 *            the pattern to count
 	 * @return the number of occurrences
+	 * @deprecated Use {@link #countMatches(String, String)}
 	 */
+	@Deprecated
 	public static int countPattern(String str, String pattern) {
 		if (str == null || pattern == null || "".equals(pattern)) {
 			return 0;
@@ -632,8 +789,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * Removes all occurrences of characters from within the source string. <div
-	 * class="ko"> 한 String 객체 안에서 특정 패턴 안에 포함된 모든 character들을 제거한다. </div> ex)
+	 * Removes all occurrences of characters from within the source string. ex)
 	 * deleteChars("zzAccBxx", "AB") => "zzccxx"
 	 * 
 	 * @param str
@@ -641,7 +797,9 @@ public class StringUtil {
 	 * @param chars
 	 *            the char to search for and remove
 	 * @return the substring with the char removed if found
+	 * @deprecated Use {@link #deleteAny(String, String)}
 	 */
+	@Deprecated
 	public static String deleteChars(String str, String chars) {
 		if (str == null || chars == null) {
 			return str;
@@ -654,10 +812,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * Removes all occurrences of a substring from within the source string.
-	 * <div class="ko"> 한 String 객체 안에서 특정 패턴을 제거한다. - 등장 패턴의 위치는 좌측에서부터 계산하고
-	 * 겹치지 않는 형태로 계산한다. + 따라서, 제거된 후에도 old 패턴은 남아 있을 수 있다. + 예를 들어,
-	 * deletePattern("aababa", "aba")는 "aba"가 된다. </div> ex)
+	 * Removes all occurrences of a substring from within the source string. ex)
 	 * deletePattern("zzABCcc", "ABC") => "zzcc"
 	 * 
 	 * @param str
@@ -665,25 +820,26 @@ public class StringUtil {
 	 * @param pattern
 	 *            the String to search for and remove
 	 * @return the substring with the string removed if found
+	 * @deprecated Use {@link #deleteMatches(String, String)}
 	 */
+	@Deprecated
 	public static String deletePattern(String str, String pattern) {
 		return replacePattern(str, pattern, "");
 	}
 
 	/**
-	 * Converts a single String with delimiter to string array. <div class="ko">
-	 * - StringTokenizer를 이용하지 않고 처리하여, 연속된 delimiter 사이는 비어 있는 token으로 간주된다. -
-	 * 주어진 String이 null일 경우, null을 return한다. - delimiter가 null일 경우, 주어진 String을
-	 * 하나의 element로 가지는 String[]를 return한다. </div> ex) String[] test; test =
-	 * delimitedStringToStringArray("aaa.bbb.ccc.ddd", "."); => test[0]="aaa",
-	 * test[1]="bbb"...
+	 * Converts a single String with delimiter to string array. ex) String[]
+	 * test; test = delimitedStringToStringArray("aaa.bbb.ccc.ddd", "."); =>
+	 * test[0]="aaa", test[1]="bbb"...
 	 * 
 	 * @param str
 	 *            the silgle String to convert
 	 * @param delimiter
 	 *            delimiter for conversioin
 	 * @return array of String values
+	 * @deprecated Use {@link #tokenizeToStringArray(String, String)}
 	 */
+	@Deprecated
 	public static String[] delimitedStringToStringArray(String str,
 			String delimiter) {
 		if (str == null) {
@@ -705,41 +861,14 @@ public class StringUtil {
 	}
 
 	/**
-	 * Make a new String that filled original to a special char as ciphers
-	 * 
-	 * @param originalStr
-	 *            original String
-	 * @param ch
-	 *            a special char
-	 * @param ciphers
-	 *            ciphers
-	 * @return filled String
-	 */
-	public static String fillString(String originalStr, char ch, int ciphers) {
-		int originalStrLength = originalStr.length();
-
-		if (ciphers < originalStrLength)
-			return null;
-
-		int difference = ciphers - originalStrLength;
-
-		StringBuilder strBuf = new StringBuilder();
-		for (int i = 0; i < difference; i++)
-			strBuf.append(ch);
-
-		strBuf.append(originalStr);
-		return strBuf.toString();
-	}
-
-	/**
 	 * Return byte length for each letter of related character
 	 * 
-	 * @param charat
+	 * @param ch
 	 *            one English letter
 	 * @return byte length of one related English letter
 	 */
-	public static int getByteLength(char charat) {
-		int charCode = charat;
+	public static int getByteLength(char ch) {
+		int charCode = ch;
 
 		if (charCode <= ONE_BYTE) {
 			return 1;
@@ -782,7 +911,9 @@ public class StringUtil {
 	 * @param chars
 	 *            character arrangement to be searched for
 	 * @return int number of strings included
+	 * 
 	 */
+	@Deprecated
 	public static int getContainsCount(String str, char[] chars) {
 		if (str == null || chars == null) {
 			return -1;
@@ -802,6 +933,38 @@ public class StringUtil {
 	}
 
 	/**
+	 * For given string, return number that includes related characters. If
+	 * given string or character to be searched for is <code>null</code>, return
+	 * -1.
+	 * 
+	 * @param str
+	 *            input string
+	 * @param chars
+	 *            character arrangement to be searched for
+	 * @return int number of strings included
+	 */
+	public static int countMatches(String str, char[] chars) {
+		return countMatches(str, new String(chars));
+	}
+
+	/**
+	 * For the given string, return the number that includes the related string.
+	 * 
+	 * @param str
+	 *            string to search in. Return 0 if this is null.
+	 * @param sub
+	 *            string to search for. Return 0 if this is null.
+	 * @see org.springframework.util.StringUtils#countOccurrencesOf(String,
+	 *      String)
+	 * @deprecated Use {@link #countMatches(String, String)}
+	 */
+	@Deprecated
+	public static int getContainsCount(String str, String sub) {
+		return org.springframework.util.StringUtils
+				.countOccurrencesOf(str, sub);
+	}
+
+	/**
 	 * For the given string, return the number that includes the related string.
 	 * 
 	 * @param str
@@ -811,7 +974,7 @@ public class StringUtil {
 	 * @see org.springframework.util.StringUtils#countOccurrencesOf(String,
 	 *      String)
 	 */
-	public static int getContainsCount(String str, String sub) {
+	public static int countMatches(String str, String sub) {
 		return org.springframework.util.StringUtils
 				.countOccurrencesOf(str, sub);
 	}
@@ -827,7 +990,9 @@ public class StringUtil {
 	 * @param chars
 	 *            string of characters to be searched for
 	 * @return int number of strings included
+	 * @deprecated Use {@link #countMatchesIgnoreCase(String, char[])}
 	 */
+	@Deprecated
 	public static int getContainsCountIgnoreCase(String str, char[] chars) {
 		char[] lowerChar = new char[chars.length];
 		for (int j = 0; j < chars.length; j++) {
@@ -835,6 +1000,45 @@ public class StringUtil {
 			lowerChar[j] = res.charAt(0);
 		}
 		return getContainsCount(str.toLowerCase(), lowerChar);
+	}
+
+	/**
+	 * 
+	 * For given string regardless of upper case or lower case letters, return
+	 * number that includes related characters. If given string or character to
+	 * be searched for is <code>null</code>, return -1.
+	 * 
+	 * @param str
+	 *            input string
+	 * @param chars
+	 *            string of characters to be searched for
+	 * @return int number of strings included
+	 */
+	public static int countMatchesIgnoreCase(String str, char[] chars) {
+		char[] lowerChar = new char[chars.length];
+		for (int j = 0; j < chars.length; j++) {
+			String res = String.valueOf(chars[j]).toLowerCase();
+			lowerChar[j] = res.charAt(0);
+		}
+		return countMatches(str.toLowerCase(), lowerChar);
+	}
+
+	/**
+	 * For the given string, return the number that includes related string,
+	 * regardless of upper case or lower case letters.
+	 * 
+	 * @param str
+	 *            string to search in. Return 0 if this is null.
+	 * @param sub
+	 *            string to search for. Return 0 if this is null.
+	 * @see org.springframework.util.StringUtils#countOccurrencesOf(String,
+	 *      String)
+	 * @deprecated Use {@link #countMatchesIgnoreCase(String, String)}
+	 */
+	@Deprecated
+	public static int getContainsCountIgnoreCase(String str, String sub) {
+		return org.springframework.util.StringUtils.countOccurrencesOf(str
+				.toLowerCase(), sub.toLowerCase());
 	}
 
 	/**
@@ -848,7 +1052,7 @@ public class StringUtil {
 	 * @see org.springframework.util.StringUtils#countOccurrencesOf(String,
 	 *      String)
 	 */
-	public static int getContainsCountIgnoreCase(String str, String sub) {
+	public static int countMatchesIgnoreCase(String str, String sub) {
 		return org.springframework.util.StringUtils.countOccurrencesOf(str
 				.toLowerCase(), sub.toLowerCase());
 	}
@@ -862,7 +1066,9 @@ public class StringUtil {
 	 * @param length
 	 *            length of string
 	 * @return amount of string that is the same as the defined length
+	 * @deprecated Use {@link #left(String, int)}
 	 */
+	@Deprecated
 	public static String getCutString(String str, int length) {
 		String result = "";
 
@@ -882,17 +1088,17 @@ public class StringUtil {
 	 * StringUtil.getLastString(&quot;password*password*a*b*c&quot;, &quot;*&quot;) = &quot;c&quot;
 	 * </pre>
 	 * 
-	 * @param origStr
+	 * @param str
 	 *            original String
-	 * @param strToken
+	 * @param token
 	 *            specific tokens
 	 * @return String of last location
 	 */
-	public static String getLastString(String origStr, String strToken) {
-		StringTokenizer str = new StringTokenizer(origStr, strToken);
+	public static String getLastString(String str, String token) {
+		StringTokenizer tokenizer = new StringTokenizer(str, token);
 		String lastStr = "";
-		while (str.hasMoreTokens()) {
-			lastStr = str.nextToken();
+		while (tokenizer.hasMoreTokens()) {
+			lastStr = tokenizer.nextToken();
 		}
 		return lastStr;
 	}
@@ -916,40 +1122,12 @@ public class StringUtil {
 	/**
 	 * Return a specific length of random string.
 	 * 
-	 * @param count
+	 * @param size
 	 *            the length of random string to be developed
 	 * @return String random string
 	 */
-	public static String getRandomString(int count) {
-		return randomAlphabetic(count);
-	}
-
-	/**
-	 * Return random string of a defined length between specific alphabet
-	 * character.
-	 * 
-	 * @param count
-	 *            count the length of random string to be made
-	 * @param startChar
-	 *            the first letter of the random string being made
-	 * @param endChar
-	 *            the last letter of the random string being made
-	 * @return String random string
-	 */
-	public static String getRandomString(int count, char startChar, char endChar) {
-		int startInt = Integer.valueOf(startChar);
-		int endInt = Integer.valueOf(endChar);
-
-		int gap = endInt - startInt;
-		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < count; i++) {
-			int chInt;
-			do {
-				chInt = StringUtil.generator.nextInt(gap + 1) + startInt;
-			} while (!Character.toString((char) chInt).matches("^[a-zA-Z]$"));
-			buf.append((char) chInt);
-		}
-		return buf.toString();
+	public static String getRandomString(int size) {
+		return randomAlphabetic(size);
 	}
 
 	/**
@@ -969,6 +1147,34 @@ public class StringUtil {
 	}
 
 	/**
+	 * Return random string of a defined length between specific alphabet
+	 * character.
+	 * 
+	 * @param size
+	 *            the length of random string to be made
+	 * @param startChar
+	 *            the first letter of the random string being made
+	 * @param endChar
+	 *            the last letter of the random string being made
+	 * @return String random string
+	 */
+	public static String getRandomString(int size, char startChar, char endChar) {
+		int startInt = Integer.valueOf(startChar);
+		int endInt = Integer.valueOf(endChar);
+
+		int gap = endInt - startInt;
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < size; i++) {
+			int chInt;
+			do {
+				chInt = StringUtil.GENERATOR.nextInt(gap + 1) + startInt;
+			} while (!Character.toString((char) chInt).matches("^[a-zA-Z]$"));
+			buf.append((char) chInt);
+		}
+		return buf.toString();
+	}
+
+	/**
 	 * Return a specific length of given character set string.
 	 * 
 	 * @param count
@@ -976,27 +1182,28 @@ public class StringUtil {
 	 * @param charset
 	 *            supported character set
 	 * @return String random string
-	 * @throws
+	 * @throws UnsupportedEncodingException
 	 */
-	public static String getRandomStringByCharset(int count, String charset) {
-		String randomStr = getRandomString(count);
-		return DigestUtil.encodeCharset(randomStr, charset);
+	public static String getRandomStringByCharset(int size, String charset)
+			throws UnsupportedEncodingException {
+		String randomStr = getRandomString(size);
+		return convertStringCharset(randomStr, charset);
 	}
 
 	/**
 	 * Return a specific length of random string in Korean characters (UTF-8
 	 * only).
 	 * 
-	 * @param count
+	 * @param size
 	 *            length of random string to be made
 	 * @return String random string in Korean characters
 	 * @throws UnsupportedEncodingException
 	 */
-	public static String getRandomStringByKorean(int count)
+	public static String getRandomStringByKorean(int size)
 			throws UnsupportedEncodingException {
 		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < count; i++) {
-			buf.append((char) (StringUtil.generator.nextInt(11172) + 0xAC00));
+		for (int i = 0; i < size; i++) {
+			buf.append((char) (StringUtil.GENERATOR.nextInt(11172) + 0xAC00));
 		}
 		return buf.toString();
 	}
@@ -1016,7 +1223,9 @@ public class StringUtil {
 	 * @param strToken
 	 *            specific String token
 	 * @return String[]
+	 * @deprecated Use {@link #tokenizeToStringArray(String, String)}
 	 */
+	@Deprecated
 	public static String[] getStringArray(String str, String strToken) {
 		if (str.indexOf(strToken) != -1) {
 			StringTokenizer st = new StringTokenizer(str, strToken);
@@ -1032,25 +1241,28 @@ public class StringUtil {
 	/**
 	 * Return token list which is separated by ","
 	 * 
-	 * @param lst
+	 * @param str
+	 *            the String to parse
 	 * @return token list which is separated by ","
 	 */
-	public static List<String> getTokens(String lst) {
-		return getTokens(lst, ",");
+	public static List<String> getTokens(String str) {
+		return getTokens(str, ",");
 	}
 
 	/**
-	 * Return token list
+	 * Return token list which is separated by input delimiter
 	 * 
-	 * @param lst
-	 * @param separator
+	 * @param str
+	 *            the String to parse
+	 * @param delimeter
+	 *            the String used as the delimiter
 	 * @return token list
 	 */
-	public static List<String> getTokens(String lst, String separator) {
+	public static List<String> getTokens(String str, String delimeter) {
 		List<String> tokens = new ArrayList<String>();
 
-		if (lst != null) {
-			StringTokenizer st = new StringTokenizer(lst, separator);
+		if (str != null) {
+			StringTokenizer st = new StringTokenizer(str, delimeter);
 			while (st.hasMoreTokens()) {
 				String en = st.nextToken().trim();
 				tokens.add(en);
@@ -1060,22 +1272,20 @@ public class StringUtil {
 	}
 
 	/**
-	 * Checks if String length is greater than zero. <div class="ko"> 주어진 String
-	 * 객체가 0보다 큰 길이를 가지고 있는지 검사한다. </div> ex) "test" => true "" => false
+	 * Checks if String length is greater than zero. ex) "test" => true "" =>
+	 * false
 	 * 
 	 * @param str
 	 *            the String to check
 	 * @return true if String length is greater than zero, false if not or null
 	 *         string input
 	 */
-	public static boolean hasLength(String inputString) {
-		return inputString != null && inputString.length() > 0;
+	public static boolean hasLength(String str) {
+		return !isEmpty(str);
 	}
 
 	/**
-	 * Checks if String contains no whitespace. <div class="ko"> 주어진 String 객체가
-	 * Whitespace가 아닌 문자를 가지고 있는지 검사한다. - Whitespace의 판별 기준은,
-	 * java.lang.Character를 기준으로 한다. </div> ex) hasText(" test ") => true
+	 * Checks if String contains no whitespace. ex) hasText(" test ") => true
 	 * hasText(" ") => false hasText("") => false
 	 * 
 	 * @param str
@@ -1084,11 +1294,10 @@ public class StringUtil {
 	 *         string input
 	 */
 	public static boolean hasText(String str) {
-		int strLen;
-		if (str == null || (strLen = str.length()) == 0) {
+		if (str == null || str.length() == 0) {
 			return false;
 		}
-		for (int i = 0; i < strLen; i++) {
+		for (int i = 0; i < str.length(); i++) {
 			if (!Character.isWhitespace(str.charAt(i))) {
 				return true;
 			}
@@ -1097,15 +1306,13 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts hex code to UniCode String <div class="ko"> 코드를 받아 문자열로 변환한다
-	 * (유니코드) </div>
+	 * Converts hex code to UniCode String
 	 * 
 	 * @param str
 	 *            the String to convert
 	 * @return UniCode String
 	 */
 	public static String hexToString(String str) {
-
 		String inStr = str;
 		char inChar[] = inStr.toCharArray();
 		StringBuffer sb = new StringBuffer();
@@ -1166,7 +1373,9 @@ public class StringUtil {
 	 * @param integer
 	 *            integer type
 	 * @return String string representation of a number
+	 * @deprecated Use @link {@link NumberUtil#intToString(int)}
 	 */
+	@Deprecated
 	public static String integer2string(int integer) {
 		return ("" + integer);
 	}
@@ -1189,7 +1398,9 @@ public class StringUtil {
 	 * @param str
 	 *            the String to check, may be null
 	 * @return <code>true</code> if only contains letters, and is non-null
+	 * @deprecated Use {@link #isLetter(String)}
 	 */
+	@Deprecated
 	public static boolean isAlpha(String str) {
 		if (str == null) {
 			return false;
@@ -1225,7 +1436,9 @@ public class StringUtil {
 	 *            the String to check, may be null
 	 * @return <code>true</code> if only contains letters or digits, and is
 	 *         non-null
+	 * @deprecated Use {@link #isLetterOrDigit(String)}
 	 */
+	@Deprecated
 	public static boolean isAlphaNumeric(String str) {
 		if (str == null) {
 			return false;
@@ -1242,16 +1455,16 @@ public class StringUtil {
 	}
 
 	/**
-	 * Checks if the String contains only digits. <div class="ko"> 주어진 String이
-	 * '숫자'로만 구성되어 있는지를 판별한다. - 숫자인지의 판별은 Java의 기본 판별 기준을 준수한다. - 주어진 String이
-	 * null일 경우, false를 return한다. </div> ex) isDigit("1234") => true
+	 * Checks if the String contains only digits. ex) isDigit("1234") => true
 	 * isDigit("1234A")=> false
 	 * 
 	 * @param str
 	 *            the String to check, may be null
 	 * @return true if String contains only digits, false if not or null string
 	 *         input
+	 * @deprecated Use @link {@link NumberUtil#isDigit(String)}
 	 */
+	@Deprecated
 	public static boolean isDigit(String str) {
 		if (str == null) {
 			return false;
@@ -1280,7 +1493,15 @@ public class StringUtil {
 	 * @return which empty string or not.
 	 */
 	public static boolean isEmpty(String str) {
-		return (str == null || str.length() == 0);
+        if (str != null) {
+            int len = str.length();
+            for (int i = 0; i < len; ++i) {
+                if (str.charAt(i) > ' ') {
+                    return false;
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -1290,53 +1511,31 @@ public class StringUtil {
 	 *            The text to check.
 	 * @return Whether empty.
 	 */
-	public static final boolean isEmptyTrimmed(String str) {
-		return (str == null || str.trim().length() == 0);
+	public static boolean isEmptyTrimmed(String str) {
+		if(str == null)
+			return true;
+		return isEmpty(str.trim());
 	}
 
 	/**
-	 * Checks if the String contains the given pattern. <div class="ko"> 주어진
-	 * String이 특정한 포맷으로 구성되었는지를 검사한다. </div>
+	 * Checks if the String contains only Korean characters. ex) isHangul('가')
+	 * => true isHangul('T') => false
 	 * 
-	 * @param str
-	 *            the String to check, may be null
-	 * @param pattern
-	 *            the pattern to check, may be null
-	 * @return true if String contains the given pattern, false if not or null
-	 *         string input
-	 */
-	public static boolean isFormattedString(String str, String pattern) {
-		if (str == null || pattern == null) {
-			return false;
-		} else {
-			return str.matches(pattern);
-		}
-	}
-
-	/**
-	 * Checks if the String contains only Korean characters. <div class="ko">
-	 * 주어진 character가 한글인지의 여부를 판별한다. </div> ex) isHangul('가') => true
-	 * isHangul('T') => false
-	 * 
-	 * @param str
-	 *            the String to check, may be null
+	 * @param achar
+	 *            the character to check, may be null
 	 * @return true if the String contains only Korean Language, false if not
 	 */
-	public static boolean isHangul(char str) {
-		String unicodeBlock = Character.UnicodeBlock.of(str).toString();
-		return unicodeBlock.equals("HANGUL_JAMO")
-				|| unicodeBlock.equals("HANGUL_SYLLABLES")
-				|| unicodeBlock.equals("HANGUL_COMPATIBILITY_JAMO");
+	public static boolean isHangul(char achar) {
+		String unicodeBlock = Character.UnicodeBlock.of(achar).toString();
+		return "HANGUL_JAMO".equals(unicodeBlock)
+				|| "HANGUL_SYLLABLES".equals(unicodeBlock)
+				|| "HANGUL_COMPATIBILITY_JAMO".equals(unicodeBlock);
 	}
 
 	/**
 	 * Checks if the String contains only Korean characters or any Korean
-	 * characters. <div class="ko"> 주어진 String에 대해서, 한글로만 되어 있는지 혹은 한글이 포함되어
-	 * 있는지를 판별한다. - full을 true로 설정할 경우, 한글로만 되어 있는지를 판별한다. + '한글로만 되어 있는지'는 영어나
-	 * 기타 언어가 아님을 의미하는 것이 아니고, 숫자나 기타 기호 문자 등도 없음을 의미한다. - full을 false로 설정할 경우,
-	 * 한글이 하나라도 포함되어 있는지를 판별한다. ex) isHangul("가나다", true) => true
-	 * isHangul("가나다abc", true) => false isHangul("가abc", false) => true
-	 * isHangul("abcd", false) => false </div>
+	 * characters. ex) isHangul("가나다", true) => true isHangul("가나다abc", true) =>
+	 * false isHangul("가abc", false) => true isHangul("abcd", false) => false
 	 * 
 	 * @param str
 	 *            the String to check, may be null
@@ -1367,21 +1566,20 @@ public class StringUtil {
 	}
 
 	/**
-	 * Checks if the String contains only letters. <div class="ko"> 주어진 String이
-	 * '문자'로만 구성되어 있는지를 판별한다. - 문자인지의 판별은 Java의 기본 판별 기준을 준수한다. - 주어진 String이
-	 * null일 경우, false를 return한다. </div> ex) isLetter("test") => true
-	 * isLetter("test가나")=> true isLetter("test#$%") => false
-	 * isLetter("test123") => false
+	 * Checks if the String contains only letters. ex) isLetter("test") => true
+	 * isLetter("test#$%") => false isLetter("test123") => false isLetter("")=>
+	 * false
 	 * 
 	 * @param str
 	 *            the String to check, may be null
-	 * @return true if String contains only letters, false if not or null string
-	 *         input
+	 * @return true if String contains only letters, false if not or null or
+	 *         empty string input
 	 */
 	public static boolean isLetter(String str) {
-		if (str == null) {
+		if (isEmpty(str)) {
 			return false;
 		}
+
 		char chars[] = str.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
 			if (!Character.isLetter(chars[i])) {
@@ -1392,18 +1590,16 @@ public class StringUtil {
 	}
 
 	/**
-	 * Checks if the String contains only letters or digits. <div class="ko">
-	 * 주어진 String이 '문자'나 '숫자'로만 구성되어 있는지를 판별한다. - 문자나 숫자인지의 판별은 Java의 기본 판별 기준을
-	 * 준수한다. - 주어진 String이 null일 경우, false를 return한다. ex)
-	 * isLetterOrDigit("12가나") => true isLetterOrDigit("12가나@#%")=> false </div>
+	 * Checks if the String contains only letters or digits. ex)
+	 * isLetterOrDigit("12abC") => true isLetterOrDigit("12@#%")=> false
 	 * 
 	 * @param str
 	 *            the String to check, may be null
 	 * @return true if String contains only letters or digits, false if not or
-	 *         null string input
+	 *         null or empty string input
 	 */
 	public static boolean isLetterOrDigit(String str) {
-		if (str == null) {
+		if (isEmpty(str)) {
 			return false;
 		}
 		char chars[] = str.toCharArray();
@@ -1434,15 +1630,16 @@ public class StringUtil {
 	}
 
 	/**
-	 * Checks if the String contains any letters except digits. <div class="ko">
-	 * 입력인자로 전달된 문자열이 숫자가 아닌 문자가 포함되어있는지 여부를 리턴한다. <br>
-	 * </div> ex) isNotNumeric("12345") => false isNumeric("12345ABC") => true
+	 * Checks if the String contains any letters except digits. ex)
+	 * isNotNumeric("12345") => false isNumeric("12345ABC") => true
 	 * 
 	 * @param str
 	 *            the String to check, may be null
 	 * @return true if String contains any letters, false if not or null string
 	 *         input
+	 * @deprecated Use @link {@link NumberUtil#isNotDigit(int)}
 	 */
+	@Deprecated
 	public static boolean isNotNumeric(String str) {
 		if (str == null) {
 			return false;
@@ -1453,48 +1650,63 @@ public class StringUtil {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
 	/**
-	 * Checks if the CharSequence contains only whitespace. <div class="ko"> 주어진
-	 * String이 Space만을 가지고 있는지를 검사한다. - Space의 판별 기준은, String.trim()에서 제거되는 대상을
-	 * 기준으로 한다. - 주어진 String이 null이면, false를 return한다. </div> ex) isSpace("   ")
+	 * Checks if the CharSequence contains only whitespace. ex) isSpace("   ")
 	 * => true isSpace("") => true isSpace("test") => false
 	 * 
 	 * @param str
 	 *            the String to check, may be null
 	 * @return true if String contains only whitespace, false if not or null
 	 *         string input
+	 * @deprecated Use {@link #isWhiteSpaceOnly(String)}
 	 */
+	@Deprecated
 	public static boolean isSpaceOnly(String str) {
 		if (str == null) {
 			return false;
 		} else {
-			return str.trim().length() <= 0;
+			return isEmptyTrimmed(str);
 		}
 	}
 
 	/**
-	 * Gets the leftmost len characters of a String. <div class="ko"> 주어진 String
-	 * 객체에 대해서 주어진 길이만큼 왼쪽 부분을 떼어 반환한다. - 주어진 길이보다 주어진 String의 길이가 작을 경우에는 주어진
-	 * String을 그대로 반환한다. - "..."을 붙이지 않는 점을 제외하고는 splitHead()와 동일하다. </div> ex)
-	 * left("1234567", 3) => "123"
+	 * Checks if the CharSequence contains only whitespace. ex)
+	 * isWhiteSpaceOnly("   ") => true isWhiteSpaceOnly("") => true
+	 * isWhiteSpaceOnly("test") => false
+	 * 
+	 * @param str
+	 *            the String to check, may be null
+	 * @return true if String contains only whitespace, false if not or null
+	 *         string input
+	 */
+	public static boolean isWhiteSpaceOnly(String str) {
+		if (str == null) {
+			return false;
+		} else {
+			return isEmptyTrimmed(str);
+		}
+	}
+
+	/**
+	 * Gets the leftmost len characters of a String. ex) left("1234567", 3) =>
+	 * "123"
 	 * 
 	 * @param str
 	 *            the String to get the leftmost characters from, may be null
-	 * @param len
+	 * @param size
 	 *            the length of the required String
 	 * @return the leftmost characters, null if null String input
 	 */
-	public static String left(String str, int len) {
+	public static String left(String str, int size) {
 		if (str == null) {
 			return null;
-		} else if (len <= 0 || str.length() <= len) {
+		} else if (size <= 0 || str.length() <= size) {
 			return str;
 		} else {
-			return str.substring(0, len);
+			return str.substring(0, size);
 		}
 	}
 
@@ -1542,7 +1754,7 @@ public class StringUtil {
 	 * @return string that is padded <code>null</code> if null String input
 	 */
 	public static String leftPad(String str, int size, char padChar) {
-		return padChar(str, size, padChar, true);
+		return padString(str, size, String.valueOf(padChar), true);
 	}
 
 	/**
@@ -1586,8 +1798,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts CR/LF characters to a space in a String. <div class="ko">
-	 * CRLF(newLine)가 포함된 문자열을 입력인자로 받아 CRLF(개행문자)를 SPACE로 변환하여 리턴한다. </div> ex)
+	 * Converts CR/LF characters to a space in a String. ex)
 	 * newLineToSpace("\r\ntest") => " test"
 	 * 
 	 * @param str
@@ -1595,11 +1806,21 @@ public class StringUtil {
 	 * @return the converted string
 	 */
 	public static String newLineToSpace(String str) {
-		String output;
+		return str.replace("\r\n", " ");
+	}
 
-		output = str.replace("\r\n", " ");
-
-		return output;
+	/**
+	 * Trim the original string. If the original string is null or string length
+	 * size is zero, return the empty string.
+	 * 
+	 * @param org
+	 *            original string
+	 * @return trimmed string
+	 * @deprecated Use {@link #nullToString(String)}
+	 */
+	@Deprecated
+	public static String null2str(String org) {
+		return null2str(org, "");
 	}
 
 	/**
@@ -1610,8 +1831,8 @@ public class StringUtil {
 	 *            original string
 	 * @return trimmed string
 	 */
-	public static String null2str(String org) {
-		return null2str(org, "");
+	public static String nullToString(String org) {
+		return nullToString(org, "");
 	}
 
 	/**
@@ -1623,9 +1844,11 @@ public class StringUtil {
 	 * @param converted
 	 *            converted string
 	 * @return trimmed string
+	 * @deprecated Use {@link #nullToString(String, String)}
 	 */
+	@Deprecated
 	public static String null2str(String org, String converted) {
-		if (org == null || org.trim().length() == 0) {
+		if (isEmptyTrimmed(org)) {
 			return converted;
 		} else {
 			return org.trim();
@@ -1633,9 +1856,26 @@ public class StringUtil {
 	}
 
 	/**
+	 * Trim the original string. If the original string is null or string length
+	 * size is zero, return the converted string.
+	 * 
+	 * @param str
+	 *            original string
+	 * @param defaultStr
+	 *            converted string
+	 * @return trimmed string
+	 */
+	public static String nullToString(String str, String defaultStr) {
+		if (isEmptyTrimmed(str)) {
+			return defaultStr;
+		} else {
+			return str.trim();
+		}
+	}
+
+	/**
 	 * Returns empty string if the given String is null, returns given String if
-	 * not. <div class="ko"> 주어진 String 객체를 검사하여 null일 경우 "" 을 반환하고, 아니면 원본을
-	 * 반환한다. </div> ex) nullToEmpty("test") => "test" String test = null;
+	 * not. ex) nullToEmpty("test") => "test" String test = null;
 	 * nullToEmpty(test) => ""
 	 * 
 	 * @param str
@@ -1643,7 +1883,7 @@ public class StringUtil {
 	 * @return empty string if the given String is null, given string if not
 	 */
 	public static String nullToEmpty(String str) {
-		if (str == null || str.length() <= 0) {
+		if (isEmpty(str)) {
 			return DEFAULT_EMPTY_STRING;
 		} else {
 			return str;
@@ -1651,99 +1891,93 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts double to String with the given format. <div class="ko"> double
-	 * 형태의 숫자를 받아서, 주어진 10진수 포맷의 String으로 변환한다. - java.text.DecimalFormat을 사용하여
-	 * 처리한다. - 예를 들어, 5277095325298.2523이라는 값에 "###,###.##"이라는 포맷을 적용하면
-	 * "5,277,095,325,298.25"로 변환된다. - 그러나, 5277095325298.2523이라는 값에
-	 * "###,###.####"이라는 포맷을 적용하면 "5,277,095,325,298.252"로 변환된다. - 마찬가지로
-	 * 111115277095325298.2523이라는 값에 "###,###.##"이라는 포맷을 적용하면
-	 * "111,115,277,095,325,296"로 변환된다. - 이것은, Java에서의 double 한계에 기인한 것이다.
-	 * </div> ex) numberFormat(12345.67d, "###,###.#") => "12,345.7"
+	 * Converts double to String with the given format. ex)
+	 * numberFormat(12345.67d, "###,###.#") => "12,345.7"
 	 * 
 	 * @param d
 	 *            the double value to convert
 	 * @param format
 	 *            decimal format for conversion
 	 * @return the converted string
+	 * @deprecated Use @link{@link NumberUtil#formatNumber(double, String)}
 	 */
+	@Deprecated
 	public static String numberFormat(double d, String format) {
 		DecimalFormat decimalformat = new DecimalFormat(format);
 		return decimalformat.format(d);
 	}
 
 	/**
-	 * Converts float to String with the given format. <div class="ko"> float
-	 * 형태의 숫자를 받아서, 주어진 10진수 포맷의 String으로 변환한다. - java.text.DecimalFormat을 사용하여
-	 * 처리한다. - Java에서의 float 한계에 유의한다. </div> ex) numberFormat(12345.67f,
-	 * "###,###.#") => "12,345.7"
+	 * Converts float to String with the given format. ex)
+	 * numberFormat(12345.67f, "###,###.#") => "12,345.7"
 	 * 
 	 * @param f
 	 *            the float value to convert
 	 * @param format
 	 *            decimal format for conversion
 	 * @return the converted string
+	 * @deprecated Use @link{@link NumberUtil#formatNumber(float, String)}
 	 */
+	@Deprecated
 	public static String numberFormat(float f, String format) {
 		DecimalFormat decimalformat = new DecimalFormat(format);
 		return decimalformat.format(f);
 	}
 
 	/**
-	 * Converts int to String with the given format. <div class="ko"> int 형태의
-	 * 숫자를 받아서, 주어진 10진수 포맷의 String으로 변환한다. - java.text.DecimalFormat을 사용하여
-	 * 처리한다. - Java에서의 int 한계에 유의한다. </div> ex) numberFormat(12345, "###,###")
-	 * => "12,345"
+	 * Converts int to String with the given format. ex) numberFormat(12345,
+	 * "###,###") => "12,345"
 	 * 
 	 * @param i
 	 *            the int value to convert
 	 * @param format
 	 *            decimal format for conversion
 	 * @return the converted string
+	 * @deprecated Use @link{@link NumberUtil#formatNumber(int, String)}
 	 */
+	@Deprecated
 	public static String numberFormat(int i, String format) {
 		DecimalFormat decimalformat = new DecimalFormat(format);
 		return decimalformat.format(i);
 	}
 
 	/**
-	 * Converts long to String with the given format. <div class="ko"> long 형태의
-	 * 숫자를 받아서, 주어진 10진수 포맷의 String으로 변환한다. - java.text.DecimalFormat을 사용하여
-	 * 처리한다. - Java에서의 long 한계에 유의한다. </div> ex) numberFormat(12345.67L,
-	 * "###,###.#") => "12,345.7"
+	 * Converts long to String with the given format. ex)
+	 * numberFormat(12345.67L, "###,###.#") => "12,345.7"
 	 * 
 	 * @param l
 	 *            the long value to convert
 	 * @param format
 	 *            decimal format for conversion
 	 * @return the converted string
+	 * @deprecated Use @link{@link NumberUtil#formatNumber(long, String)}
 	 */
+	@Deprecated
 	public static String numberFormat(long l, String format) {
 		DecimalFormat decimalformat = new DecimalFormat(format);
 		return decimalformat.format(l);
 	}
 
 	/**
-	 * Converts short to String with the given format. <div class="ko"> short
-	 * 형태의 숫자를 받아서, 주어진 10진수 포맷의 String으로 변환한다. - java.text.DecimalFormat을 사용하여
-	 * 처리한다. - Java에서의 short 한계에 유의한다. </div> ex) numberFormat(12345, "###,###")
-	 * => "12,345"
+	 * Converts short to String with the given format. ex) numberFormat(12345,
+	 * "###,###") => "12,345"
 	 * 
 	 * @param s
 	 *            the short value to convert
 	 * @param format
 	 *            decimal format for conversion
 	 * @return the converted string
+	 * @deprecated Use @link{@link NumberUtil#formatNumber(short, String)}
 	 */
+	@Deprecated
 	public static String numberFormat(short s, String format) {
 		DecimalFormat decimalformat = new DecimalFormat(format);
 		return decimalformat.format(s);
 	}
 
 	/**
-	 * Returns the default Object if the given Object is null. <div class="ko">
-	 * 주어진 Object가 null이 아닐 경우 그 Object를 반환하고, null일 경우 default Object를 반환한다.
-	 * </div> ex) String test = null; System.out.println(nvl(test, "NULL TEST"))
-	 * => "NULL TEST"
+	 * Returns the default Object if the given Object is null. ex) String test =
+	 * null; System.out.println(nvl(test, "NULL TEST")) => "NULL TEST"
 	 * 
 	 * String test = "test"; System.out.println(nvl(test, "NULL TEST")) =>
 	 * "test"
@@ -1754,16 +1988,34 @@ public class StringUtil {
 	 *            the default Object
 	 * @return Returns the default Object if the given Object is null, returns
 	 *         the given Object if not
+	 * @deprecated Use {@link #nullToObject(Object, Object)}
 	 */
+	@Deprecated
 	public static Object nvl(Object inputObject, Object defaultObject) {
 		return inputObject != null ? inputObject : defaultObject;
 	}
 
 	/**
-	 * Returns the default String if the given String is null. <div class="ko">
-	 * 주어진 String이 null이 아닐 경우 그 String을 반환하고, null일 경우 default String을 반환한다.
-	 * </div> ex) String test = null; System.out.println(nvl(test, "NULL TEST"))
-	 * => "NULL TEST"
+	 * Returns the default Object if the given Object is null. ex) String test =
+	 * null; System.out.println(nullToObject(test, "NULL TEST")) => "NULL TEST"
+	 * 
+	 * String test = "test"; System.out.println(nullToObject(test, "NULL TEST"))
+	 * => "test"
+	 * 
+	 * @param obj
+	 *            the Object to check
+	 * @param defaultObj
+	 *            the default Object
+	 * @return Returns the default Object if the given Object is null, returns
+	 *         the given Object if not
+	 */
+	public static Object nullToObject(Object obj, Object defaultObj) {
+		return obj != null ? obj : defaultObj;
+	}
+
+	/**
+	 * Returns the default String if the given String is null. ex) String test =
+	 * null; System.out.println(nvl(test, "NULL TEST")) => "NULL TEST"
 	 * 
 	 * String test = "test"; System.out.println(nvl(test, "NULL TEST")) =>
 	 * "test"
@@ -1774,51 +2026,25 @@ public class StringUtil {
 	 *            the default String
 	 * @return Returns the default String if the given String is null, returns
 	 *         the given String if not
+	 * @deprecated Use {@link #nullToString(String, String)}
 	 */
+	@Deprecated
 	public static String nvl(String inputString, String defaultString) {
 		return (String) nvl((Object) inputString, (Object) defaultString);
 	}
 
-	private static String padChar(String str, int size, char padChar,
-			boolean isLeft) {
-		if (str == null) {
-			return null;
-		}
-		int originalStrLength = str.length();
-
-		if (size < originalStrLength)
-			return str;
-
-		int difference = size - originalStrLength;
-
-		StringBuilder strBuf = new StringBuilder();
-		if (!isLeft) {
-			strBuf.append(str);
-		}
-
-		for (int i = 0; i < difference; i++)
-			strBuf.append(padChar);
-
-		if (isLeft) {
-			strBuf.append(str);
-		}
-
-		return strBuf.toString();
-	}
-
 	/**
-	 * Gets the String with a specified character. Pad to a size of size <div
-	 * class="ko"> 특정한 문자(char)와 일정한 길이 값을 입력으로 받아 해당 크기만큼 문자가 반복되는 문자열을 생성한다. -
-	 * padding(5, 'e') => "eeeee". - 주어진 길이 값이 0이면 => "". - 주어진 길이 값이 0보다 작으면 =>
-	 * null. - padding(5, '가') => "가가가가가". - length는 String.getBytes().length
-	 * 기준이 아닌 String.length() 기준임을 유의한다. </div> ex) padding(5, 'e') => "eeeee"
+	 * Gets the String with a specified character. Pad to a size of size ex)
+	 * padding(5, 'e') => "eeeee"
 	 * 
 	 * @param size
 	 *            the length to pad to
 	 * @param padChar
 	 *            the character to pad with
 	 * @return padded String
+	 * @deprecated Use {@link #repeat(int, char)}
 	 */
+	@Deprecated
 	public static String padding(int size, char padChar) {
 		if (size < 0) {
 			return null;
@@ -1828,6 +2054,20 @@ public class StringUtil {
 			buffer.insert(i, padChar);
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * Gets the String with a specified character. Pad to a size of size ex)
+	 * repeat(5, 'e') => "eeeee"
+	 * 
+	 * @param size
+	 *            the number of repeat
+	 * @param ch
+	 *            the character to repeat
+	 * @return the repeated String
+	 */
+	public static String repeat(int size, char ch) {
+		return leftPad("", size, ch);
 	}
 
 	private static String padString(String str, int size, String padStr,
@@ -1866,10 +2106,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * Normalize the path String. <div class="ko"> String으로 표현된 path 정보를 표준화한다.
-	 * - 주어진 path 정보 String에 대해서, "\\"로 표현된 path delimiter를 "/"로 변환하고 상대 경로를 절대
-	 * 경로로 바꾼다. - 주어진 path 정보 String일 경우, null을 return한다. </div> ex)
-	 * pathClean("../aaaa\\bbbb\\cccc\\dddd") => "aaaa/bbbb/cccc/dddd"
+	 * Normalize the path String. ex) pathClean("../aaaa\\bbbb\\cccc\\dddd") =>
+	 * "aaaa/bbbb/cccc/dddd"
 	 * 
 	 * @param path
 	 *            the path String to normalize
@@ -1880,7 +2118,7 @@ public class StringUtil {
 			return null;
 		}
 		String p = replacePattern(path, "\\", "/");
-		String pArray[] = delimitedStringToStringArray(p, "/");
+		String pArray[] = tokenizeToStringArray(p, "/");
 		List<String> pList = new LinkedList<String>();
 		int tops = 0;
 		for (int i = pArray.length - 1; i >= 0; i--) {
@@ -1900,9 +2138,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * Compare both path String after nomalization. <div class="ko"> 주어진 두 개의
-	 * path 정보 String에 대해서, 표준화 후 같은 경로인지를 판별한다. - 주어진 정보가 null인 경우에도 판별한다. (둘 다
-	 * null일 경우, true return.) </div> ex)
+	 * Compare both path String after nomalization. ex)
 	 * pathEquals("../aaaa\\bbbb\\cccc\\dddd", "aaaa/bbbb/cccc/dddd") => true
 	 * 
 	 * @param path1
@@ -1922,10 +2158,10 @@ public class StringUtil {
 		return pathClean(path1).equals(pathClean(path2));
 	}
 
-	private static String randomAlphabetic(int randomLength) {
+	private static String randomAlphabetic(int size) {
 		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < randomLength; i++) {
-			buf.append(alphas[StringUtil.generator.nextInt(52)]);
+		for (int i = 0; i < size; i++) {
+			buf.append(ALPHAS[StringUtil.GENERATOR.nextInt(52)]);
 		}
 		return buf.toString();
 	}
@@ -1939,15 +2175,16 @@ public class StringUtil {
 	 *            string to be deleted
 	 * @return String deleted string
 	 * @see org.springframework.util.StringUtils#deleteAny(String, String)
+	 * @deprecated Use {@link #deleteAny(String, String)}
 	 */
+	@Deprecated
 	public static String removeAll(String str, String charsToDelete) {
 		return org.springframework.util.StringUtils.deleteAny(str,
 				charsToDelete);
 	}
 
 	/**
-	 * Removes all occurrences of a character from within the source string.
-	 * <div class="ko"> 한 String 객체 안에서 주어진 문자(char)를 제거한다. </div> ex)
+	 * Removes all occurrences of a character from within the source string. ex)
 	 * removeChar("ABBBBBC", 'B') => "AC"
 	 * 
 	 * @param str
@@ -1955,7 +2192,9 @@ public class StringUtil {
 	 * @param remove
 	 *            the char to search for and remove
 	 * @return the substring with the char removed if found
+	 * @deprecated Use {@link #deleteAny(String, char)}
 	 */
+	@Deprecated
 	public static String removeChar(String str, char remove) {
 		return replacePattern(str, String.valueOf(remove), "");
 	}
@@ -1964,14 +2203,14 @@ public class StringUtil {
 	 * Removes all occurrences of specified characters from within the source
 	 * string.<br>
 	 * specified characters : + { '/', '-', ':', ',', '.', '%' }<br>
-	 * <div class="ko"> 한 String 객체 안에서 특정 문자들을 제거한다. - 제거할 대상 문자는 다음과 같다. + {
-	 * '/', '-', ':', ',', '.', '%' } </div> ex) removeCharAll("test/-") =>
-	 * "test"
+	 * ex) removeCharAll("test/-") => "test"
 	 * 
 	 * @param str
 	 *            the source String to search
 	 * @return the substring with specified chars removed if found
+	 * @deprecated Use {@link #deleteAny(String, char[])}
 	 */
+	@Deprecated
 	public static String removeCharAll(String str) {
 		char[] targetCharacters = { '/', '-', ':', ',', '.', '%' };
 		return removeCharAll(str, targetCharacters);
@@ -1979,16 +2218,17 @@ public class StringUtil {
 
 	/**
 	 * Removes all occurrences of given chars from within the source string.<br>
-	 * <div class="ko"> 한 String 객체 안에서 주어진 문자들을 제거한다. ex) char[] ch = new
-	 * char[2]; ch[0] = 'b'; ch[1] = 'z'; removeCharAll("AbbzzB", ch)) => "AB"
-	 * </div>
+	 * ex) char[] ch = new char[2]; ch[0] = 'b'; ch[1] = 'z';
+	 * removeCharAll("AbbzzB", ch)) => "AB"
 	 * 
 	 * @param str
 	 *            the source String to search
 	 * @param remove
 	 *            chars to search for (case insensitive) and remove
 	 * @return the substring with given chars removed if found
+	 * @deprecated Use {@link #deleteAny(String, char[])}
 	 */
+	@Deprecated
 	public static String removeCharAll(String str, char[] remove) {
 		String value = str;
 		for (int i = 0; i < remove.length; i++) {
@@ -1998,15 +2238,83 @@ public class StringUtil {
 	}
 
 	/**
-	 * Input string to HTML tag format.
+	 * For input strings, remove all strings to be deleted.
 	 * 
-	 * @param input
-	 *            the (escaped) input string
-	 * @return the unescaped string
-	 * @see HtmlUtils#htmlUnescape(String)
+	 * @param str
+	 *            input string
+	 * @param charsToDelete
+	 *            string to be deleted
+	 * @return String deleted string
+	 * @see org.springframework.util.StringUtils#deleteAny(String, String)
 	 */
-	public static String removeEscapeChar(String input) {
-		return HtmlUtils.htmlUnescape(input);
+	public static String deleteAny(String str, String charsToDelete) {
+		return org.springframework.util.StringUtils.deleteAny(str,
+				charsToDelete);
+	}
+
+	/**
+	 * Removes all occurrences of given chars from within the source string.<br>
+	 * ex) char[] ch = new char[2]; ch[0] = 'b'; ch[1] = 'z';
+	 * deleteAny("AbbzzB", ch)) => "AB"
+	 * 
+	 * @param str
+	 *            the source String to search
+	 * @param charsToDelete
+	 *            chars to search for (case insensitive) and remove
+	 * @return the substring with given chars removed if found
+	 */
+	public static String deleteAny(String str, char[] charsToDelete) {
+		return deleteAny(str, new String(charsToDelete));
+	}
+
+	/**
+	 * Removes all occurrences of a character from within the source string. ex)
+	 * deleteAny("ABBBBBC", 'B') => "AC"
+	 * 
+	 * @param str
+	 *            the source String to search
+	 * @param charToDelete
+	 *            the char to search for and remove
+	 * @return the substring with the char removed if found
+	 */
+	public static String deleteAny(String str, char charToDelete) {
+		return deleteAny(str, String.valueOf(charToDelete));
+	}
+
+	/**
+	 * For input strings, remove matched strings to be deleted.
+	 * 
+	 * @param str
+	 *            input string
+	 * @param subStr
+	 *            string to be deleted
+	 * @return String deleted string
+	 * @see org.springframework.util.StringUtils#delete(String, String)
+	 */
+	public static String deleteMatches(String str, String subStr) {
+		return org.springframework.util.StringUtils.delete(str, subStr);
+	}
+
+	/**
+	 * For input strings, remove matched strings to be deleted.
+	 * 
+	 * <pre>
+	 * StringUtil.deleteFirstMatches(&quot;pass*word&quot;, &quot;*&quot;) = &quot;password&quot;
+	 * </pre>
+	 * 
+	 * @param str
+	 *            original String
+	 * @param deletedStr
+	 *            String to be deleted
+	 * @return converting result
+	 */
+	public static String deleteFirstMatches(String str, String deletedStr) {
+		int startIndex = str.indexOf(deletedStr);
+		if (startIndex != -1) {
+			int endIndex = deletedStr.length() + startIndex;
+			return str.substring(0, startIndex) + str.substring(endIndex);
+		}
+		return str;
 	}
 
 	/**
@@ -2032,17 +2340,18 @@ public class StringUtil {
 	 *            original String
 	 * @param replacedStr
 	 *            to be replaced String
-	 * @param replaceStr
+	 * @param replacement
 	 *            replace String
 	 * @return converting result
 	 */
+	@Deprecated
 	public static String replace(String str, String replacedStr,
-			String replaceStr) {
-		String newStr = "";
+			String replacement) {
+		String newStr = str;
 		if (str.indexOf(replacedStr) != -1) {
 			String s1 = str.substring(0, str.indexOf(replacedStr));
 			String s2 = str.substring(str.indexOf(replacedStr) + 1);
-			newStr = s1 + replaceStr + s2;
+			newStr = s1 + replacement + s2;
 		}
 		return newStr;
 	}
@@ -2051,7 +2360,7 @@ public class StringUtil {
 	 * Replaces each substring of this string that matches the given regular
 	 * expression with the given replacement.
 	 * 
-	 * @param source
+	 * @param str
 	 *            input string
 	 * @param regex
 	 *            regular expression
@@ -2060,19 +2369,18 @@ public class StringUtil {
 	 * @return changed string
 	 * @see String#replaceAll(String, String)
 	 */
-	public static String replaceAll(String source, String regex,
-			String replacement) {
-		if (source == null) {
+	public static String replaceAll(String str, String regex, String replacement) {
+		if (str == null) {
 			return null;
 		}
-		return source.replaceAll(regex, replacement);
+		return str.replaceAll(regex, replacement);
 	}
 
 	/**
 	 * Replaces the first substring of this string that matches the given
 	 * regular expression with the given replacement.
 	 * 
-	 * @param source
+	 * @param src
 	 *            input string
 	 * @param regex
 	 *            regular expression
@@ -2081,31 +2389,19 @@ public class StringUtil {
 	 * @return changed string
 	 * @see String#replaceFirst(String, String)
 	 */
-	public static String replaceFirst(String source, String regex,
+	public static String replaceFirst(String src, String regex,
 			String replacement) {
-		if (source == null) {
+		if (src == null) {
 			return null;
 		}
-		return source.replaceFirst(regex, replacement);
-	}
-
-	/**
-	 * Unescape string that includes HTML tag.
-	 * 
-	 * @param input
-	 *            the (unescaped) input string
-	 * @return the escaped string
-	 * @see HtmlUtils#htmlEscape(String)
-	 */
-	public static String replaceHtmlEscape(String input) {
-		return HtmlUtils.htmlEscape(input);
+		return src.replaceFirst(regex, replacement);
 	}
 
 	/**
 	 * Replaces the last substring of this string that matches the given regular
 	 * expression with the given replacement.
 	 * 
-	 * @param source
+	 * @param str
 	 *            input string
 	 * @param regex
 	 *            regular expression
@@ -2113,59 +2409,110 @@ public class StringUtil {
 	 *            given replacement
 	 * @return changed string
 	 */
-	public static String replaceLast(String source, String regex,
+	public static String replaceLast(String str, String regex,
 			String replacement) {
 		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(source);
+		Matcher matcher = pattern.matcher(str);
 		if (!matcher.find()) {
-			return source;
+			return str;
 		}
 		int lastMatchStart = 0;
 		do {
 			lastMatchStart = matcher.start();
 		} while (matcher.find());
 		matcher.find(lastMatchStart);
-		StringBuffer sb = new StringBuffer(source.length());
+		StringBuffer sb = new StringBuffer(str.length());
 		matcher.appendReplacement(sb, replacement);
 		matcher.appendTail(sb);
 		return sb.toString();
 	}
 
 	/**
-	 * Replaces all occurrences of a String within another String. <div
-	 * class="ko"> 한 String 객체 안에서 특정 패턴(old)을 다른 패턴(new)으로 변환한다. - 등장 패턴의 위치는
-	 * 좌측에서부터 계산하고 겹치지 않는 형태로 계산한다. + 따라서, 변환된 후에도 old 패턴은 남아 있을 수 있다. + 예를 들어,
-	 * replace("abaa", "aba", "bab")는 "baba"가 된다. </div> ex)
+	 * Replaces all occurrences of a String within another String. ex)
 	 * replacePattern("abaa", "aba", "bab") => "baba"
 	 * 
-	 * @param text
+	 * @param str
 	 *            text to search and replace in, may be null
-	 * @param searchString
+	 * @param replacedStr
 	 *            the String to search for, may be null
 	 * @param replacement
 	 *            the String to replace it with, may be null
 	 * @return the text with any replacements processed, null if null String
 	 *         input
+	 * @deprecated Use {@link #replaceAll(String, String, String) 
 	 */
-	public static String replacePattern(String text, String searchString,
+	@Deprecated
+	public static String replacePattern(String str, String replacedStr,
 			String replacement) {
-		if (text == null) {
+		if (str == null) {
 			return null;
 		}
-		if (searchString == null || replacement == null) {
-			return text;
+		if (replacedStr == null || replacement == null) {
+			return str;
 		}
 		StringBuffer sbuf = new StringBuffer();
 		int pos = 0;
-		int index = text.indexOf(searchString);
-		int patLen = searchString.length();
-		for (; index >= 0; index = text.indexOf(searchString, pos)) {
-			sbuf.append(text.substring(pos, index));
+		int index = str.indexOf(replacedStr);
+		int patLen = replacedStr.length();
+		for (; index >= 0; index = str.indexOf(replacedStr, pos)) {
+			sbuf.append(str.substring(pos, index));
 			sbuf.append(replacement);
 			pos = index + patLen;
 		}
-		sbuf.append(text.substring(pos));
+		sbuf.append(str.substring(pos));
 		return sbuf.toString();
+	}
+
+	/**
+	 * Unescape string that includes HTML tag.
+	 * 
+	 * @param str
+	 *            the (unescaped) input string
+	 * @return the escaped string
+	 * @see HtmlUtils#htmlEscape(String)
+	 * @deprecated Use {@link #htmlEscape(String)}
+	 */
+	@Deprecated
+	public static String replaceHtmlEscape(String str) {
+		return HtmlUtils.htmlEscape(str);
+	}
+
+	/**
+	 * Unescape string that includes HTML escape characters.
+	 * 
+	 * @param input
+	 *            the (unescaped) input string
+	 * @return the escaped string
+	 * @see HtmlUtils#htmlEscape(String)
+	 */
+	public static String htmlEscape(String input) {
+		return HtmlUtils.htmlEscape(input);
+	}
+
+	/**
+	 * Input string to HTML tag format.
+	 * 
+	 * @param str
+	 *            the (escaped) input string
+	 * @return the unescaped string
+	 * @see HtmlUtils#htmlUnescape(String)
+	 * @deprecated Use {@link #htmlUnescape(String)}
+	 */
+	@Deprecated
+	public static String removeEscapeChar(String str) {
+		return HtmlUtils.htmlUnescape(str);
+	}
+
+	/**
+	 * Input string to HTML tag format.
+	 * 
+	 * @param input
+	 *            the (escaped) input string
+	 * @return the unescaped string
+	 * @see HtmlUtils#htmlUnescape(String)
+	 */
+	public static String htmlUnescape(String input) {
+		return HtmlUtils.htmlUnescape(input);
 	}
 
 	/**
@@ -2185,24 +2532,22 @@ public class StringUtil {
 	}
 
 	/**
-	 * Gets the rightmost len characters of a String. <div class="ko"> 주어진
-	 * String 객체에 대해서 주어진 길이만큼 오른쪽 부분을 떼어 반환한다. - 주어진 길이보다 주어진 String의 길이가 작을
-	 * 경우에는 주어진 String을 그대로 반환한다. - "..."을 붙이지 않는 점을 제외하고는 splitTail()와 동일하다.
-	 * </div> ex) right("1234567", 3) => "567"
+	 * Gets the rightmost len characters of a String. ex) right("1234567", 3) =>
+	 * "567"
 	 * 
 	 * @param str
 	 *            the String to get the rightmost characters from, may be null
-	 * @param len
+	 * @param size
 	 *            the length of the required String
 	 * @return the rightmost characters, null if null String input
 	 */
-	public static String right(String str, int len) {
+	public static String right(String str, int size) {
 		if (str == null) {
 			return null;
-		} else if (len <= 0 || str.length() <= len) {
+		} else if (size <= 0 || str.length() <= size) {
 			return str;
 		} else {
-			return str.substring(str.length() - len);
+			return str.substring(str.length() - size);
 		}
 	}
 
@@ -2250,7 +2595,7 @@ public class StringUtil {
 	 * @return string that is padded <code>null</code> if null String input
 	 */
 	public static String rightPad(String str, int size, char padChar) {
-		return padChar(str, size, padChar, false);
+		return padString(str, size, String.valueOf(padChar), false);
 	}
 
 	/**
@@ -2295,18 +2640,17 @@ public class StringUtil {
 	}
 
 	/**
-	 * Splits the provided text into an array, separator specified. <div
-	 * class="ko"> 주어진 String에 대해서 separator(char)를 이용하여 tokenize한 후 String[]로
-	 * 뽑아낸다. - 연속된 separator 사이는 token이 되지 않는다. - 주어진 String이 null일 경우, null을
-	 * return한다. ex) split("aaVbbVcc", 'V') => 2번째 argument가 separator가 되어 "aa",
-	 * "bb", "cc"스트링이 String[] 형태로 return 된다. </div>
+	 * Splits the provided text into an array, separator specified. ex)
+	 * split("aaVbbVcc", 'V') => {"aa", "bb", "cc"}
 	 * 
 	 * @param str
 	 *            the String to parse
 	 * @param separator
 	 *            the character used as the delimiter
 	 * @return an array of parsed Strings
+	 * @deprecated Use {@link #tokenizeToStringArray(String, char)}
 	 */
+	@Deprecated
 	public static String[] split(String str, char separator) {
 		StringBuffer tempStringBuffer = new StringBuffer();
 		tempStringBuffer.append(separator);
@@ -2322,7 +2666,9 @@ public class StringUtil {
 	 * @param size
 	 *            length of string
 	 * @return string to be split
+	 * @deprecated Use {@link #left(String, int)}
 	 */
+	@Deprecated
 	public static String splitHead(String str, int size) {
 		if (str == null) {
 			return "";
@@ -2334,17 +2680,17 @@ public class StringUtil {
 	}
 
 	/**
-	 * Splits the leftmost len characters of a String with ellipsis. <div
-	 * class="ko"> 주어진 String 객체에 대해서 주어진 길이만큼 앞부분을 떼어 반환한다. - 주어진 길이보다 주어진
-	 * String의 길이가 작을 경우에는 주어진 String을 그대로 반환한다. - 떼어낸 앞부분의 뒤에 "..."을 붙여서 반환한다.
-	 * </div> ex) splitHead("12345678", 3) => "123..."
+	 * Splits the leftmost len characters of a String with ellipsis. ex)
+	 * splitHead("12345678", 3) => "123..."
 	 * 
 	 * @param str
 	 *            the String to get the leftmost characters from, may be null
 	 * @param len
 	 *            the length of the required String
 	 * @return the leftmost characters with ellipsis, null if null String input
+	 * @deprecated Use {@link #abbreviateFromLeft(String, int)}
 	 */
+	@Deprecated
 	public static String splitHeadWithEllipsis(String str, int len) {
 		if (str == null) {
 			return null;
@@ -2356,6 +2702,26 @@ public class StringUtil {
 	}
 
 	/**
+	 * substring the leftmost len characters of a String with ellipsis. ex)
+	 * abbreviateFromLeft("12345678", 3) => "123..."
+	 * 
+	 * @param str
+	 *            the String to get the leftmost characters from, may be null
+	 * @param size
+	 *            the length of the required String
+	 * @return the leftmost characters with ellipsis, null if null String input
+	 */
+	public static String abbreviateFromLeft(String str, int size) {
+		if (str == null) {
+			return null;
+		} else if (size <= 0 || str.length() <= size) {
+			return str;
+		} else {
+			return str.substring(0, size) + "...";
+		}
+	}
+
+	/**
 	 * Split a String from the end of a string to the given size.
 	 * 
 	 * @param str
@@ -2363,7 +2729,9 @@ public class StringUtil {
 	 * @param size
 	 *            length of string
 	 * @return string to be split
+	 * @deprecated Use {@link #right(String, int)}
 	 */
+	@Deprecated
 	public static String splitTail(String str, int size) {
 		if (str == null) {
 			return "";
@@ -2375,17 +2743,17 @@ public class StringUtil {
 	}
 
 	/**
-	 * Splits the leftmost len characters of a String with ellipsis. <div
-	 * class="ko"> 주어진 String 객체에 대해서 주어진 길이만큼 뒷부분을 떼어 반환한다. - 주어진 길이보다 주어진
-	 * String의 길이가 작을 경우에는 주어진 String을 그대로 반환한다. - 떼어낸 뒷부분의 앞에 "..."을 붙여서 반환한다.
-	 * </div> ex) splitTail("12345678", 3) => "...678"
+	 * Splits the leftmost len characters of a String with ellipsis. ex)
+	 * splitTail("12345678", 3) => "...678"
 	 * 
 	 * @param str
 	 *            the String to get the rightmost characters from, may be null
 	 * @param len
 	 *            the length of the required String
 	 * @return the rightmost characters with ellipsis, null if null String input
+	 * @deprecated Use {@link #abbreviateFromRight(String, int)}
 	 */
+	@Deprecated
 	public static String splitTailWithEllipsis(String str, int len) {
 		if (str == null) {
 			return null;
@@ -2393,6 +2761,26 @@ public class StringUtil {
 			return str;
 		} else {
 			return "..." + str.substring(str.length() - len);
+		}
+	}
+
+	/**
+	 * substring the rightmost len characters of a String with ellipsis. ex)
+	 * abbreviateFromRight("12345678", 3) => "...678"
+	 * 
+	 * @param str
+	 *            the String to get the rightmost characters from, may be null
+	 * @param size
+	 *            the length of the required String
+	 * @return the rightmost characters with ellipsis, null if null String input
+	 */
+	public static String abbreviateFromRight(String str, int size) {
+		if (str == null) {
+			return null;
+		} else if (size <= 0 || str.length() <= size) {
+			return str;
+		} else {
+			return "..." + str.substring(str.length() - size);
 		}
 	}
 
@@ -2407,7 +2795,9 @@ public class StringUtil {
 	 * @param str
 	 *            string representation of a number
 	 * @return integer integer type of string
+	 * @deprecated Use @link {@link NumberUtil#stringToInt(String)}
 	 */
+	@Deprecated
 	public static int string2integer(String str) {
 		int ret = Integer.parseInt(str.trim());
 
@@ -2415,13 +2805,14 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts String to BigDecimal <div class="ko"> 문자열을 BigDecimal로 변환하여
-	 * 리턴한다. </div>
+	 * Converts String to BigDecimal
 	 * 
 	 * @param str
 	 *            the String value to convert
 	 * @return the converted BigDecimal
+	 * @deprecated Use @link {@link NumberUtil#stringToBigDecimal(String)}
 	 */
+	@Deprecated
 	public static BigDecimal stringToBigDecimal(String str) {
 		if ("".equals(rightTrim(str)))
 			return new BigDecimal(0);
@@ -2430,8 +2821,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts String to BigDecimal from the specified position <div
-	 * class="ko"> 문자열의 내용 중 정해진 위치의 일부 문자열을 BigDecimal로 변환하여 리턴한다. </div>
+	 * Converts String to BigDecimal from the specified position
 	 * 
 	 * @param str
 	 *            the String value to convert
@@ -2440,7 +2830,10 @@ public class StringUtil {
 	 * @param len
 	 *            the length of str from pos
 	 * @return the converted BigDecimal
+	 * @deprecated Use @link
+	 *             {@link NumberUtil#substringToBigDecimal(String, int, int)}
 	 */
+	@Deprecated
 	public static BigDecimal stringToBigDecimal(String str, int pos, int len) {
 		if ("".equals(rightTrim(str)))
 			return new BigDecimal(0);
@@ -2451,8 +2844,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts UniCode String to hex code <div class="ko"> 문자열을 받아 해당하는 hex 코드로
-	 * 만들어 반환한다. (유니코드) </div> ex) stringToHex("123") => "003100320033"
+	 * Converts UniCode String to hex code ex) stringToHex("123") =>
+	 * "003100320033"
 	 * 
 	 * @param str
 	 *            the String to convert
@@ -2476,13 +2869,14 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts String to int <div class="ko"> 문자열을 정수형으로 변환하여 리턴한다. </div> ex)
-	 * stringToNumn("123") => 123
+	 * Converts String to int ex) stringToNumn("123") => 123
 	 * 
 	 * @param str
 	 *            the String to convert
 	 * @return the converted int value
+	 * @deprecated Use @link {@link NumberUtil#stringToInt(String)}
 	 */
+	@Deprecated
 	public static int stringToNumn(String str) {
 		if ("".equals(rightTrim(str)))
 			return 0;
@@ -2491,9 +2885,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts String to int from a position <div class="ko"> 문자열의 내용 중 정해진 위치의
-	 * 일부 문자열을 정수형으로 변환하여 리턴한다. </div> ex) stringToNumn("123456789", 5, 3) =>
-	 * 678
+	 * Converts String to int from a position ex) stringToNumn("123456789", 5,
+	 * 3) => 678
 	 * 
 	 * @param str
 	 *            the String value to convert
@@ -2502,7 +2895,9 @@ public class StringUtil {
 	 * @param len
 	 *            the length of str from pos
 	 * @return the converted int value
+	 * @deprecated Use @link {@link NumberUtil#substringToInt(String, int, int)}
 	 */
+	@Deprecated
 	public static int stringToNumn(String str, int pos, int len) {
 		if ("".equals(rightTrim(str)))
 			return 0;
@@ -2513,34 +2908,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * convert first letter to a big letter or a small letter.<br>
-	 * 
-	 * <pre>
-	 * StringUtil.swapFirstLetterCase("Password") = "password'
-	 * StringUtil.swapFirstLetterCase("password') = "Password"
-	 * </pre>
-	 * 
-	 * @param str
-	 *            String to be swapped
-	 * @return String converting result
-	 */
-	public static String swapFirstLetterCase(String str) {
-		StringBuilder sbuf = new StringBuilder(str);
-		sbuf.deleteCharAt(0);
-		if (Character.isLowerCase(str.substring(0, 1).toCharArray()[0])) {
-			sbuf.insert(0, str.substring(0, 1).toUpperCase());
-		} else {
-			sbuf.insert(0, str.substring(0, 1).toLowerCase());
-		}
-		return sbuf.toString();
-	}
-
-	/**
-	 * Converts 10 digit String to business number format(Korean). <div
-	 * class="ko"> 주어진 10자리 숫자 String을 "111-11-11111" 형태의 사업자등록번호 포맷으로 변환한다. -
-	 * 주어진 String이 10자리가 아닐 경우, ""를 return한다. - 주어진 String이 숫자만으로 구성되어 있지 않을 경우,
-	 * ""을 return한다. </div> ex) toBusinessNoPattern("1111111111") =>
-	 * "111-11-11111"
+	 * Converts 10 digit String to business number format(Korean). ex)
+	 * toBusinessNoPattern("1111111111") => "111-11-11111"
 	 * 
 	 * @param str
 	 *            the String value to convert
@@ -2550,32 +2919,66 @@ public class StringUtil {
 		if (str == null) {
 			return "";
 		}
-		if (str.length() != 10 || !isDigit(str)) {
+		if (str.length() != 10 || !NumberUtil.isDigit(str)) {
 			return "";
 		} else {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(str.substring(0, 3));
-			buffer.append('-');
-			buffer.append(str.substring(3, 5));
-			buffer.append('-');
-			buffer.append(str.substring(5, 10));
-			return buffer.toString();
+			return String.format("%s-%s-%s", str.substring(0, 3), str
+					.substring(3, 5), str.substring(5, 10));
 		}
 	}
 
 	/**
-	 * Splits the provided text into an array, separator specified. <div
-	 * class="ko"> 주어진 String에 대해서 delimiter를 이용하여 tokenize한 후 String[]로 뽑아낸다. -
-	 * Java의 StringTokenizer를 이용하여 처리한다. - 옵션에 따라, 공백(space)에 대한 처리(trim), 값이
-	 * ""인 token에 대한 포함 여부를 결정할 수 있다. - StringTokenizer를 이용하므로, 연속된 delimiter
-	 * 사이는 token이 되지 않는다. - 주어진 String이 null일 경우, null을 return한다. - delimiter가
-	 * null일 경우, 주어진 String을 하나의 element로 가지는 String[]를 return한다. </div> ex)
-	 * String[] test; test = tokenizeToStringArray("aaa.bbb.ccc.ddd", ".", true,
-	 * true) => test[0]="aaa", test[1]="bbb"...
+	 * Splits the provided text into an array, separator specified. ex) String[]
+	 * test; test = tokenizeToStringArray("aaa,bbb,ccc") => test[0]="aaa",
+	 * test[1]="bbb"...
 	 * 
 	 * @param str
 	 *            the String to parse
-	 * @param separator
+	 * @return an array of parsed Strings
+	 */
+	public static String[] tokenizeToStringArray(String str) {
+		return tokenizeToStringArray(str, ",", false, false);
+	}
+
+	/**
+	 * Splits the provided text into an array, separator specified. ex) String[]
+	 * test; test = tokenizeToStringArray("aaa,bbb,ccc", ',') => test[0]="aaa",
+	 * test[1]="bbb"...
+	 * 
+	 * @param str
+	 *            the String to parse
+	 * @param delimeter
+	 *            the character used as the delimiter
+	 * @return an array of parsed Strings
+	 */
+	public static String[] tokenizeToStringArray(String str, char delimeter) {
+		return tokenizeToStringArray(str, String.valueOf(delimeter), false,
+				false);
+	}
+
+	/**
+	 * Splits the provided text into an array, separator specified. ex) String[]
+	 * test; test = tokenizeToStringArray("aaa.bbb.ccc.ddd", "."); =>
+	 * test[0]="aaa", test[1]="bbb"...
+	 * 
+	 * @param str
+	 *            the String to parse
+	 * @param delimiter
+	 *            the String used as the delimiter
+	 * @return an array of parsed Strings
+	 */
+	public static String[] tokenizeToStringArray(String str, String delimiter) {
+		return tokenizeToStringArray(str, delimiter, false, false);
+	}
+
+	/**
+	 * Splits the provided text into an array, separator specified. ex) String[]
+	 * test; test = tokenizeToStringArray("aaa.bbb.ccc.ddd", ".", true, true) =>
+	 * test[0]="aaa", test[1]="bbb"...
+	 * 
+	 * @param str
+	 *            the String to parse
+	 * @param delimeter
 	 *            the character used as the delimiter
 	 * @param trimTokens
 	 *            trim every tokens of array
@@ -2583,15 +2986,15 @@ public class StringUtil {
 	 *            ignore empty tokens
 	 * @return an array of parsed Strings
 	 */
-	public static String[] tokenizeToStringArray(String str, String separator,
+	public static String[] tokenizeToStringArray(String str, String delimeter,
 			boolean trimTokens, boolean ignoreEmptyTokens) {
 		if (str == null) {
 			return null;
 		}
-		if (separator == null) {
+		if (delimeter == null) {
 			return new String[] { str };
 		}
-		StringTokenizer st = new StringTokenizer(str, separator);
+		StringTokenizer st = new StringTokenizer(str, delimeter);
 		List<String> tokens = new ArrayList<String>();
 		do {
 			if (!st.hasMoreTokens()) {
@@ -2609,23 +3012,35 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts a first character to lower case. <div class="ko"> 주어진 String의
-	 * 첫번째 글자를 소문자로 변환한다. </div> ex) toLowercase("ABCD") => "aBCD"
+	 * Converts a first character to lower case. ex) toLowercase("ABCD") =>
+	 * "aBCD"
 	 * 
 	 * @param str
 	 *            input string
 	 * @return the converted string
+	 * @deprecated Use {@link #toLowerCaseFirstLetter(String)}
 	 */
+	@Deprecated
 	public static String toLowercase(String str) {
 		return changeFirstCharacterCase(false, str);
 	}
 
 	/**
-	 * Converts 13 digit String to social security number format(Korean). <div
-	 * class="ko"> 주어진 13자리 숫자 String을 "111111-1111111" 형태의 주민등록번호 포맷으로 변환한다. -
-	 * 주어진 String이 13자리가 아닐 경우, ""를 return한다. - 주어진 String이 숫자만으로 구성되어 있지 않을 경우,
-	 * ""을 return한다. </div> ex) toSocialSecuNoPattern("1111111111111") =>
-	 * "111111=1111111"
+	 * Converts a first character to lower case. ex)
+	 * toLowerCaseFirstLetter("ABCD") => "aBCD"
+	 * 
+	 * @param str
+	 *            input string
+	 * @return the converted string
+	 * 
+	 */
+	public static String toLowerCaseFirstLetter(String str) {
+		return changeFirstCharacterCase(false, str);
+	}
+
+	/**
+	 * Converts 13 digit String to social security number format(Korean). ex)
+	 * toSocialSecuNoPattern("1111111111111") => "111111=1111111"
 	 * 
 	 * @param str
 	 *            the String value to convert
@@ -2635,7 +3050,7 @@ public class StringUtil {
 		if (str == null) {
 			return "";
 		}
-		if (str.length() != 13 || !isDigit(str)) {
+		if (str.length() != 13 || !NumberUtil.isDigit(str)) {
 			return "";
 		} else {
 			StringBuffer buffer = new StringBuffer();
@@ -2647,9 +3062,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts digit String to telephone number format(Korean). <div
-	 * class="ko"> 입력된 문자열로 부터 숫자만 추출하여 '-'가 포함된 전화번호 형태의 문자열로 포매팅하여 리턴한다.
-	 * </div>
+	 * Converts digit String to telephone number format(Korean).
 	 * 
 	 * <pre>
 	 * String actual = StringUtil.toTelephoneNumberFormat(&quot;032-123-4567&quot;); // 032-123-4567
@@ -2677,7 +3090,7 @@ public class StringUtil {
 		int originLength = origin.length();
 
 		// extract numeric chars only
-		if (StringUtil.isNotNumeric(origin)) {
+		if (NumberUtil.isNotDigit(origin)) {
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < originLength; i++) {
 				if (Character.isDigit(origin.charAt(i))) {
@@ -2726,21 +3139,33 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts a first character to uppper case. <div class="ko"> 주어진 String의
-	 * 첫번째 글자를 대문자로 변환한다. ex) toUpperCase("abcd") => "Abcd"
+	 * Converts a first character to uppper case. ex) toUpperCase("abcd") =>
+	 * "Abcd"
 	 * 
 	 * @param str
 	 *            input string
 	 * @return the converted string
+	 * @deprecated Use {@link #toUpperCaseFirstLetter(String)}
 	 */
+	@Deprecated
 	public static String toUpperCase(String inputString) {
 		return changeFirstCharacterCase(true, inputString);
 	}
 
 	/**
-	 * Converts digit String to zip code format(Korean). <div class="ko"> 주어진
-	 * 6자리 숫자 String을 "111-111" 형태의 우편번호 포맷으로 변환한다. - 주어진 String이 6자리가 아닐 경우,
-	 * ""를 return한다. - 주어진 String이 숫자만으로 구성되어 있지 않을 경우, ""을 return한다. </div> ex)
+	 * Converts a first character to uppper case. ex)
+	 * toUpperCaseFirstLetter("abcd") => "Abcd"
+	 * 
+	 * @param str
+	 *            input string
+	 * @return the converted string
+	 */
+	public static String toUpperCaseFirstLetter(String inputString) {
+		return changeFirstCharacterCase(true, inputString);
+	}
+
+	/**
+	 * Converts digit String to zip code format(Korean). ex)
 	 * toZipCodePattern("111111") => "111-111"
 	 * 
 	 * @param str
@@ -2751,14 +3176,11 @@ public class StringUtil {
 		if (str == null) {
 			return "";
 		}
-		if (str.length() != 6 || !isDigit(str)) {
+		if (str.length() != 6 || !NumberUtil.isDigit(str)) {
 			return "";
 		} else {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(str.substring(0, 3));
-			buffer.append('-');
-			buffer.append(str.substring(3, 6));
-			return buffer.toString();
+			return String.format("%s-%s", str.substring(0, 3), str.substring(3,
+					6));
 		}
 	}
 
@@ -2775,7 +3197,9 @@ public class StringUtil {
 	 * @param trimString
 	 *            String to be trimmed
 	 * @return converting result
+	 * @deprecated Use {@link #deleteFirstMatches(String, String)}
 	 */
+	@Deprecated
 	public static String trim(String origString, String trimString) {
 		int startPosit = origString.indexOf(trimString);
 		if (startPosit != -1) {
@@ -2787,10 +3211,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * Compares two Strings with whitespace normalized by using trim <div
-	 * class="ko"> 주어진 두 개의 String 객체에 대해서, trim()후 같은지를 비교한다. - 주어진 String 객체에
-	 * null이 포함되어 있는 경우에도 결과 값을 반환한다. </div> ex) trimEquals("     test     ",
-	 * "test") => true
+	 * Compares two Strings with whitespace normalized by using trim ex)
+	 * trimEquals("     test     ", "test") => true
 	 * 
 	 * @param str1
 	 *            the first String, may be null
@@ -2816,32 +3238,44 @@ public class StringUtil {
 
 	/**
 	 * Converts qualified name String to unqualified name String using separator
-	 * '.'. <div class="ko"> Qualified Name으로 표현된 String을 받아서 Unqualified Name
-	 * 형태의 String으로 변환한다. - separator는 '.'로 가정한다. </div>
+	 * '.'.
 	 * 
-	 * @param qualifiedName
+	 * @param str
 	 *            input string
 	 * @return the converted string
 	 */
-	public static String unqualify(String qualifiedName) {
-		return unqualify(qualifiedName, '.');
+	public static String unqualify(String str) {
+		return unqualify(str, '.');
 	}
 
 	/**
 	 * Converts qualified name String to unqualified name String using
-	 * separator. <div class="ko"> Qualified Name으로 표현된 String을 받아서 Unqualified
-	 * Name 형태의 String으로 변환한다. - Qualified Name에 사용되는 seperator를 지정하여 처리하도록 한다.
-	 * </div>
+	 * separator.
 	 * 
-	 * @param qualifiedName
+	 * @param str
 	 *            input string
-	 * @param separator
+	 * @param delimiter
 	 *            the seperator character
 	 * @return the converted string
 	 */
-	public static String unqualify(String qualifiedName, char separator) {
-		return qualifiedName
-				.substring(qualifiedName.lastIndexOf(separator) + 1);
+	public static String unqualify(String str, char delimiter) {
+		return str.substring(str.lastIndexOf(delimiter) + 1);
+	}
+
+	/**
+	 * Converts this String into a sequence of bytes using the named charset,
+	 * storing the result into a new String
+	 * 
+	 * @param str
+	 *            target string
+	 * @param charset
+	 *            the name of a supported charset
+	 * @return The resultant string
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String convertStringCharset(String str, String charset)
+			throws UnsupportedEncodingException {
+		return new String(str.getBytes(charset));
 	}
 
 	/**
@@ -2851,13 +3285,15 @@ public class StringUtil {
 	public static String decodeString(String str) {
 		return DigestUtil.decodeBase64(str);
 	}
-	
-		/**
+
+	/**
+	 * @throws NoSuchAlgorithmException
 	 * @deprecated in favor of @link
 	 *             {@link DigestUtil#encodePassword(String, String)}
 	 */
 	@Deprecated
-	public static String encodePassword(String password, String algorithm) {
+	public static String encodePassword(String password, String algorithm)
+			throws NoSuchAlgorithmException {
 		return DigestUtil.encodePassword(password, algorithm);
 	}
 
@@ -2868,8 +3304,8 @@ public class StringUtil {
 	public static String encodeString(String str) {
 		return DigestUtil.encodeBase64(str);
 	}
-	
-		/**
+
+	/**
 	 * @deprecated in favor of @link {@link NumberUtil#isNumber(String)}
 	 */
 	@Deprecated
@@ -2878,11 +3314,161 @@ public class StringUtil {
 	}
 
 	/**
-	 * @deprecated in favor of @link
-	 *             {@link ValidationUtil#isPatternMatching(String, String)}
+	 * Checks if the String contains the given pattern.
+	 * 
+	 * @param str
+	 *            the String to check, may be null
+	 * @param regex
+	 *            the pattern to check, may be null
+	 * @return true if String contains the given pattern, false if not or null
+	 *         string input
+	 * @deprecated Use {@link #isRegexPatternMatch(String, String)}
 	 */
 	@Deprecated
-	public static boolean isPatternMatching(String str, String pattern) {
-		return ValidationUtil.isPatternMatching(str, pattern);
+	public static boolean isFormattedString(String str, String regex) {
+		if (str == null || regex == null) {
+			return false;
+		} else {
+			return str.matches(regex);
+		}
 	}
+
+	/**
+	 * Check if the entire pattern matches the formal input pattern.
+	 * 
+	 * <pre>
+	 * StringUtil.isRegexPatternMatch(&quot;aaaaab&quot;, &quot;a*b&quot;) = true;
+	 * StringUtil.isRegexPatternMatch(&quot;cabbbb&quot;, &quot;a*b&quot;) = false;
+	 * </pre>
+	 * 
+	 * @param str
+	 *            pattern to be checked
+	 * @param pattern
+	 *            regular expression pattern
+	 * @return if the input string matches the formal pattern, <code>true</code>
+	 */
+	public static boolean isRegexPatternMatch(String str, String pattern) {
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(str);
+		return m.matches();
+	}
+
+	/**
+	 * Check if the input string matches the formal pattern. Change * to ..
+	 * 
+	 * <pre>
+	 * StringUtil.isPatternMatching("abc-def', "*-*") 	= true
+	 * StringUtil.isPatternMatching("abc", "*-*") 	    = false
+	 * </pre>
+	 * 
+	 * @param str
+	 *            pattern to be checked
+	 * @param pattern
+	 *            pattern String
+	 * @return if the entered string matches the formal pattern,
+	 *         <code>true</code>
+	 */
+	public static boolean isPatternMatching(String str, String pattern) {
+		// if url has wild key, i.e. "*", convert it to ".*" so that we can
+		// perform regex matching
+		if (pattern.indexOf('*') >= 0) {
+			pattern = pattern.replaceAll("\\*", ".*");
+		}
+
+		pattern = "^" + pattern + "$";
+
+		return Pattern.matches(pattern, str);
+	}
+
+	/**
+	 * Perform escaping in advance so that metacharacters [\^$.|?*+() that are
+	 * meaningfully used are not used in a way different from the user's
+	 * intentions.
+	 * 
+	 * @param orgPattern
+	 *            original string
+	 * @return escaping string
+	 */
+	private static String regexMetaCharEscape(String orgPattern) {
+		return orgPattern.replaceAll("([\\[\\\\\\^\\$\\.\\|\\?\\*\\+\\(\\)])",
+				"\\\\$1");
+	}
+
+	/**
+	 * Check if letter matching format defined by user has come in.
+	 * 
+	 * <pre>
+	 * StringUtil.isUserFormat(&quot;123-456&quot;, &quot;###-###&quot;) = true;
+	 * StringUtil.isUserFormat(&quot;123.456&quot;, &quot;###.###&quot;) = true;
+	 * </pre>
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param pattern
+	 *            user defined pattern
+	 * @return in case of string matching pattern that is defined by user,
+	 *         <code>true</code>
+	 */
+	public static boolean isUserFormat(String str, String pattern) {
+		String metaChange = regexMetaCharEscape(pattern);
+		String regexChange = metaChange.replaceAll("#", "\\\\d").replaceAll(
+				"S", "[a-zA-Z]");
+		return str.matches(regexChange);
+	}
+
+	/**
+	 * Check if input string matches the given filter pattern. s of sken is
+	 * special character. k is korean. e is english. n is number.
+	 * 
+	 * <pre>
+	 * StringUtil.isPatternInclude(&quot;asdf@5456&quot;, &quot;s&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;-&quot;, &quot;s&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;한&quot;, &quot;k&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;123가32&quot;, &quot;k&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;asdfsdfsdf&quot;, &quot;e&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;asdfs1dfsdf&quot;, &quot;e&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;123123123&quot;, &quot;n&quot;) = true;
+	 * StringUtil.isPatternInclude(&quot;asdfs1dfsdf&quot;, &quot;n&quot;) = true;
+	 * </pre>
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param param
+	 *            filter pattern
+	 * @return if input string pattern matches filter, <code>true</code>
+	 */
+	public static boolean isPatternInclude(String str, String param) {
+
+		if (param.indexOf("s") >= 0) {
+			return isRegexPatternMatch(str, ".*[~!@\\#$%<>^&*\\()\\-=+_\\'].*");
+		}
+		if (param.indexOf("k") >= 0) {
+			return isRegexPatternMatch(str, ".*[ㄱ-ㅎ|ㅏ-ㅣ|가-힣].*");
+		}
+		if (param.indexOf("e") >= 0) {
+			return isRegexPatternMatch(str, ".*[a-zA-Z].*");
+		}
+		if (param.indexOf("n") >= 0) {
+			return isRegexPatternMatch(str, ".*\\d.*");
+		}
+		return true;
+	}
+
+	/**
+	 * Check if some strings match pattern.
+	 * 
+	 * <pre>
+	 * StringUtil.isRegexPatternInclude("cabbbb", "a*b"))  = true
+	 * </pre>
+	 * 
+	 * @param str
+	 *            string to be checked
+	 * @param pattern
+	 *            regular expression pattern
+	 * @return if input sting matches the formal pattern, <code>true</code>
+	 */
+	public static boolean isRegexPatternInclude(String str, String pattern) {
+		return isRegexPatternMatch(str, ".*" + pattern + ".*");
+	}
+
 }

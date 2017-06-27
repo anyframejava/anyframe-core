@@ -45,18 +45,17 @@ public class PropertiesServiceDynamicReloadTest {
 	@Inject
 	private PropertiesServiceImpl propertiesService;
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDynamicReload() throws Exception {
 		Boolean fstDynamicReload = propertiesService
 				.getBoolean("dynamic.reload");
 
-		Hashtable resources = propertiesService.getResources();
-		Enumeration en = resources.keys();
+		Hashtable<Resource, Long> resources = propertiesService.getResources();
+		Enumeration<Resource> en = resources.keys();
 
 		Resource dynamicReloadResource = null;
 		while (en.hasMoreElements()) {
-			Resource resource = (Resource) en.nextElement();
+			Resource resource = en.nextElement();
 			if (resource.getFilename().equals(
 					"dynamic-reload-resource.properties")) {
 				dynamicReloadResource = resource;
@@ -65,8 +64,8 @@ public class PropertiesServiceDynamicReloadTest {
 
 		Properties props = new Properties();
 		props.put("dynamic.reload", fstDynamicReload ? "false" : "true");
-		FileOutputStream fos = new FileOutputStream(
-				dynamicReloadResource.getFile());
+		FileOutputStream fos = new FileOutputStream(dynamicReloadResource
+				.getFile());
 		props.store(fos, "");
 		fos.flush();
 		fos.close();

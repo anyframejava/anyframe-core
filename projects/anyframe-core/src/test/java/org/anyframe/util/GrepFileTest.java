@@ -16,6 +16,7 @@
 package org.anyframe.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -31,26 +32,26 @@ import org.anyframe.util.file.GrepFile;
  */
 public class GrepFileTest extends TestCase {
 
-	public void testContainsPattern() throws Exception {
+	public void testContainsPattern() throws IOException {
 		File file = File.createTempFile("test", "test");
 		file.deleteOnExit();
 		assertTrue(GrepFile.containsPattern(file, Pattern.compile(".test$")));
 	}
 
-	public void testFindPattern() throws Exception {
+	public void testFindPattern() throws IOException {
 		File file = new File("./src/test/resources/anyframe-test.properties");
-		String[] stringArray = GrepFile.findPattern(file,
-				Pattern.compile("[a-zA-Z]*_[a-zA-Z]*"), 0);
+		String[] stringArray = GrepFile.findPattern(file, Pattern
+				.compile("[a-zA-Z]*_[a-zA-Z]*"), 0);
 		assertTrue(stringArray.length > 0);
 	}
 
-	public void testFindFileString() throws Exception {
+	public void testFindFileString() {
 		File file = new File("./src/test/resources");
 		File[] fileArray = GrepFile.find(file, ".xml$");
 		assertTrue(fileArray.length > 0);
 	}
 
-	public void testFindFileStringBoolean() throws Exception {
+	public void testFindFileStringBoolean() {
 		File file = new File("./src/test/resources");
 		File[] fileArray = GrepFile.find(file, "^application", true);
 		assertTrue(fileArray.length > 0);

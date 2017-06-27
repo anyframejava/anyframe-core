@@ -44,7 +44,7 @@ import org.springframework.context.NoSuchMessageException;
  * @author SoYon Lim
  */
 public class AggregatingMessageSource implements MessageSource {
-	private Logger logger = LoggerFactory
+	private final Logger logger = LoggerFactory
 			.getLogger(AggregatingMessageSource.class);
 
 	private List<MessageSource> messageSources;
@@ -61,13 +61,28 @@ public class AggregatingMessageSource implements MessageSource {
 	 *            message
 	 * @param locale
 	 *            the Locale in which to do the lookup
-	 * @return RuntimeException
+	 * @return NoSuchMessageException
 	 *         {@link #getMessage(MessageSourceResolvable, Locale)} is not
 	 *         supported
 	 */
 	public String getMessage(MessageSourceResolvable resolvable, Locale locale)
 			throws NoSuchMessageException {
-		throw new RuntimeException("Not supported");
+		for (MessageSource messageSource : messageSources) {
+			try {
+				return messageSource.getMessage(resolvable, locale);
+			} catch (NoSuchMessageException e) {
+				logger.debug(String.format(
+						"Message Source [%s] does not contain message. %s",
+						messageSource.getClass().getName(), e.getMessage()));
+			}
+		}
+
+		String[] codes = resolvable.getCodes();
+		if (codes == null) {
+			codes = new String[0];
+		}
+		throw new NoSuchMessageException(
+				codes.length > 0 ? codes[codes.length - 1] : null, locale);
 	}
 
 	/**
@@ -90,8 +105,7 @@ public class AggregatingMessageSource implements MessageSource {
 			throws NoSuchMessageException {
 		for (MessageSource messageSource : messageSources) {
 			try {
-				String result = messageSource.getMessage(code, args, locale);
-				return result;
+				return messageSource.getMessage(code, args, locale);
 			} catch (NoSuchMessageException e) {
 				logger.debug(String
 						.format("Message Source [%s] does not contain message with key '%s' and locale '%s'",

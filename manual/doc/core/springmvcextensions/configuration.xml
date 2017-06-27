@@ -28,7 +28,7 @@
 	        "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-	        ]]><emphasis role="bold">http://www.anyframejava.org/schema/mvc http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-5.2.xsd"</emphasis><![CDATA[>
+	        ]]><emphasis role="bold">http://www.anyframejava.org/schema/mvc http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-5.3.xsd"</emphasis><![CDATA[>
 	
 	    <]]><emphasis role="bold">anyframe:annotation-driven synchronizeOnSession="true"</emphasis><![CDATA[/>
 		
@@ -42,7 +42,7 @@
 		<title>@EnableWebMvcAnyframe</title>
 		<para>Spring은 3.0 부터 Java Based Configuration을 지원해왔으며, 3.1부터는 이를 더욱 발전시켜 @Enable* 형태의 어노테이션 기반 설정 간략화 기능을 제공하고 있다.</para>
 		<para><![CDATA[Spring은 <mvc:annotaion-driven/>]]>에 대응되는 @EnableWebMvc 어노테이션을 제공하고 있다.(스프링에서 제공하는 @Enable* 어노테이션들에 관한 상세한 내용은 <link linkend="core_spring_javaconfig_bean_codeequivalents">여기</link>를 참고하기 바란다.)</para>
-		<para>이에 Anyframe에서는 Core Pluging 1.0.4 버전부터 <![CDATA[<anyframe:annotation-driven/>]]>에 대응되는 @EnableWebMvcAnyframe 어노테이션을 제공하고 있다. @EnableWebMvcAnyframe의 사용예제는 다음과 같다.</para>
+		<para>이에 Anyframe에서는 Core Plugin 1.0.4 버전부터 <![CDATA[<anyframe:annotation-driven/>]]>에 대응되는 @EnableWebMvcAnyframe 어노테이션을 제공하고 있다. @EnableWebMvcAnyframe의 사용예제는 다음과 같다.</para>
 		<programlisting language="java"><![CDATA[package org.anyframe.sample.javaconfig.config.web;
 
 import java.util.Locale;
@@ -125,8 +125,8 @@ public class WebAppConfig {
 							</para>
 						</listitem>									
 					</itemizedlist>						
-					<table>
-						<title>Download List</title>
+					<informaltable>
+						<caption>Download List</caption>
 						<tgroup cols="2">
 							<colspec colnum="1" colname="col1" colwidth="4*"/>
 							<colspec colnum="2" colname="col2" colwidth="6*"/>
@@ -139,12 +139,12 @@ public class WebAppConfig {
 							<tbody>										
 								<row>
 									<entry align="center">anyframe-sample-javaconfig-mvc.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-javaconfig-mvc.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.0/reference/sample/anyframe-sample-javaconfig-mvc.zip">Download</ulink>
 									</entry>
 								</row>														
 							</tbody>
 						</tgroup>
-					</table> 
+					</informaltable> 
 				</listitem>
 			</itemizedlist>
 		</para>	

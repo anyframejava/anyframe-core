@@ -21,8 +21,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * For testing functions what ValidationUtil supports, there are some test scenarios
- * in this TestCase.
+ * For testing functions what ValidationUtil supports, there are some test
+ * scenarios in this TestCase.
  * 
  * @author SoYon Lim
  * @author JongHoon Kim
@@ -40,7 +40,7 @@ public class ValidationUtilTest {
 	@Test
 	public void testIsIncorpCertNumber() {
 		assertTrue(ValidationUtil.isIncorpCertNumber("110111-0398556")); // Samsung
-																			// SDS
+		// SDS
 		assertFalse(ValidationUtil.isIncorpCertNumber("110111-0398555"));
 		assertFalse(ValidationUtil.isIncorpCertNumber("11010398556"));
 	}
@@ -48,7 +48,7 @@ public class ValidationUtilTest {
 	@Test
 	public void testIsBizRegNumber() {
 		assertTrue(ValidationUtil.isBizRegNumber("110-81-28774")); // Samsung
-																	// SDS
+		// SDS
 		assertFalse(ValidationUtil.isBizRegNumber("110-81-28773"));
 		assertFalse(ValidationUtil.isBizRegNumber("110-81774"));
 	}
@@ -87,65 +87,10 @@ public class ValidationUtilTest {
 
 	@Test
 	public void testIsRangeByteLength() {
-		assertTrue(ValidationUtil.isRangeByteLength("Anyframe Java Test", 10, 20));
+		assertTrue(ValidationUtil.isRangeByteLength("Anyframe Java Test", 10,
+				20));
 		assertTrue(ValidationUtil.isRangeByteLength("애니프레임 자바", 20, 30));
 		assertFalse(ValidationUtil.isRangeByteLength("애니프레임 자바", 25, 30));
 	}
 
-	@Test
-	public void testIsUserFormat() {
-		assertTrue(ValidationUtil.isUserFormat("123,456", "###,###"));
-		assertFalse(ValidationUtil.isUserFormat("123,45A", "###,###"));
-		assertFalse(ValidationUtil.isUserFormat("123456", "###,###"));
-		assertTrue(ValidationUtil.isUserFormat("123-456", "###-###"));
-		assertTrue(ValidationUtil.isUserFormat("123.456", "###.###"));
-		assertTrue(ValidationUtil.isUserFormat("123**456", "###**###"));
-		assertTrue(ValidationUtil.isUserFormat("123^456", "###^###"));
-		assertTrue(ValidationUtil.isUserFormat("123?456", "###?###"));
-		assertTrue(ValidationUtil.isUserFormat("123(456", "###(###"));
-	}
-
-	@Test
-	public void testIsRegexPatternMatch() {
-		assertTrue(ValidationUtil.isRegexPatternMatch("aaaaab", "a*b"));
-		assertFalse(ValidationUtil.isRegexPatternMatch("cabbbb", "a*b"));
-	}
-
-	@Test
-	public void testIsPatternMatching() {
-		assertTrue(ValidationUtil.isPatternMatching("abc-def", "*-*"));
-		assertFalse(ValidationUtil.isPatternMatching("abc", "*-*"));
-	}
-
-	@Test
-	public void testIsPatternInclude() {
-		assertTrue(ValidationUtil.isPatternInclude("asdf@5456", "s"));
-		assertFalse(ValidationUtil.isPatternInclude("asdf5456", "s"));
-		assertTrue(ValidationUtil.isPatternInclude("@", "s"));
-		assertFalse(ValidationUtil.isPatternInclude("1234가나다라", "s"));
-		assertTrue(ValidationUtil.isPatternInclude("가나다@", "s"));
-		assertTrue(ValidationUtil.isPatternInclude("-", "s"));
-		assertTrue(ValidationUtil.isPatternInclude("ㅁㅁ--4", "s"));
-		assertTrue(ValidationUtil.isPatternInclude("한", "k"));
-		assertFalse(ValidationUtil.isPatternInclude("eng", "k"));
-		assertTrue(ValidationUtil.isPatternInclude("eng가", "k"));
-		assertTrue(ValidationUtil.isPatternInclude("123가32", "k"));
-		assertFalse(ValidationUtil.isPatternInclude("eng32", "k"));
-		assertTrue(ValidationUtil.isPatternInclude("eng가", "k"));
-		assertTrue(ValidationUtil.isPatternInclude("가나다", "k"));
-		assertFalse(ValidationUtil.isPatternInclude("", "k"));
-		assertTrue(ValidationUtil.isPatternInclude("asdfsdfsdf", "e"));
-		assertTrue(ValidationUtil.isPatternInclude("asdfs1dfsdf", "e"));
-		assertTrue(ValidationUtil.isPatternInclude("123123123", "n"));
-		assertTrue(ValidationUtil.isPatternInclude("asdfs1dfsdf", "n"));
-	}
-
-	@Test
-	public void testIsRegexPatternInclude() {
-		assertTrue(ValidationUtil.isRegexPatternInclude("cabbbb", "a*b"));
-		assertTrue(ValidationUtil.isRegexPatternInclude("cccc123123abbbb", "a*b"));
-		assertTrue(ValidationUtil.isRegexPatternInclude("000abbbbsdfs12", "a*b"));
-		assertTrue(ValidationUtil.isRegexPatternInclude("abc", "."));
-
-	}
 }
