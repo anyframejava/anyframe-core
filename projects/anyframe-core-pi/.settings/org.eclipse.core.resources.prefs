@@ -1,0 +1,5 @@
+#Fri Sep 30 14:26:52 KST 2011
+eclipse.preferences.version=1
+encoding//src/main/resources/message/message-moviefinder_ko.properties=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/core/moviefinder/movie/form.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/core/moviefinder/movie/list.jsp=UTF-8
