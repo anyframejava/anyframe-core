@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
+ * This class is jta transaction test class.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
@@ -31,7 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = {
 		"classpath:spring/integration/common/context-message.xml",
 		"classpath:spring/integration/common/context-transaction.xml",
-		"classpath:spring/integration/jta/context-tx-jndi-jta.xml"})
+		"classpath:spring/integration/jta/context-tx-jndi-jta.xml" })
 public class TransactionServiceTest extends AbstractTransactionServiceTest {
 
 }

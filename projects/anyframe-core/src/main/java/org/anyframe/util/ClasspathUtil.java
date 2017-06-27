@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,15 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util;
 
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Util class to append specific library files to system class loader.
@@ -28,11 +28,13 @@ import org.apache.commons.logging.LogFactory;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
+@Deprecated
 public class ClasspathUtil {
-	private static final Log log = LogFactory.getLog(ClasspathUtil.class);
-	
-	public static sun.misc.URLClassPath getURLClassPath(ClassLoader loader) throws IllegalArgumentException,
-			IllegalAccessException {
+	private static final Logger logger = LoggerFactory
+			.getLogger(ClasspathUtil.class);
+
+	public static sun.misc.URLClassPath getURLClassPath(ClassLoader loader)
+			throws IllegalArgumentException, IllegalAccessException {
 		if (!(loader instanceof URLClassLoader)) {
 			return null;
 		}
@@ -44,24 +46,30 @@ public class ClasspathUtil {
 		java.lang.reflect.Field ucpField = null;
 		if (ucpField == null) {
 			// Add them to the URLClassLoader's classpath
-			ucpField = (java.lang.reflect.Field) AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					java.lang.reflect.Field ucp = null;
+			ucpField = (java.lang.reflect.Field) AccessController
+					.doPrivileged(new PrivilegedAction() {
+						public Object run() {
+							java.lang.reflect.Field ucp = null;
 
-					try {
-						ucp = URLClassLoader.class.getDeclaredField("ucp");
-						ucp.setAccessible(true);
+							try {
+								ucp = URLClassLoader.class
+										.getDeclaredField("ucp");
+								ucp.setAccessible(true);
 
-					} catch (SecurityException e) {
-						log.error("Cannot access field 'ucp'. Error : " + e.getMessage());
+							} catch (SecurityException e) {
+								logger.error(
+										"Cannot access field 'ucp'. Error : {}",
+										new Object[] { e.getMessage() });
 
-					} catch (NoSuchFieldException e) {
-						log.error("Cannot find field 'ucp'. Error : " + e.getMessage());
-					}
+							} catch (NoSuchFieldException e) {
+								logger.error(
+										"Cannot find field 'ucp'. Error : {}",
+										new Object[] { e.getMessage() });
+							}
 
-					return ucp;
-				}
-			});
+							return ucp;
+						}
+					});
 		}
 
 		return ucpField;

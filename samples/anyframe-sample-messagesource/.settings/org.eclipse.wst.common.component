@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+<wb-module deploy-name="anyframe-sample-messagesource">
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <dependent-module archiveName="anyframe-core-1.0.4.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/anyframe-core/anyframe-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="anyframe-query-1.1.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/anyframe-query/anyframe-query">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+<property name="java-output-path"/>
+<property name="context-root" value="anyframe-sample-messagesource"/>
+</wb-module>
+</project-modules>

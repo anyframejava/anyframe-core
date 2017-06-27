@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,18 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.sample.logging;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Enumeration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
+import org.apache.log4j.Appender;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -35,7 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:./src/test/resources/spring/context-*.xml" })
-public class StandardLog4jConfigurationTest{
+public class StandardLog4jConfigurationTest {
 
 	/**
 	 * Test that a LogFactory gets created as expected.
@@ -43,20 +44,20 @@ public class StandardLog4jConfigurationTest{
 	@Test
 	public void testCreateFactory() {
 
-		Log logger = LogFactory.getLog(getClass());
+		Logger logger = LoggerFactory.getLogger(this.getClass());
 
 		assertNotNull("LogFactory exists", logger);
-		assertEquals("LogFactory class",
-				"org.apache.commons.logging.impl.Log4JLogger", logger
-						.getClass().getName());
+		assertEquals("LoggerFactory class", "org.slf4j.impl.Log4jLoggerAdapter", logger.getClass().getName());
 	}
 
 	/**
 	 * Tests if Prop File appender were added or not
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSampleConfiguration() {
-		Enumeration enu = Logger.getRootLogger().getAllAppenders();
+		Enumeration<Appender> enu = org.apache.log4j.Logger.getRootLogger()
+				.getAllAppenders();
 
 		if (enu.hasMoreElements()) {
 			System.out.println();

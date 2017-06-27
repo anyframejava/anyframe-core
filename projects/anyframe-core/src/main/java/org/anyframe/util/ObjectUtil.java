@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util;
 
 import java.beans.PropertyDescriptor;
@@ -25,8 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -35,19 +35,21 @@ import org.springframework.util.ReflectionUtils;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-public abstract class ObjectUtil {
+public class ObjectUtil {
 
 	private ObjectUtil() {
-
+		throw new AssertionError();
 	}
 
 	/**
 	 * Logger for this class
 	 */
-	private static Log log = LogFactory.getLog(ObjectUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
 
+	@SuppressWarnings("unchecked")
 	private static Map classCache = new HashMap();
 
+	@SuppressWarnings("unchecked")
 	public static Class loadClass(String className) {
 		return loadClass(className, null);
 	}
@@ -62,6 +64,7 @@ public abstract class ObjectUtil {
 	 * @return The requested class
 	 * @throws ClassNotFoundException
 	 */
+	@SuppressWarnings("unchecked")
 	public static Class loadClass(String className, ClassLoader loader) {
 
 		Class theClass;
@@ -82,13 +85,12 @@ public abstract class ObjectUtil {
 						try {
 							theClass = Class.forName(className);
 						} catch (ClassNotFoundException e1) {
-							throw new RuntimeException(
-									"Class is not found. [" + className + "]");
+							throw new RuntimeException("Class is not found. ["
+									+ className + "]");
 						}
 						if (theClass != null) {
-							if (log.isInfoEnabled()) {
-								log.info("Loaded Class: " + theClass.getName());
-							}
+							logger.info("Loaded Class: {}",
+									new Object[] { theClass.getName() });
 							classCache.put(className, theClass);
 						}
 					}
@@ -103,24 +105,23 @@ public abstract class ObjectUtil {
 	 * Get an instance of the given class name.
 	 * 
 	 * @param className
-	 * @return an instance of the given class 
+	 * @return an instance of the given class
 	 * @throws RuntimeException
 	 */
+	@SuppressWarnings("unchecked")
 	public static Object getObject(String className) {
 		Class clazz;
 		try {
 			clazz = loadClass(className);
 			return clazz.newInstance();
 		} catch (InstantiationException e) {
-			if (log.isErrorEnabled())
-				log.error(className + " : Class is cant instantialized.");
-			throw new RuntimeException(className
+			logger.error("{} : Class is cant instantialized.",
+					new Object[] { className });			throw new RuntimeException(className
 					+ " : Class is cant instantialized.");
 		} catch (IllegalAccessException e) {
-			if (log.isErrorEnabled())
-				log.error(className + " : Class is not accessed.");
-			throw new RuntimeException(className
-					+ " : Class is not accessed.");
+			logger.error("{} : Class is not accessed.",
+					new Object[] { className });
+			throw new RuntimeException(className + " : Class is not accessed.");
 		}
 	}
 
@@ -129,6 +130,7 @@ public abstract class ObjectUtil {
 	 * @param bean
 	 * @return true or false
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean isEmpty(Object bean) {
 		if (bean == null)
 			return true;
@@ -150,20 +152,17 @@ public abstract class ObjectUtil {
 						return false;
 					}
 				} catch (IllegalAccessException e) {
-					if (log.isErrorEnabled())
-						log.error(propertyName + " : Class is not accessed.");
-					throw new RuntimeException(propertyName
+					logger.error("{} : Class is not accessed.",
+							new Object[] { propertyName });					throw new RuntimeException(propertyName
 							+ " : Class is not accessed.");
 				} catch (InvocationTargetException e) {
-					if (log.isErrorEnabled())
-						log.error(propertyName + " : Invocation error.");
+					logger.error("{} : Invocation error.",
+							new Object[] { propertyName });
 					throw new RuntimeException(propertyName
 							+ " : Invocation error.");
 				} catch (NoSuchMethodException e) {
-					if (log.isErrorEnabled())
-						log
-								.error(propertyName
-										+ " : Class has no such method.");
+					logger.error("{} : Class has no such method.",
+							new Object[] { propertyName });
 					throw new RuntimeException(propertyName
 							+ " : Class has no such method.");
 				}
@@ -176,6 +175,7 @@ public abstract class ObjectUtil {
 	 * @param destObj
 	 * @param origObj
 	 */
+	@SuppressWarnings("unchecked")
 	public static void copyProperties(Object destObj, Object origObj) {
 		PropertyDescriptor[] propertyDescriptors = PropertyUtils
 				.getPropertyDescriptors(destObj.getClass());
@@ -192,20 +192,17 @@ public abstract class ObjectUtil {
 					origValue = PropertyUtils
 							.getProperty(origObj, propertyName);
 				} catch (IllegalAccessException e) {
-					if (log.isErrorEnabled())
-						log.error(propertyName + " : Class is not accessed.");
-					throw new RuntimeException(propertyName
+					logger.error("{} : Class is not accessed.",
+							new Object[] { propertyName });					throw new RuntimeException(propertyName
 							+ " : Class is not accessed.");
 				} catch (InvocationTargetException e) {
-					if (log.isErrorEnabled())
-						log.error(propertyName + " : Invocation error.");
+					logger.error("{} : Invocation error.",
+							new Object[] { propertyName });
 					throw new RuntimeException(propertyName
 							+ " : Invocation error.");
 				} catch (NoSuchMethodException e) {
-					if (log.isErrorEnabled())
-						log
-								.error(propertyName
-										+ " : Class has no such method.");
+					logger.error("{} : Class has no such method.",
+							new Object[] { propertyName });
 					throw new RuntimeException(propertyName
 							+ " : Class has no such method.");
 				}
@@ -227,8 +224,8 @@ public abstract class ObjectUtil {
 				return true;
 			}
 		} catch (SecurityException e) {
-			if (log.isErrorEnabled())
-				log.error(propertyName + " : Class is not Security.");
+			logger.error("{} : Class is not Security.",
+					new Object[] { propertyName });
 			throw new RuntimeException(propertyName
 					+ " : Class is not Security.");
 		} catch (NoSuchFieldException e) {
@@ -248,19 +245,14 @@ public abstract class ObjectUtil {
 		try {
 			return PropertyUtils.getProperty(object, name);
 		} catch (IllegalAccessException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Class is not accessed.");
-			throw new RuntimeException(name
-					+ " : Class is not accessed.");
+			logger.error("{} : Class is not accessed.", new Object[] { name });			throw new RuntimeException(name + " : Class is not accessed.");
 		} catch (InvocationTargetException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Invocation error.");
+			logger.error("{} : Invocation error.", new Object[] { name });
 			throw new RuntimeException(name + " : Invocation error.");
 		} catch (NoSuchMethodException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Class has no such method.");
-			throw new RuntimeException(name
-					+ " : Class has no such method.");
+			logger.error("{} : Class has no such method.",
+					new Object[] { name });
+			throw new RuntimeException(name + " : Class has no such method.");
 		}
 	}
 
@@ -301,19 +293,15 @@ public abstract class ObjectUtil {
 				PropertyUtils.setProperty(object, name, value);
 			}
 		} catch (IllegalAccessException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Class is not accessed.");
-			throw new RuntimeException(name
-					+ " : Class is not accessed.");
+			logger.error("{} : Class is not accessed.", new Object[] { name });
+			throw new RuntimeException(name + " : Class is not accessed.");
 		} catch (InvocationTargetException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Invocation error.");
+			logger.error("{} : Invocation error.", new Object[] { name });
 			throw new RuntimeException(name + " : Invocation error.");
 		} catch (NoSuchMethodException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Class has no such method.");
-			throw new RuntimeException(name
-					+ " : Class has no such method.");
+			logger.error("{} : Class has no such method.",
+					new Object[] { name });
+			throw new RuntimeException(name + " : Class has no such method.");
 		}
 	}
 
@@ -328,24 +316,21 @@ public abstract class ObjectUtil {
 		try {
 			PropertyUtils.setProperty(object, name, value);
 		} catch (IllegalAccessException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Class is not accessed.");
-			throw new RuntimeException(name
-					+ " : Class is not accessed.");
+			logger.error("{} : Class is not accessed.", new Object[] { name });
+			throw new RuntimeException(name + " : Class is not accessed.");
 		} catch (InvocationTargetException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Invocation error.");
+			logger.error("{} : Invocation error.");
 			throw new RuntimeException(name + " : Invocation error.");
 		} catch (NoSuchMethodException e) {
-			if (log.isErrorEnabled())
-				log.error(name + " : Class has no such method.");
-			throw new RuntimeException(name
-					+ " : Class has no such method.");
+			logger.error("{} : Class has no such method.",
+					new Object[] { name });
+			throw new RuntimeException(name + " : Class has no such method.");
 		}
 	}
-	
+
 	/**
 	 * Set value to object's member variable named fieldName
+	 * 
 	 * @param object
 	 * @param fieldName
 	 * @param value
@@ -361,15 +346,15 @@ public abstract class ObjectUtil {
 		try {
 			field = object.getClass().getDeclaredField(fieldName);
 		} catch (NoSuchFieldException e) {
-			if (log.isErrorEnabled())
-				log.error(fieldName + " : Class has no such Field."
-						+ e.toString());
+			logger.error("{} : Class has no such Field. {}", new Object[] {
+					fieldName, e.toString() });
 			throw new RuntimeException(fieldName
 					+ " : Class has no such field.");
 		}
 		return field;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Method getMethod(Object object, String methodName,
 			Class[] argClasses) {
 		Method method = null;
@@ -377,12 +362,11 @@ public abstract class ObjectUtil {
 			method = object.getClass()
 					.getDeclaredMethod(methodName, argClasses);
 		} catch (SecurityException e) {
-			if (log.isErrorEnabled())
-				log.error(methodName + " : Security!" + e.toString());
+			logger.error("{} : Security! {}",
+					new Object[] { methodName, e.toString() });
 		} catch (NoSuchMethodException e) {
-			if (log.isErrorEnabled())
-				log.error(methodName + " : Class has no such method."
-						+ e.toString());
+			logger.error("{} : Class has no such method. {}", new Object[] {
+					methodName, e.toString() });
 		}
 
 		return method;
@@ -418,6 +402,7 @@ public abstract class ObjectUtil {
 	 * @param property
 	 * @param value
 	 */
+	@SuppressWarnings("unchecked")
 	public static void addProperty(Object destObject, String property,
 			Object value) {
 		String methodName = "add" + StringUtil.swapFirstLetterCase(property);
@@ -426,17 +411,14 @@ public abstract class ObjectUtil {
 		try {
 			method.invoke(destObject, new Object[] { value });
 		} catch (IllegalArgumentException e) {
-			if (log.isErrorEnabled())
-				log.error("Argument is illegal.");
+			logger.error("Argument is illegal.");
 			throw new RuntimeException("Argument is illegal.");
 		} catch (IllegalAccessException e) {
-			if (log.isErrorEnabled())
-				log.error(property + " : Class is not accessed.");
-			throw new RuntimeException(property
-					+ " : Class is not accessed.");
+			logger.error("{} : Class is not accessed.",
+					new Object[] { property });
+			throw new RuntimeException(property + " : Class is not accessed.");
 		} catch (InvocationTargetException e) {
-			if (log.isErrorEnabled())
-				log.error(property + " : Invocation error.");
+			logger.error("{} : Invocation error.", new Object[] { property });
 			throw new RuntimeException(property + " : Invocation error.");
 		}
 	}

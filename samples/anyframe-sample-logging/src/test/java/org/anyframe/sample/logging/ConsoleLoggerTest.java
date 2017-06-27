@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.sample.logging;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Enumeration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -38,7 +38,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:./src/test/resources/spring/context-*.xml" })
-public class ConsoleLoggerTest{
+public class ConsoleLoggerTest {
 
 	/**
 	 * [Flow #-1] Positive Case : try to log using ConsoleLogger
@@ -46,11 +46,12 @@ public class ConsoleLoggerTest{
 	 * @throws Exception
 	 *             fail to test
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testConsoleLogging() {
 		// 1. find all appenders of ConsoleLogger
-		Enumeration appenders = Logger.getLogger(this.getClass())
-				.getAllAppenders();
+		Enumeration<Appender> appenders = org.apache.log4j.Logger.getLogger(
+				this.getClass()).getAllAppenders();
 
 		if (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
@@ -69,7 +70,7 @@ public class ConsoleLoggerTest{
 		}
 
 		// 3. try to log
-		Log logger = LogFactory.getLog(this.getClass());
+		Logger logger = LoggerFactory.getLogger(this.getClass());
 		assertTrue(logger.isDebugEnabled());
 		logger.debug("log - testConsoleLoggingConf");
 	}

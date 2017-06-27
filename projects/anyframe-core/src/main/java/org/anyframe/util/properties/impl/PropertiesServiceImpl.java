@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,15 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.Assert;
 
 /**
+ * This service enables applications to approach the value of singular key
+ * Containing the pairs of key-value internally. It enhances the flexibility
+ * through managing the information for system environment. It is not needed for
+ * EJB components because they present the functions originally.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
+@SuppressWarnings("unchecked")
 public class PropertiesServiceImpl implements PropertiesService,
 		InitializingBean, DisposableBean, ResourceLoaderAware {
 	private ExtendedProperties anyframeProperties = null;
@@ -301,15 +307,15 @@ public class PropertiesServiceImpl implements PropertiesService,
 				loadPropertiesDefinition(fileName, this.encoding);
 			}
 		} catch (Exception e) {
-			if (PropertiesService.LOGGER.isErrorEnabled()) {
-				PropertiesService.LOGGER
-						.error("[Properties Service] Fail to refresh file properties "
-								+ fileName + ".");
-				PropertiesService.LOGGER
-						.error("[Properties Service] Some property files doesn't exist or there are wrong definitions in property files.");
-			}
+
+			PropertiesService.LOGGER.error(
+					"Properties Service : Fail to refresh file properties {}.",
+					new Object[] { fileName });
+			PropertiesService.LOGGER
+					.error("Properties Service : Some property files doesn't exist or there are wrong definitions in property files.");
+
 			throw new NestedRuntimeException(
-					"[Properties Service] Fail to refresh file properties "
+					"Properties Service : Fail to refresh file properties "
 							+ fileName + ".", e);
 		}
 	}
@@ -334,18 +340,15 @@ public class PropertiesServiceImpl implements PropertiesService,
 
 			if (dynamicReload > 0) {
 				watcher.start();
-				if (PropertiesService.LOGGER.isDebugEnabled()) {
-					PropertiesService.LOGGER
-							.debug("Properties Service : Watcher is started...");
-				}
+				PropertiesService.LOGGER
+						.debug("Properties Service : Watcher is started...");
 			}
 		} catch (Exception e) {
 			if (e instanceof BaseException)
 				throw (BaseException) e;
 			else {
-				if (PropertiesService.LOGGER.isErrorEnabled())
-					PropertiesService.LOGGER
-							.error("[Properties Service] There are something wrong definitions in a service configuration file or property files.");
+				PropertiesService.LOGGER
+						.error("[Properties Service] There are something wrong definitions in a service configuration file or property files.");
 				throw new BaseException(
 						"[Properties Service] Fail to initialize a Properties Service.",
 						e);
@@ -401,13 +404,10 @@ public class PropertiesServiceImpl implements PropertiesService,
 
 	private void loadPropertiesDefinition(Resource resource, String encoding)
 			throws Exception {
-		if (PropertiesService.LOGGER.isDebugEnabled()) {
-			PropertiesService.LOGGER
-					.debug("[Properties Service] Property file is a "
-							+ resource.getFilename()
-							+ ". Encoding Type of the file is" + encoding
-							+ " .");
-		}
+		PropertiesService.LOGGER
+				.debug("[Properties Service] Property file is a "
+						+ resource.getFilename()
+						+ ". Encoding Type of the file is" + encoding + " .");
 		ExtendedProperties anyframeProperty = new ExtendedProperties();
 		anyframeProperty.load(resource.getInputStream(), encoding);
 		if (dynamicReload > 0)

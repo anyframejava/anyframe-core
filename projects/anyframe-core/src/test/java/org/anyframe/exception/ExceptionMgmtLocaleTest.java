@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,16 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.exception;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
-import org.anyframe.exception.BaseException;
-import org.anyframe.exception.message.Message;
-import org.anyframe.exception.sample.ISampleService;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import javax.inject.Inject;
+import javax.inject.Named;
 
+import org.anyframe.exception.message.Message;
+import org.anyframe.exception.sample.SampleService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * For testing functions what MessageHandler supports, there are some test
@@ -29,35 +35,27 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * 
  * @author JongHoon Kim
  */
-public class ExceptionMgmtLocaleTest extends
-		AbstractDependencyInjectionSpringContextTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "file:./src/test/resources/spring/anyframe-exception.xml" })
+public class ExceptionMgmtLocaleTest {
 
-	private ISampleService sampleService;
-
-	public ISampleService getSampleService() {
-		return sampleService;
-	}
-
-	public void setSampleService(ISampleService sampleService) {
-		this.sampleService = sampleService;
-	}
-
-	protected String[] getConfigLocations() {
-		return new String[] { "classpath*:/spring/anyframe-exception.xml" };
-	}
+	@Inject
+	@Named("sampleService")
+	private SampleService sampleService;
 
 	/**
 	 * [Flow #-1] Positive : When SampleSerivce throws BaseException, get
 	 * message structure from that exception. When Language is KOREAN.
 	 */
+	@Test
 	public void testThrowBaseExceptionKO() {
 		Message messages;
-		
+
 		Locale locale = Locale.KOREAN;
 		// 1. throw new BaseException (constructor is consist of MessageSource,
 		// messageKey, cause exception)
 		try {
-			sampleService.testBaseExceptionWithLocale(1, locale );
+			sampleService.testBaseExceptionWithLocale(1, locale);
 		} catch (BaseException be) {
 			be.getMessage();
 			messages = be.getMessages();
@@ -93,19 +91,20 @@ public class ExceptionMgmtLocaleTest extends
 			assertEquals("원인1", messages.getReason());
 		}
 	}
-	
+
 	/**
 	 * [Flow #-1] Positive : When SampleSerivce throws BaseException, get
 	 * message structure from that exception. When Language is KOREAN.
 	 */
+	@Test
 	public void testThrowBaseExceptionEN() {
 		Message messages;
-		
+
 		Locale locale = Locale.ENGLISH;
 		// 1. throw new BaseException (constructor is consist of MessageSource,
 		// messageKey, cause exception)
 		try {
-			sampleService.testBaseExceptionWithLocale(1, locale );
+			sampleService.testBaseExceptionWithLocale(1, locale);
 		} catch (BaseException be) {
 			be.getMessage();
 			messages = be.getMessages();
@@ -140,5 +139,5 @@ public class ExceptionMgmtLocaleTest extends
 			assertEquals("solution1", messages.getSolution());
 			assertEquals("reason1", messages.getReason());
 		}
-	}	
+	}
 }

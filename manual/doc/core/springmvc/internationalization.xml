@@ -51,16 +51,17 @@
         		<para>
         			다음은 messageSource가 정의되어 있는 context-user.xml 파일의 일부이다.
         			<programlisting language="xml"><![CDATA[<bean id="messageSource"
-   class="org.anyframe.spring.message.EncodingResourceBundleMessageSource">
-   <property name="]]><emphasis role="bold">basenames</emphasis>"<![CDATA[>
-      <list>
-        <!-- properties파일의 이름을 등록한다.
-                 등록되 있지 않을 시에 디폴트로 message.properties파일을 찾는다.-->
-         <]]><emphasis role="bold">value</emphasis><![CDATA[>]]><emphasis 
-         role="bold">message-user</emphasis><![CDATA[</]]><emphasis
-              role="bold">value</emphasis><![CDATA[>
-      </list>
-   </property>
+   class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:message/message-generation</value>
+				<value>classpath:message/message-moviefinder</value>
+				<value>classpath:message/message-converter</value>
+			</list>
+		</property>
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
 </bean>]]></programlisting>
 				</para>
 			</listitem>
@@ -275,4 +276,85 @@ public class UserController {
 			</para>
 	    </section>    	
 	</section>
+	
+	<note>
+		<title>[참고] Encoding 설정</title>
+		<para>
+			Java 개발 시 영어 이외의 문자를 처리하는 데 있어서 Encoding(인코딩) 설정 문제 때문에 문자가 깨지는 현상을 볼 수 있다.
+		    (한글 처리와 관련한 문제로 종종 발생한다.) 컴퓨터에서 영어, 한글 등 문자를 표현하는 다양한 방식이 있는데 
+		    이 방식을 처리하는 데 있어서 Encoding/Decoding 설정이 필요하다. 
+		</para>   
+		<para>	
+			이 매뉴얼에서는 ASCII와 호환이 가능하면서 유니코드를 표현할 수 있는 UTF-8 인코딩 설정을 예로 들어서 설명하도록 한다.
+		</para>
+		<para>	
+			<emphasis role="bold">[1] Console 화면에서의 문자 출력를 위한 Encoding 설정</emphasis>  
+		</para>		
+		<para>	
+			Java 소스 코드 내(*.java)에서 System.out.println("한글 메시지")와 같이 한글을 Console 화면에 출력하려고 할 때, 정상적으로 한글이 출력되지 않는 경우가 있다.
+			이유는 Java 소스 코드 파일의 인코딩과 컴파일된 파일이 실행되는 실행 환경의 인코딩이 다르기 때문이다. 
+			Java 실행 시 디폴트로 OS 환경에 설정되어 있는 인코딩을 기준으로 동작하므로 실행되는 환경의 인코딩 정보를 변경하기 위해서는 -Dfile.encoding="{파일 인코딩 정보}"과 같은 형태의 옵션을 
+			이용할 수 있다.   
+		</para>
+		<para>	
+			파일 인코딩을 UTF-8로 설정한 경우, Windows OS 환경에서는 아래와 같이 작성한다. (ex. 웹 어플리케이션을 Tomcat을 이용하여 구동한다면 catalina.bat 파일에 작성한다.) 
+			대부분 한글 Windows OS를 로컬 환경에 설치하므로 아래와 같은 추가 작업을 할 필요가 없는 경우가 많다. 
+    <programlisting language="xml">set JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8</programlisting>
+			Unix/Linux/Mac OS 환경에서는 아래와 같이 작성한다. (ex. 웹 어플리케이션을 Tomcat을 이용하여 구동한다면 catalina.sh 파일에 작성한다.)
+    <programlisting language="xml">JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"</programlisting>	
+            Eclipse에서 실행 시에는 아래와 같이 Eclipse Preferences에 설정한 후 실행시키도록 한다.
+    <programlisting language="xml"><![CDATA[Eclipse Preferences > General > Workspace > Text file encoding 설정을 UTF-8로 설정]]></programlisting>
+		</para>		
+		<para>	
+			<emphasis role="bold">[2] 웹 화면 개발 시 Encoding 설정</emphasis>  
+		</para>	
+		<para>
+		<emphasis role="bold">*웹 어플리케이션 개발 시 영어 이외의 문자 처리를 위한 Encoding/Decoding 설정 방법은 매우 다양하므로 아래에 제시한 방법은 참고용으로만 살펴보도록 한다.*</emphasis>  
+		WAS별로 제시되는 Encoding 방식이 다를 수 있고, 실제 코드 개발 시 사용하는 자바 API 혹은 자바스크립트 메소드 또한 다양하므로 해당 프로젝트 요구 사항에 따라 적용하도록 한다.
+		</para>		
+		<para>	
+			[2.1] GET 방식 문자열 처리 시, Servlet Container 설정 혹은 JavaScript 함수 이용   
+		</para>
+		<para>
+		웹 어플리케이션을 Tomcat을 이용하여 구동한다면, 아래와 같이 server.xml 파일 내 Connector 태그에서 URIEncoding 옵션을 UTF-8로 설정해주도록 한다. (URIEncodig 설정 방식은 WAS 별로 다를 수 있으므로 참고하도록 한다.)
+    <programlisting language="xml"><![CDATA[<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8"/>]]></programlisting>			
+		JavaScript에서 인코딩 기능을 제공해주는 함수로 encodeURI()와 encodeURIComponent()를 이용할 수 있다. 
+		</para>
+		<para>
+- encodeURI() 함수의 경우 인터넷 주소(URL) 표시에 사용되는 특수 문자들을 제외한 나머지 주소 내용을 인코딩할 때 사용한다. 즉, 인터넷 주소(URL) 전체를 인코딩할 때 사용한다.
+        </para>
+        <para>
+- encodeURIComponent() 함수의 경우 인터넷 주소(URL) 표시에 사용되는 모든 문자를 인코딩하므로 인터넷 주소(URL) 전체를 인코딩할 때 사용하지 않고, 
+요청 파라미터 값 하나하나를 따로 인코딩할 때 사용한다.
+        </para>
+        <para>
+GET 방식으로 한글과 같은 문자열을 넘기게 되는 경우 특히 IE(Internet Explorer) 브라우저를 사용할 때 인코딩 설정으로 인한 문제가 발생하는 경우가 많으므로 
+JSP 페이지 개발 시 GET 방식으로 문자열을 넘겨주는 경우 encodeURI() 혹은 encodeURIComponent() 함수를 사용하여 인코딩을 해주도록 한다. 
+		</para>		
+		<para>	
+			[2.2] POST 방식 문자열 처리 시 CharacterEncodingFilter 이용 
+		</para>
+		<para>
+		JSP 페이지에서 form 내에 요청 파라미터 값으로 문자열을 설정하여 값을 보내게 되면 POST 방식으로 전달되고 이는 HTTP Request Body에 포함되어 전송된다. 
+		이러한 경우 모든 요청에 대해서 Filter 클래스를 수행하도록 web.xml 파일 내에 설정하면 request.setCharacterEncoding(encoding 정보) 메소드를 실행시키게 된다.
+		request.setCharacterEncoding() 메소드의 경우 Request Body에만 적용하게 되어 있기 때문에 POST 방식에만 적용되는 것이다.
+		request.setCharacterEncoding() 메소드를 이용하여 지정한 인코딩 방식이 GET 방식의 QueryString에 의한 파라미터에는 적용되지 않으므로 
+		GET 방식의 파라미터에 영어 이외의 한글 등의 문자열이 있을경우 위의 [2.1]에서와 같은 별도의 처리가 필요함에 유의하도록 한다. 		
+		</para>
+		<para>	
+		web.xml 파일 내에 encodingFilter를 설정해주도록 한다.
+    <programlisting language="xml"><![CDATA[<filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+</filter>
+<filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+</filter-mapping>]]></programlisting>						
+		</para>							
+	</note>		
 </chapter>

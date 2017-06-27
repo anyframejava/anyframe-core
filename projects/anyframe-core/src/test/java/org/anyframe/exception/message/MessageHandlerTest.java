@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,17 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.exception.message;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
-import org.anyframe.exception.message.Message;
-import org.anyframe.exception.message.MessageHandler;
+import javax.inject.Inject;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.context.MessageSource;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
-
-
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * For testing functions what MessageHandler supports, there are some test
@@ -31,23 +34,21 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author SoYon Lim
  * @author JongHoon Kim
  */
-public class MessageHandlerTest extends
-		AbstractDependencyInjectionSpringContextTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "file:./src/test/resources/spring/anyframe-exception.xml" })
+public class MessageHandlerTest {
 
-	protected String[] getConfigLocations() {
-		return new String[] { "classpath*:/spring/anyframe-exception.xml" };
-	}
+	@Inject
+	private MessageSource messageSource;
 
 	/**
 	 * [Flow #-1] Positive, Negative Case : message parameters are substituted
 	 * in the message using Spring MessageSource.
 	 */
+	@Test
 	public void testHandleExMessageMessageSourceStringObjectArray() {
-		MessageSource messageSource = (MessageSource) getApplicationContext()
-				.getBean("messageSource");
-		// Default Locale Setting
-		Locale.setDefault (Locale.ENGLISH); 
-		
+		Locale.setDefault(Locale.ENGLISH);
+
 		// 1. In case message parameter doesn't exist, get full message through
 		// MessageHandler.
 		Message messages1 = MessageHandler.handleExMessage(messageSource,
@@ -88,6 +89,7 @@ public class MessageHandlerTest extends
 	 * [Flow #-2] Positive, Negative Case : message parameters are substituted
 	 * in the message using MessageFormat.
 	 */
+	@Test
 	public void testHandleExMessageStringObjectArray() {
 		// 1. In case message parameter type is String, get full message through
 		// MessageHandler.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,17 +25,13 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ResourceLoaderAware;
+import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,14 +62,37 @@ import org.springframework.jdbc.core.RowMapper;
  *      &lt;/property&gt;
  * 		&lt;property name="defaultLanguage" value="ko"/&gt;
  * 		&lt;property name="defaultCountry" value="KR"/&gt;
- * 		&lt;property name="cacheConfiguration" value="classpath:/spring/ehcache.xml"/&gt;
+ *      &lt;property name="cacheManager" ref="cacheManager" /&gt;
  * &lt;/bean&gt;
+ * 
+ * &lt;bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+ *     p:cache-manager-ref="ehcache" /&gt;
+
+ * &lt;bean id="ehcache"
+ *     class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+ *     p:config-location="classpath:spring/message/ehcache.xml" /&gt;
+ * </pre>
+ * 
+ * Ehcache Configuration Example (ex:ehcache.xml) :
+ * 
+ * <pre>
+ * &lt;cache name="databaseMessageSourceCache" 
+ *     maxElementsInMemory="3"
+ *     eternal="false"
+ *     timeToIdleSeconds="1"
+ *     timeToLiveSeconds="1"
+ *     overflowToDisk="true"
+ *     maxElementsOnDisk="10000000"
+ *     diskPersistent="false"
+ *     diskExpiryThreadIntervalSeconds="120"
+ *     memoryStoreEvictionPolicy="LRU"
+ *     /&gt;
  * </pre>
  * 
  * @author SoYon Lim
  */
 public class DatabaseMessageSource extends AbstractMessageSource implements
-		InitializingBean, ResourceLoaderAware, DisposableBean {
+		InitializingBean, DisposableBean {
 	private DataSource dataSource;
 
 	private Properties messageTable;
@@ -84,7 +103,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 
 	private boolean lazyLoad = true;
 
-	private String cacheConfiguration;
+	private CacheManager cacheManager;
 
 	private static String TABLE = "MESSAGE_SOURCE";
 	private static String KEY = "KEY";
@@ -98,8 +117,6 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	private JdbcTemplate jdbcTemplate;
 
 	private Cache cache;
-
-	private ResourceLoader resourceLoader = null;
 
 	private String tableName;
 	private String keyColumn;
@@ -122,19 +139,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 			this.jdbcTemplate = new JdbcTemplate(dataSource);
 
 			// 2. get cache
-			CacheManager cacheManager = null;
-			if (cacheConfiguration != null) {
-				// Can only load single resources by absolute URL.
-				Resource resource = resourceLoader
-						.getResource(cacheConfiguration);
-				cacheManager = new CacheManager(resource.getInputStream());
-			} else {
-				// configuring ehcache from ehcache-failsafe.xml in default
-				cacheManager = new CacheManager();
-			}
-
-			cacheManager.addCache("MessageCache");
-			cache = cacheManager.getCache("MessageCache");
+			cache = cacheManager.getCache("databaseMessageSourceCache");
 
 			// 3. set default locale
 			defaultLocale = new Locale(defaultLanguage, defaultCountry);
@@ -160,11 +165,13 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 				// eternal attribute, when set to "true", overrides timeToLive
 				// and
 				// timeToIdle so that no expiration can take place.
-				cache.getCacheConfiguration().setEternal(true);
+				((net.sf.ehcache.Cache) cache.getNativeCache())
+						.getCacheConfiguration().setEternal(true);
 				// maxElementsInMemory to 0 so that it stores unlimited objects
 				// in
 				// the memory
-				cache.getCacheConfiguration().setMaxElementsInMemory(0);
+				((net.sf.ehcache.Cache) cache.getNativeCache())
+						.getCacheConfiguration().setMaxEntriesLocalHeap(0);
 				readMessages(true);
 			}
 		} catch (Exception e) {
@@ -173,7 +180,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	}
 
 	public void destroy() throws Exception {
-		this.cache.removeAll();
+		this.cache.clear();
 	}
 
 	/**
@@ -235,7 +242,7 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	 */
 	public void refresh() {
 		synchronized (this.cache) {
-			this.cache.removeAll();
+			this.cache.clear();
 			if (!lazyLoad) {
 				// 1. reload all messages if lazyLoad is false
 				readMessages(true);
@@ -263,9 +270,11 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 						ps.setString(4, message.getText());
 
 						if (!lazyLoad) {
-							cache.put(new Element(message.getKey() + "_"
-									+ message.getLanguage() + "_"
-									+ message.getCountry(), message.getText()));
+							cache.put(
+									message.getKey() + "_"
+											+ message.getLanguage() + "_"
+											+ message.getCountry(),
+									message.getText());
 						}
 					}
 
@@ -301,10 +310,8 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 						String textValue = rs.getString("text");
 
 						if (caching) {
-							Element element = new Element(keyValue + "_"
-									+ languageValue + "_" + countryValue,
-									textValue);
-							cache.put(element);
+							cache.put(keyValue + "_" + languageValue + "_"
+									+ countryValue, textValue);
 						}
 
 						return new Message(keyValue, languageValue,
@@ -349,17 +356,15 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 							String countryValue = rs.getString("country");
 							String textValue = rs.getString("text");
 
-							Element element = new Element(keyValue + "_"
-									+ languageValue + "_" + countryValue,
-									textValue);
-							cache.put(element);
+							cache.put(keyValue + "_" + languageValue + "_"
+									+ countryValue, textValue);
 							return textValue;
 						}
 					});
 		} catch (EmptyResultDataAccessException e) {
-			Element element = new Element(code + "_" + locale.getLanguage()
-					+ "_" + locale.getCountry(), UNDEFINED);
-			cache.put(element);
+			cache.put(
+					code + "_" + locale.getLanguage() + "_"
+							+ locale.getCountry(), UNDEFINED);
 			return UNDEFINED;
 		}
 
@@ -380,10 +385,9 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	 */
 	private String readMessage(String code, Locale locale, String cacheKey) {
 		String result = null;
-
-		Element element = cache.get(cacheKey);
-		if (element != null) {
-			result = (String) element.getValue();
+		ValueWrapper valueWrapper = cache.get(cacheKey);
+		if (valueWrapper != null) {
+			result = valueWrapper.get().toString();
 			return result;
 		}
 
@@ -397,10 +401,6 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 	/****************************/
 	/** GETTER, SETTER METHODS **/
 	/****************************/
-
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
-	}
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -422,12 +422,12 @@ public class DatabaseMessageSource extends AbstractMessageSource implements
 		this.defaultCountry = defaultCountry;
 	}
 
-	public void setCacheConfiguration(String cacheConfiguration) {
-		this.cacheConfiguration = cacheConfiguration;
+	public void setCacheManager(CacheManager cacheManager) {
+		this.cacheManager = cacheManager;
 	}
-
+	
 	// for test
 	public Cache getCache() {
-		return cache;
+		return this.cache;
 	}
 }

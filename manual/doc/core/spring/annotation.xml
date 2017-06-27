@@ -17,9 +17,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"]]>
     <emphasis role="bold"><![CDATA[xmlns:context="http://www.springframework.org/schema/context"]]></emphasis>
     <![CDATA[xsi:schemalLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd>]]>
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd>]]>
         <emphasis role="bold">http://www.springframework.org/schema/context</emphasis>
-        <emphasis role="bold">http://www.springframework.org/schema/context/spring-context-3.0.xsd"></emphasis>
+        <emphasis role="bold">http://www.springframework.org/schema/context/spring-context-3.1.xsd"></emphasis>
         <emphasis role="bold"><![CDATA[<context:annotation-config/>]]></emphasis>	                            
 <![CDATA[</beans>]]></programlisting></para>
 
@@ -113,9 +113,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"]]>
     <emphasis role="bold"><![CDATA[xmlns:context="http://www.springframework.org/schema/context"]]></emphasis>
     <![CDATA[xsi:schemalLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd]]>
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd]]>
         <emphasis role="bold">http://www.springframework.org/schema/context</emphasis>
-        <emphasis role="bold">http://www.springframework.org/schema/context/spring-context-3.0.xsd"></emphasis>
+        <emphasis role="bold">http://www.springframework.org/schema/context/spring-context-3.1.xsd"></emphasis>
     <emphasis role="bold"><![CDATA[<context:component-scan base-package="org.anyframe.plugin" />]]></emphasis>	                            
 <![CDATA[</beans>]]></programlisting>
 			</para>
@@ -541,9 +541,9 @@ public class MovieServiceImpl implements MovieService {
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:context="http://www.springframework.org/schema/context"
         xsi:schemaLocation="http://www.springframework.org/schema/beans 
-                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                 http://www.springframework.org/schema/context 
-                http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+                http://www.springframework.org/schema/context/spring-context-3.1.xsd">
         				
     <context:annotation-config/>
 
@@ -861,16 +861,16 @@ public void dispose() {
 							<tbody>
 								<row>
 									<entry align="center">maven-ant-tasks-2.0.10.jar</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/maven-ant-tasks-2.0.10.jar">Download</ulink></entry>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/maven-ant-tasks-2.0.10.jar">Download</ulink></entry>
 								</row>
 								<row>
 									<entry align="center">anyframe-sample-di-qualifier.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/anyframe-sample-di-qualifier.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-di-qualifier.zip">Download</ulink>
 									</entry>
 								</row>	
 								<row>
 									<entry align="center">anyframe-sample-di-provider.zip</entry>
-									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/anyframe-sample-di-provider.zip">Download</ulink>
+									<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-di-provider.zip">Download</ulink>
 									</entry>
 								</row>																											
 							</tbody>						

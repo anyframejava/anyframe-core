@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,22 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.util.file;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * Utility helper class to link file.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
 public abstract class LinkFileHelper {
-	private static final Log log = LogFactory.getLog(LinkFileHelper.class);
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(LinkFileHelper.class);
 
 	public static interface LinkLineItemHandler {
 		public boolean processItem(String itemString);
@@ -46,7 +50,9 @@ public abstract class LinkFileHelper {
 					break;
 			}
 		} catch (Exception e) {
-			log.error("I/O Error occurs. Error : " + e.getMessage());
+			logger.error("I/O Error occurs. Error : {}",
+					new Object[] { e.getMessage() });
+
 			return;
 		} finally {
 			if (reader != null)

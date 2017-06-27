@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
+ * {@link org.springframework.context.MessageSource} implementation that
+ * accesses resource bundles in files to handle encoding configuration.
  * 
  * @author Sooyeon Park
  * 
@@ -34,8 +36,9 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 public class EncodingResourceBundleMessageSource extends
 		ResourceBundleMessageSource {
 
-	private Log logger = LogFactory
-			.getLog(EncodingResourceBundleMessageSource.class);
+	private Logger logger = LoggerFactory
+			.getLogger(EncodingResourceBundleMessageSource.class);
+
 	private String defaultEncoding = "UTF-8";
 
 	public void setDefaultEncoding(String defaultEncoding) {
@@ -52,7 +55,8 @@ public class EncodingResourceBundleMessageSource extends
 			return new String(originalMessage.getBytes("8859_1"),
 					defaultEncoding);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Unsupported Encoding : " + defaultEncoding, e);
+			logger.error("Unsupported Encoding : {}",
+					new Object[] { defaultEncoding }, e);
 			return null;
 		}
 	}
@@ -103,8 +107,8 @@ public class EncodingResourceBundleMessageSource extends
 			codes = new String[0];
 		}
 		for (String code : codes) {
-			String msg = getMessageInternalNotEncoding(code, resolvable
-					.getArguments(), locale);
+			String msg = getMessageInternalNotEncoding(code,
+					resolvable.getArguments(), locale);
 
 			if (msg != null) {
 				return msg;
@@ -112,8 +116,8 @@ public class EncodingResourceBundleMessageSource extends
 		}
 		String defaultMessage = resolvable.getDefaultMessage();
 		if (defaultMessage != null) {
-			return renderDefaultMessage(defaultMessage, resolvable
-					.getArguments(), locale);
+			return renderDefaultMessage(defaultMessage,
+					resolvable.getArguments(), locale);
 		}
 		if (codes.length > 0) {
 			String fallback = getDefaultMessage(codes[0]);

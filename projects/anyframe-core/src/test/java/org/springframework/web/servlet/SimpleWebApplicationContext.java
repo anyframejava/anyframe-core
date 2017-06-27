@@ -45,6 +45,7 @@ import org.springframework.web.servlet.view.XmlViewResolver;
  * @author Juergen Hoeller
  * @since 21.05.2003
  */
+@SuppressWarnings("deprecation")
 public class SimpleWebApplicationContext extends StaticWebApplicationContext {
 
 	public void refresh() throws BeansException {

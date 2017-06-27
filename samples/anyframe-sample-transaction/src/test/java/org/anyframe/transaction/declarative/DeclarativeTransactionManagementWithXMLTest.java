@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,14 +33,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Sample test code to test function provided by User Mgmt Service
+ * This class is test case class for declarative Transaction Service using XML.
+ * 
+ * @author Soyon Lim
+ * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath*:spring/integration/common/context-annotation.xml",
-        "classpath*:spring/integration/datasource/context-transaction.xml",
-        "classpath*:spring/integration/testMovie/context-movie-xml.xml"
-})
+		"classpath*:spring/integration/datasource/context-transaction.xml",
+		"classpath*:spring/integration/testMovie/context-movie-xml.xml" })
 public class DeclarativeTransactionManagementWithXMLTest {
 
 	@Inject
@@ -61,20 +63,20 @@ public class DeclarativeTransactionManagementWithXMLTest {
 		Movie updateMovie = movieService.get("MV-00003");
 		updateMovie.setMovieId("MV-11111");
 		updateMovie.setTitle("TEST Movie");
-		
+
 		try {
 			movieService.updateMovieList(newMovie, updateMovie);
 			fail("fail to get movie.");
 		} catch (Exception e) {
 			try {
-				Movie movie =  movieService.get(newMovieID);
+				Movie movie = movieService.get(newMovieID);
 				assertNotNull("fail to commit.", movie);
 			} catch (Exception ie) {
 				fail("fail to trnasaction management.");
 			}
 		}
 	}
-	
+
 	private Movie getMovie() throws Exception {
 		Genre genre = new Genre();
 		genre.setGenreId("GR-03");

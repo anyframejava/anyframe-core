@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,20 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
+ * This TransactionTestSampleServiceImpl class is an implementation class for
+ * transaction test.
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
 @Service
-public class TransactionTestSampleServiceImpl extends SimpleJdbcDaoSupport
-		implements TransactionTestSampleService {
+public class TransactionTestSampleServiceImpl extends JdbcDaoSupport implements
+		TransactionTestSampleService {
 	TransactionSynchronizationSample transactionSynchronization = new TransactionSynchronizationSample();
 
 	@Inject
@@ -44,7 +47,7 @@ public class TransactionTestSampleServiceImpl extends SimpleJdbcDaoSupport
 
 	public Transaction get(Transaction transaction) throws Exception {
 		String sql = "select col1,col2,col3 from transactiontest where col1 = ? and col2 = ? and col3 = ?";
-		return this.getSimpleJdbcTemplate().queryForObject(
+		return this.getJdbcTemplate().queryForObject(
 				sql,
 				new BeanPropertyRowMapper<Transaction>(Transaction.class) {
 					public Transaction mapRow(ResultSet rs, int i)
@@ -65,7 +68,7 @@ public class TransactionTestSampleServiceImpl extends SimpleJdbcDaoSupport
 
 		String sql = "INSERT INTO transactiontest (col1, col2, col3) VALUES (?, ?, ?)";
 
-		this.getSimpleJdbcTemplate().update(
+		this.getJdbcTemplate().update(
 				sql,
 				new Object[] { transaction.getCol1(), transaction.getCol2(),
 						transaction.getCol3() });
@@ -74,15 +77,15 @@ public class TransactionTestSampleServiceImpl extends SimpleJdbcDaoSupport
 
 	public List<Transaction> listData(Transaction transaction) throws Exception {
 		String sql = "select col1,col2,col3 from transactiontest";
-		return getSimpleJdbcTemplate().query(sql,
+		return getJdbcTemplate().query(sql,
 				new BeanPropertyRowMapper<Transaction>(Transaction.class));
 	}
 
 	public void removeData(Transaction transaction) throws Exception {
 		TransactionSynchronizationManager
-		.registerSynchronization(transactionSynchronization);
+				.registerSynchronization(transactionSynchronization);
 		String sql = "delete transactiontest where col1 = ?";
-		this.getSimpleJdbcTemplate().update(sql,
+		this.getJdbcTemplate().update(sql,
 				new Object[] { transaction.getCol1() });
 	}
 
@@ -90,7 +93,7 @@ public class TransactionTestSampleServiceImpl extends SimpleJdbcDaoSupport
 		TransactionSynchronizationManager
 				.registerSynchronization(transactionSynchronization);
 		String sql = "update transactiontest set col2= ? , col3 = ? where col1 = ?";
-		this.getSimpleJdbcTemplate().update(
+		this.getJdbcTemplate().update(
 				sql,
 				new Object[] { transaction.getCol2(), transaction.getCol3(),
 						transaction.getCol1() });

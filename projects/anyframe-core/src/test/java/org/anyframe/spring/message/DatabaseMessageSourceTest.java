@@ -1,3 +1,18 @@
+/*
+ * Copyright 2002-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.anyframe.spring.message;
 
 import static org.junit.Assert.assertEquals;
@@ -15,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -104,6 +120,14 @@ public class DatabaseMessageSourceTest {
 			fail("Unable to initialize database for test. " + e);
 		}
 	}
+	
+	/**
+	 * clear cache
+	 */
+	@After
+	public void destroy() throws Exception {
+		((DatabaseMessageSource) this.messageSource).destroy();
+	}
 
 	/**
 	 * [Flow #-1] Positive Case : try to get message in db. check the size of
@@ -134,13 +158,12 @@ public class DatabaseMessageSourceTest {
 						new Object[] { "Schrek" }, new Locale("en", "US")));
 
 		// 3. check cache size
-		assertTrue(
-				"Fail to check memory size of cache.",
-				((DatabaseMessageSource) messageSource).getCache().getSize() == 3);
+		assertTrue("Fail to check memory size of cache.",
+				getCacheSize((DatabaseMessageSource) messageSource) == 3);
 
 		// 4. sleep for expiring cached data
 		Thread.sleep(2000);
-
+		
 		// 5. get message with arguments
 		assertEquals(
 				"Fail to get message (message id = 'error.moviefinderimpl.get', locale = 'ko_KR')",
@@ -149,9 +172,8 @@ public class DatabaseMessageSourceTest {
 						new Locale("ko", "KR")));
 
 		// 6. check cache size
-		assertTrue(
-				"Fail to check memory size of cache.",
-				((DatabaseMessageSource) messageSource).getCache().getSize() == 3);
+		assertTrue("Fail to check memory size of cache.",
+				getCacheSize((DatabaseMessageSource) messageSource) == 1);
 	}
 
 	/**
@@ -172,9 +194,9 @@ public class DatabaseMessageSourceTest {
 		Thread.sleep(2000);
 
 		// 3. check cache size
-		assertTrue("Fail to check memory size of cache.",
-				((DatabaseMessageSource) lazyLoadingMessageSource).getCache()
-						.getSize() == 10);
+		assertTrue(
+				"Fail to check memory size of cache.",
+				getCacheSize((DatabaseMessageSource) lazyLoadingMessageSource) == 10);
 
 		// 4. get message with arguments
 		assertEquals(
@@ -247,5 +269,11 @@ public class DatabaseMessageSourceTest {
 		List<Message> exportedMessages = ((DatabaseMessageSource) messageSourceWithDefaultLocale)
 				.exportMessages();
 		assertEquals("Fail to exort messages", 11, exportedMessages.size());
+	}
+
+	private int getCacheSize(DatabaseMessageSource messageSource) {
+		net.sf.ehcache.Cache nativeCache = (net.sf.ehcache.Cache) (messageSource
+				.getCache().getNativeCache());
+		return nativeCache.getKeysWithExpiryCheck().size();
 	}
 }

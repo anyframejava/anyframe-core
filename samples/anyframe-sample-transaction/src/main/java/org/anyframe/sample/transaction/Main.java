@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,16 @@ import org.anyframe.sample.domain.Movie;
 import org.anyframe.sample.transaction.moviefinder.service.MovieService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
 /**
- * Sample code to test a feature provided by TransactionService 
+ * Sample code to test a feature provided by TransactionService
  * 
  * [how to execute this class in maven] mvn exec:java
  * -Dexec.mainClass=anyframe.sample.transaction.Main
+ * 
+ * @author Heewon Jung
  */
 public class Main {
-	
+
 	protected ClassPathXmlApplicationContext context;
 
 	/**
@@ -43,14 +44,14 @@ public class Main {
 	}
 
 	/**
-	 * detroying
+	 * destroying
 	 */
 	protected void teardown() {
 		context.close();
 	}
 
 	/**
-	 * Main method to execute a test 
+	 * Main method to execute a test
 	 */
 	public static void main(String[] args) throws Exception {
 		Main main = new Main();
@@ -66,18 +67,18 @@ public class Main {
 	public void manageMovie() throws Exception {
 
 		// 1. lookup movieService
-		MovieService movieService = (MovieService) context.getBean("txMovieService");
-		
+		MovieService movieService = (MovieService) context
+				.getBean("txMovieService");
+
 		// 1. create a new movie
 		Movie movie = getMovie();
 		movieService.create(movie);
 
 		// 2. get a movie
 		movie = movieService.get(movie.getMovieId());
-		System.out.println("The product name is a '" + movie.getTitle()
-				+ "'.");
+		System.out.println("The product name is a '" + movie.getTitle() + "'.");
 	}
-	
+
 	private Movie getMovie() throws Exception {
 		Genre genre = new Genre();
 		genre.setGenreId("GR-03");

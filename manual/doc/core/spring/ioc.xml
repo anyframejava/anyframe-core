@@ -83,7 +83,7 @@
 			<para>
 				Spring Framework의 가장 큰 장점으로 IoC Container 기능이 부각되어 있으나, IoC 기능은 Spring Framework이 
 				탄생하기 훨씬 이전부터 사용되던 개념이었다. 그러므로 "IoC 기능을 Spring Framework의 장점이라고 이야기하는 것은
-				적합하지 않다."고 반론을 제기하면서 "새로운 개념을 사용하는 것이 적합하다."고 주장한 사람이 Martin Flowler이다. 
+				적합하지 않다."고 반론을 제기하면서 "새로운 개념을 사용하는 것이 적합하다."고 주장한 사람이 Martin Fowler이다. 
 				Lightweight 컨테이너들이 이야기하는 IoC를 Dependency Injection이라는 용어로 사용하는 것이 더 적합하다고 
 				이야기하고 있다. Martin Flowler의 이 같은 구분 이후 IoC 개념을 개발자들마다 다양한 방식으로 분류하고 있으나 
 				다음 그림과 같이 IoC와 Dependency Injection 간의 관계를 분류하는 것이 일반적이다.
@@ -515,7 +515,7 @@
                     <programlisting language="xml"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
     <bean id="…" class="…">
     <!-- collaborators and configuration for this bean go here -->
     </bean>
@@ -1126,6 +1126,42 @@ MovieService movieService = (MovieServiceImpl)<emphasis role="bold">ctx.getBean<
           			</listitem>
         		</itemizedlist>
       		</section>
+      		<section id="core_spring_ioc_dependencies_xml_shortcut_with_the_c-namespace">
+       	 		<title>c-namespace 기반의 XML 단축표현</title>
+        		<para>Spring 3.1 버전부터 소개된 c-namespace를 이용하면, 중첩하여 표현된 복잡한 constructor-arg 요소를 축약된 형태의 생성자 인자 속성으로 간단히 나타낼 수 있다.
+       	            <programlisting language="xml"><![CDATA[<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  ]]><emphasis role="bold">xmlns:c="http://www.springframework.org/schema/c"</emphasis><![CDATA[
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd">
+      
+  <bean id="bar" class="x.y.Bar"/>
+  <bean id="baz" class="x.y.Baz"/>
+
+  <-- 'traditional' declaration -->      
+  <bean id="foo" class="x.y.Foo">
+      <constructor-arg ref="bar"/>
+      <constructor-arg ref="baz"/>
+      <constructor-arg value="foo@bar.com"/>
+  </bean>
+
+  <-- 'c-namespace' declaration -->
+  <bean id="foo" class="x.y.Foo" ]]><emphasis role="bold">c:bar-ref="bar" c:baz-ref="baz" c:email="foo@bar.com"</emphasis><![CDATA[>
+
+</beans>]]></programlisting>    		
+        		</para>
+      			<para>간혹 생성자의 인자값을 알 수 없는 경우 (일반적으로 디버깅 정보없이 컴파일된 bytecode의 경우), 다음과 같이 대안으로 인자의 순번을 이용할 수 있다.
+       	            <programlisting language="xml"><![CDATA[<-- 'c-namespace' index declaration -->
+<bean id="foo" class="x.y.Foo" ]]><emphasis role="bold">c:_0-ref="bar" c:_1-ref="baz"</emphasis><![CDATA[>]]></programlisting>
+					<note>
+						<para>
+							XML 문법의 제약사항으로 인하여, XML의 속성명은 숫자로 시작할 수 없다. 따라서 순번을 이용하는 경우에는 _(언더바) 문자를 XML 속성명 앞에 표기하여야 한다.				
+						</para>
+					</note>    		
+        		</para>
+      			<para>실제 상황에서, 생성자 분석 메커니즘은 굳이 순번을 이용할 필요가 없을 정도로 상당히 효율적이다. 따라서 설정시 생성자의 순번 대신 인자명을 기술하는 방식을 권장한다.</para>
+
+			</section>
     	</section>
 
 		<section id="core_spring_ioc_dependencies_property">
@@ -2632,21 +2668,21 @@ org.springframework.beans.factory.config.Scope 인터페이스를 implement한�
     <![CDATA[xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/util 
-        http://www.springframework.org/schema/util/spring-util-3.0.xsd
+        http://www.springframework.org/schema/util/spring-util-3.1.xsd
         http://www.springframework.org/schema/jee 
-        http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+        http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
         http://www.springframework.org/schema/lang 
-        http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+        http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
         http://www.springframework.org/schema/jms 
-        http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+        http://www.springframework.org/schema/jms/spring-jms-3.1.xsd
         ]]><emphasis role="bold">http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd</emphasis>
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd</emphasis>
         <![CDATA[http://www.springframework.org/schema/tx 
-        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
         <!-- <bean/> definitions here -->
 </beans>]]></programlisting>
 				</para>

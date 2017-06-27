@@ -9,7 +9,7 @@
 		다음은 Core Plugin 설치로 추가된 context-message.xml 파일의 일부로 'messageSource' Bean 정의 내용이다.
 	</para>
 	<programlisting language="xml"><![CDATA[<bean id="messageSource" 
-    class="]]><emphasis role="bold"><![CDATA[org.anyframe.spring.message.EncodingResourceBundleMessageSource]]></emphasis><![CDATA[">
+    class="]]><emphasis role="bold"><![CDATA[org.springframework.context.support.ReloadableResourceBundleMessageSource]]></emphasis><![CDATA[">
     <property name="basenames">
         <list>
             <value>message/message-generation</value>        
@@ -22,7 +22,7 @@
     </property>]]></emphasis><![CDATA[
 </bean>]]></programlisting>
 	<para>
-		위와 같이 EncodingResourceBundleMessageSource의 defaultEncoding 속성을 사용하여 Encoding을 정의해 줌으로써 messageSource bean을 정의한다.
+		위와 같이 ReloadableResourceBundleMessageSource의 defaultEncoding 속성을 사용하여 Encoding을 정의해 줌으로써 messageSource bean을 정의한다.
 		defaultEncoding을 정의하지 않을 시에는 기본적으로 "UTF-8"로 셋팅된다. 
 	</para>
 	<important>

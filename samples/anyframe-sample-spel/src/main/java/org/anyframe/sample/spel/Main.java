@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,17 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.StringUtils;
 
-
 /**
- * Spring Expression Language를 활용한 다양한 Expression을 테스트하기 위한 샘플 코드
+ * Sample to test various Expression using Spring Expression Language
  * 
  * [how to execute this class in maven] mvn exec:java
  * -Dexec.mainClass=org.anyframe.sample.spel.Main
+ * 
+ * @author SoYon Lim
  */
 public class Main {
 	/**
-	 * 테스트 수행을 위한 main
+	 * main
 	 */
 	public static void main(String[] args) throws Exception {
 		Main main = new Main();
@@ -94,7 +95,7 @@ public class Main {
 	public void evaluateListExpression() throws Exception {
 		Genre genre = getGenre();
 		StandardEvaluationContext context = new StandardEvaluationContext(genre);
-		
+
 		ExpressionParser parser = new SpelExpressionParser();
 		String title = parser.parseExpression("movies[0].Title").getValue(
 				context, String.class);
@@ -188,6 +189,7 @@ public class Main {
 						+ name);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void evaluateCollectionSelectionExpression() throws Exception {
 		Genre genre = getGenre();
 		StandardEvaluationContext context = new StandardEvaluationContext(genre);
@@ -200,6 +202,7 @@ public class Main {
 				+ movies.get(0).getTitle());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void evaluateCollectionProjectionExpression() throws Exception {
 		Genre genre = getGenre();
 		StandardEvaluationContext context = new StandardEvaluationContext(genre);

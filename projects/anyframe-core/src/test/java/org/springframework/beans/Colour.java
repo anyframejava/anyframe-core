@@ -20,9 +20,15 @@ import org.springframework.core.enums.ShortCodedLabeledEnum;
 
 /**
  * @author Rob Harrop
+ * @deprecated as of Spring 3.0, in favor of Java 5 enums.
  */
 public class Colour extends ShortCodedLabeledEnum {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2626603733494135727L;
+	
 	public static final Colour RED = new Colour(0, "RED");
 	public static final Colour BLUE = new Colour(1, "BLUE");
 	public static final Colour GREEN = new Colour(2, "GREEN");

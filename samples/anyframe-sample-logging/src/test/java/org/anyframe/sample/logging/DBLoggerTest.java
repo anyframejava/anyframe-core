@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,13 @@ import java.util.Enumeration;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
-import org.apache.log4j.Logger;
 import org.apache.log4j.jdbc.JDBCAppender;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -59,11 +58,12 @@ public class DBLoggerTest {
 	 * @throws Exception
 	 *             fail to test
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDBLogging() throws Exception {
 		// 1. find all appenders of DBLogger
-		Enumeration appenders = Logger.getLogger(this.getClass())
-				.getAllAppenders();
+		Enumeration<Appender> appenders = org.apache.log4j.Logger.getLogger(
+				this.getClass()).getAllAppenders();
 
 		if (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
@@ -84,7 +84,7 @@ public class DBLoggerTest {
 		}
 
 		// 3. try to log
-		Log logger = LogFactory.getLog(this.getClass());
+		Logger logger = LoggerFactory.getLogger(this.getClass());
 		assertTrue(logger.isErrorEnabled());
 		logger.error("log - testDBLoggingConf");
 

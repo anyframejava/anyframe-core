@@ -104,18 +104,15 @@
 						<entry>US</entry>
 					</row>
 					<row>
-						<entry>cacheConfiguration</entry>
+						<entry>cacheManager</entry>
 						<entry>
 							DatabaseMessageSource는 효율적인 Message 조회를 위해 내부적으로 Ehcache를 사용하고 있다. 한 번 조회된 Message는 
 							Cache에 저장되므로, 다음번 조회시 DB에 다시 접근할 필요가 없게 된다. (단, Cache 속성 정의에 따라 달라질 수 있음.)
-							기본적으로 Ehcache는 내부의 ehcache-failsafe.xml의 정의에 따라 캐싱된 객체를 관리하지만 별도 속성을 정의한 경우
-							변경할 수 있다. 이를 위해서 cacheConfiguration의 값으로 캐싱을 위한 정책을 정의한 XML 파일의 경로를 정의한다.
-							cacheConfiguration은 절대/상대 경로(file:...)나 클래스패스(classpath:...)를 이용하여 정의 가능하다.
-							XML 정의를 위한 보다 자세한 내용은 <ulink url="http://ehcache.org/documentation/configuration.html">Ehcache 매뉴얼</ulink>을 
-							참고하도록 한다.
+							Cache 기능을 연동하려면 Spring에서 제공되는 org.springframework.cache.ehcache.EhCacheCacheManager를 통해 별도 Spring Bean으로 등록된 cacheManager의 id를  정의하여 준다. 
+							기본적으로 Ehcache는  별도 속성 파일을 정의하여 캐싱된 객체를 관리하는데 databaseMessageSourceCache 이름으로 캐시를 추가하여야 한다.
 						</entry>
 						<entry>N</entry>
-						<entry>ehcache 라이브러리 내의 ehcache-failsafe.xml</entry>
+						<entry>N/A</entry>
 					</row>					
 					<row>
 						<entry>lazyLoad</entry>
@@ -143,8 +140,48 @@
             <prop key="text.column">MESSAGE</prop>
         </props>
     </property>
+    <property name="cacheManager" ref="cacheManager" />    
     <property name="cacheConfiguration" value="classpath:/spring/message/ehcache.xml"/>
-</bean>]]></programlisting>	
+</bean>
+
+<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+    p:cache-manager-ref="ehcache" />
+
+<bean id="ehcache"
+    class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+    p:config-location="classpath:spring/message/ehcache.xml" />]]></programlisting>	
+		<para>
+			별도로 정의된 ehcache.xml 파일에는 다음과 같이 databaseMessageSourceCache 이름으로 지정된 캐시를 정의하여 준다.
+			Ehcache 설정을 위한 보다 자세한 내용은 <ulink url="http://ehcache.org/documentation/configuration.html">Ehcache 매뉴얼</ulink>을 참고하도록 한다.
+		</para>
+		<programlisting language="xml"><![CDATA[<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../config/ehcache.xsd" name="cacheManager">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache
+            maxElementsInMemory="3"
+            eternal="false"
+            timeToIdleSeconds="1"
+            timeToLiveSeconds="1"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+
+    <cache name="]]><emphasis role="bold">databaseMessageSourceCache</emphasis><![CDATA[" 
+            maxElementsInMemory="3"
+            eternal="false"
+            timeToIdleSeconds="1"
+            timeToLiveSeconds="1"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+</ehcache>]]></programlisting>               
 	</section>
 	<section id="core_db_messagesource_import_export">
 		<title>Import/Export/Refresh Messages</title>

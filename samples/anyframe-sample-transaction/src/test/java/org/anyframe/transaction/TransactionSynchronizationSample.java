@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.anyframe.transaction;
 
 import org.springframework.transaction.support.TransactionSynchronization;
 
 /**
+ * TransactionSynchronization sample class for transaction test
+ * 
  * @author SoYon Lim
  * @author JongHoon Kim
  */
@@ -69,8 +71,7 @@ public class TransactionSynchronizationSample implements
 	}
 
 	public void flush() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

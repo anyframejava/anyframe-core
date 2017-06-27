@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * 
  * [how to execute this class in maven] mvn exec:java
  * -Dexec.mainClass=org.anyframe.sample.validation.payload.Main
+ * 
+ * @author Jeryeon Kim
  */
 public class Main {
 	protected ClassPathXmlApplicationContext context;
@@ -44,7 +46,7 @@ public class Main {
 	}
 
 	/**
-	 * detroying
+	 * destroying
 	 */
 	protected void teardown() {
 		context.close();
@@ -64,41 +66,31 @@ public class Main {
 		main.teardown();
 	}
 
-	@SuppressWarnings("unchecked")
 	public void validateMovie() throws Exception {
 		Validator validator = (Validator) context.getBean("validator");
 
 		Movie movie = new Movie();
 		movie.setMovieId("MV-000001");
-		movie
-				.setTitle("Can Hieronymus Merkin Ever Forget Mercy Humppe and Find True Happiness?");
+		movie.setTitle("Can Hieronymus Merkin Ever Forget Mercy Humppe and Find True Happiness?");
 		movie.setActors("Johnny Depp");
 		movie.setRuntime(200);
 		movie.setReleaseDate(new Date());
 		movie.setTicketPrice(18000);
 		movie.setNowPlaying("Y");
 
-		Set<ConstraintViolation<Movie>> constraintViolations = validator
-				.validate(movie);
-		System.out.println("the number of constraint violation is "
-				+ constraintViolations.size());
+		Set<ConstraintViolation<Movie>> constraintViolations = validator.validate(movie);
+		System.out.println("the number of constraint violation is " + constraintViolations.size());
 
-		Iterator<ConstraintViolation<Movie>> iterator = constraintViolations
-				.iterator();
+		Iterator<ConstraintViolation<Movie>> iterator = constraintViolations.iterator();
 
 		while (iterator.hasNext()) {
 			ConstraintViolation<Movie> constraintViolation = iterator.next();
 
-			Set payloads = constraintViolation.getConstraintDescriptor()
-					.getPayload();
+			Set payloads = constraintViolation.getConstraintDescriptor().getPayload();
 			if (!payloads.isEmpty()) {
-				System.out
-						.println("----------------------------------------------");
-				System.out.println("invalid value : "
-						+ constraintViolation.getInvalidValue());
-				System.out.println("message : "
-						+ constraintViolation.getPropertyPath() + " "
-						+ constraintViolation.getMessage());
+				System.out.println("----------------------------------------------");
+				System.out.println("invalid value : " + constraintViolation.getInvalidValue());
+				System.out.println("message : " + constraintViolation.getPropertyPath() + " " + constraintViolation.getMessage());
 				System.out.println("payload : " + payloads.iterator().next());
 			}
 		}

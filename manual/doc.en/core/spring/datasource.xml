@@ -638,9 +638,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     ]]><emphasis role="bold">xmlns:jee="http://www.springframework.org/schema/jee"</emphasis><![CDATA[
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
     ]]><emphasis role="bold">http://www.springframework.org/schema/jee 
-        http://www.springframework.org/schema/jee/spring-jee-3.0.xsd</emphasis><![CDATA[">
+        http://www.springframework.org/schema/jee/spring-jee-3.1.xsd</emphasis><![CDATA[">
 
     <jee:jndi-lookup id="dataSource" jndi-name="AnyframeDS" resource-ref="true">
         <jee:environment>

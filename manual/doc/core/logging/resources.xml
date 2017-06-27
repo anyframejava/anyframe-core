@@ -42,11 +42,11 @@
 						<tbody>
 							<row>
 								<entry align="center">hsqldb.zip</entry>
-								<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/hsqldb.zip">Download</ulink></entry>
+								<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/hsqldb.zip">Download</ulink></entry>
 							</row>										
 							<row>
 								<entry align="center">anyframe-sample-logging.zip</entry>
-								<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.3/reference/sample/anyframe-sample-logging.zip">Download</ulink></entry>
+								<entry align="center"><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.4/reference/sample/anyframe-sample-logging.zip">Download</ulink></entry>
 							</row>
 						</tbody>
 					</tgroup>
@@ -55,12 +55,11 @@
 			<listitem>
 				<para>참고자료</para>
 				<itemizedlist>
-					<listitem><para><ulink url="http://logging.apache.org/">Apache Logging Service Home</ulink></para></listitem>
+					<listitem><para><ulink url="http://slf4j.org/">Simple Logging Facade for Java (SLF4J) Home</ulink></para></listitem>
 					<listitem><para><ulink url="http://logging.apache.org/log4j">Log4j Home</ulink></para></listitem>
 					<listitem><para><ulink url="http://logging.apache.org/log4j/docs/api/index.html">Log4j API</ulink></para></listitem>
 					<listitem><para><ulink url="http://logging.apache.org/log4j/docs/manual.html">Short Intruduction to Log4j </ulink></para></listitem>
 					<listitem><para><ulink url="http://code.google.com/p/log4jdbc/">Log4jdbc Home</ulink></para></listitem>
-					<listitem><para><ulink url="http://slf4j.org/">Simple Logging Facade for Java (SLF4J) Home</ulink></para></listitem>
 				</itemizedlist>
 			</listitem>
 		</itemizedlist>

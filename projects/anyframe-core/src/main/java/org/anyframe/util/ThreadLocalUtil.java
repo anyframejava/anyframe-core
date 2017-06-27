@@ -1,3 +1,18 @@
+/*
+ * Copyright 2002-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.anyframe.util;
 
 import java.util.HashMap;
@@ -12,25 +27,43 @@ import java.util.Map;
  */
 public class ThreadLocalUtil {
 
-	private static ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
+	private ThreadLocalUtil() {
+		throw new AssertionError();
+	}	
+	
+	private static ThreadLocal<Map<Object, Object>> threadLocal = new ThreadLocal<Map<Object, Object>>();
 
-	private static Map<String, Object> getThreadLocal() {
+	/**
+	 * Gets the thread local variable.
+	 * @return thread local object 
+	 */	
+	public static Map<Object, Object> getThreadLocal() {
 		if (threadLocal.get() == null) {
-			Map<String, Object> sharedInfo = new HashMap<String, Object>();
+			Map<Object, Object> sharedInfo = new HashMap<Object, Object>();
 			threadLocal.set(sharedInfo);
 		}
 		return threadLocal.get();
 	}
 	
-	public static void add(String key, Object object){
+	/**
+	 * Puts an object to thread local with a key.
+	 */	
+	public static void add(Object key, Object object){
 		getThreadLocal().put(key, object);
 	}
 	
-	public static Object get(String key){
+	/**
+	 * Gets an object in the thread local with a key.
+	 */
+	public static Object get(Object key){
 		return getThreadLocal().get(key);
 	}
 
-	public static boolean isExist(String key){
+	/**
+	 * Checks if thread local contains an object with a key.
+	 * @return true if thread local contains an object with a key, false if not.
+	 */
+	public static boolean isExist(Object key){
 		Object object = getThreadLocal().get(key);
 		if(object != null) { return true;
 		}else{
@@ -38,14 +71,21 @@ public class ThreadLocalUtil {
 		}
 	}
 	
+	/**
+	 * Clears thread local variable.
+	 */
 	public static void clearSharedInfo() {
 		getThreadLocal().clear();
 		threadLocal.set(null);
 	}
 	
-	public static String[] getThreadLocalKeys(){
-		String[] arrKeys = new String[getThreadLocal().size()];		
-		Iterator<String> keyIter = getThreadLocal().keySet().iterator();
+	/**
+	 * Gets keys in the thread local variable.
+	 * @return array of keys.
+	 */	
+	public static Object[] getThreadLocalKeys(){
+		Object[] arrKeys = new String[getThreadLocal().size()];		
+		Iterator<Object> keyIter = getThreadLocal().keySet().iterator();
 		int i = 0;
 		while(keyIter.hasNext()){
 			arrKeys[i] = keyIter.next();
@@ -54,15 +94,23 @@ public class ThreadLocalUtil {
 		return arrKeys;
 	}
 	
+	/**
+	 * Gets size of the thread local variable.
+	 * @return size of the thread local variable. 
+	 */	
 	public static int size(){
 		return getThreadLocal().size();
 	}
 	
+	/**
+	 * Gets values in the thread local variable.
+	 * @return array of values.
+	 */	
 	public static Object[] getThreadLocalValues(){
 		
 		int size = size();
 		
-		String[] arrKeys = getThreadLocalKeys();
+		Object[] arrKeys = getThreadLocalKeys();
 		Object[] values = new Object[size];
 		
 		for( int i = 0 ; i < size ; i ++ ){
@@ -71,12 +119,15 @@ public class ThreadLocalUtil {
 		return values;
 	}
 	
+	/**
+	 * Prints string values of the thread local variable.
+	 */	
 	public static void toPrintString(){
 		
 		int size = size();
 		
 		StringBuffer str = new StringBuffer();
-		String[] keys = getThreadLocalKeys();
+		Object[] keys = getThreadLocalKeys();
 		Object[] values = getThreadLocalValues();
 		
 		for ( int i = 0 ; i < size ; i ++ ){

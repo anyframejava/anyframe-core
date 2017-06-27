@@ -30,6 +30,7 @@ import java.util.TreeSet;
  * @author Juergen Hoeller
  * @since 11.11.2003
  */
+@SuppressWarnings("unchecked")
 public class IndexedTestBean {
 
 	private TestBean[] array;
